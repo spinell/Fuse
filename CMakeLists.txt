@@ -17,3 +17,7 @@ set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(src)
+
+set_directory_properties(PROPERTIES
+    VS_STARTUP_PROJECT Fuse
+)
