@@ -16,22 +16,28 @@
             "displayName": "vs2026",
             "description": "vs2026",
             "inherits" :[ "windows-base" ],
-            "generator": "Visual Studio 18 2026",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
-            }
+            "generator": "Visual Studio 18 2026"
+        },
+        {
+            "name": "vs2026-clang",
+            "displayName": "vs2026-clang",
+            "description": "vs2026-clang",
+            "inherits" :[ "vs2026" ],
+            "toolset" : "ClangCL"
         },
         {
             "name": "vs2022",
             "displayName": "vs2022",
             "description": "vs2022",
             "inherits" :[ "windows-base" ],
-            "generator": "Visual Studio 17 2022",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
-            }
+            "generator": "Visual Studio 17 2022"
+        },
+        {
+            "name": "vs2022-clang",
+            "displayName": "vs2022-clang",
+            "description": "vs2022-clang",
+            "inherits" :[ "vs2022" ],
+            "toolset" : "ClangCL"
         }
     ]
 }
