@@ -46,9 +46,39 @@ jobs:
       - name: Setup Visual Studio command line
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build / Test / Install
+      - name: Run CMake (Configure/Build/Test/Install)
         uses: ./.github/actions/build
         with:
           cc: cl.exe
           cxx: cl.exe
+          build_type:  ${{ matrix.buildConfig }}
+
+  ###########################################
+  #           Linux builds
+  ###########################################
+  linux-gcc:
+    runs-on: ubuntu-24.04
+    name: linux-${{ matrix.compiler.cc }}-${{ matrix.buildConfig }}
+    strategy:
+      matrix:
+        buildConfig: [Debug, RelWithDebInfo, Release]
+        compiler:
+          - { cc: gcc-14, cxx: g++-14 }
+          - { cc: gcc-15, cxx: g++-15 }
+    container:
+        image: ghcr.io/spinell/fuse-build-ubuntu-25.10:1.0.0
+        credentials:
+          username: ${{ github.actor  }}
+          password: ${{ secrets.PAT_PACKAGE_READ_WIRTE }}
+    steps:
+
+      - uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Run CMake (Configure/Build/Test/Install)
+        uses: ./.github/actions/build
+        with:
+          cc:  ${{ matrix.compiler.cc }}
+          cxx: ${{ matrix.compiler.cxx }}
           build_type:  ${{ matrix.buildConfig }}
