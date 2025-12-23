@@ -1,0 +1,31 @@
+#############################################################
+#           Install build tools
+#############################################################
+name: 'Install build tools'
+description: 'Install build tools on every OS'
+
+runs:
+  using: "composite"
+  steps:
+
+  - name: Install GCC 14
+    if: ${{ runner.os == 'Linux' }}
+    shell: bash
+    run: sudo apt-get -y --no-install-recommends --no-install-suggests install gcc-14 g++-14
+
+  - name: Install lcov & gcov
+    shell: bash
+    if: ${{ runner.os == 'Linux' }}
+    run: sudo apt-get -y --no-install-recommends --no-install-suggests install lcov gcovr
+
+  - name: Install CMake and Ninja
+    uses: lukka/get-cmake@v4.2.1
+    id: cmake-and-ninja
+    with:
+      cmakeVersion: 4.2.0
+      ninjaVersion: 1.13.2
+
+  - name: Install Doxygen
+    uses: ssciwr/doxygen-install@v1.6.4
+    with:
+      version: "1.15.0"

@@ -1,0 +1,54 @@
+#
+# Build / Install / Test on all platform
+#
+
+
+# The name of the workflow that GitHub displays on your repository's 'Actions' tab.
+name: Build
+description: "Build / Install / Test on all platform"
+
+# The name for workflow runs generated from the workflow.
+# GitHub displays the workflow run name in the list of workflow runs on your repository's "Actions" tab.
+# If run-name is omitted or is only whitespace, then the run name is set to event-specific information for the workflow run.
+# For example, for a workflow triggered by a push or pull_request event, it is set as the commit message or the title of the pull request.
+run-name: "[${{github.event_name}}] on ${{github.ref_name}} - ${{ github.event.head_commit.message }} (${{github.sha}})"
+
+
+on:
+  workflow_dispatch:
+  push:
+    branches: main
+    paths-ignore:
+      - .gitignore
+      - .gitattributes
+      - .README.md
+      - .editorconfig
+
+jobs:
+  ###########################################
+  #           Windows builds
+  ###########################################
+  windows:
+    name: msvc-${{ matrix.buildConfig }}
+    runs-on: Windows-2025
+    strategy:
+      matrix:
+        buildConfig: [Debug, RelWithDebInfo, Release]
+    steps:
+      - uses: actions/checkout@v6
+        name: Clone repository
+        with:
+          submodules: true
+
+      - name: Install build tools
+        uses: ./.github/actions/install-build-tools
+
+      - name: Setup Visual Studio command line
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build / Test / Install
+        uses: ./.github/actions/build
+        with:
+          cc: cl.exe
+          cxx: cl.exe
+          build_type:  ${{ matrix.buildConfig }}

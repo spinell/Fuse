@@ -1,0 +1,63 @@
+#############################################################
+#     composite  action that build,test and install
+#############################################################
+name: 'Install build tools'
+description: 'Build'
+
+inputs:
+  cc:
+    description: The C compiler.
+    required: true
+  cxx:
+    description: The C++ compiler.
+    required: true
+  build_type:
+    description: The build type.
+    required: true
+  build_dir:
+    # Use $GITHUB_WORKSPACE instead of ${{ github.workspace }}
+    # because they are not the same when running inside a container.
+    description: The build folder.
+    default: $GITHUB_WORKSPACE/out/build
+  install_dir:
+    # Use $GITHUB_WORKSPACE instead of ${{ github.workspace }}
+    # because they are not the same when running inside a container.
+    description: The install folder.
+    default: $GITHUB_WORKSPACE/out/install
+
+runs:
+  using: "composite"
+  steps:
+    - name: Debug info for debugging
+      if: false
+      shell: bash
+      run: |
+        echo "pwd $(pwd)"
+        echo "github.workspace   : ${{ github.workspace }}"
+        echo "GITHUB_WORKSPACE   : $GITHUB_WORKSPACE"
+        echo 'runner.workspace   : ${{ runner.workspace }}'
+        echo "RUNNER_WORKSPACE   : $RUNNER_WORKSPACE"
+        echo "inputs.build_dir   : ${{ inputs.build_dir }}"
+        echo "inputs.install_dir : ${{ inputs.install_dir }}"
+
+    # Run CMake Configure
+    - name: Run CMake Configure
+      shell: bash
+      run: |
+            cmake \
+              -B ${{inputs.build_dir}}    \
+              -G Ninja                   \
+              --log-level=VERBOSE        \
+              -DCMAKE_BUILD_TYPE=${{ inputs.build_type }}  \
+              -DCMAKE_C_COMPILER=${{ inputs.cc }}  \
+              -DCMAKE_CXX_COMPILER=${{ inputs.cxx }}
+
+    # Run CMake Build
+    - name: Run CMake Build
+      shell: bash
+      run: cmake --build ${{inputs.build_dir}}
+
+    # Run CMake Install
+    - name: Run CMake Install
+      shell: bash
+      run: cmake --install ${{inputs.build_dir}} --prefix ${{inputs.install_dir}}
