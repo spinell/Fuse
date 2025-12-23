@@ -1,0 +1,32 @@
+root = true
+
+# Default setting for all files
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.py]
+indent_style = space
+
+[*.md]
+indent_size = 4
+indent_style = space
+tab_width = 4  # Markdown syntax treats tabs as 4 spaces
+
+[*.{cmd, bat}]
+end_of_line = crlf
+
+[*.json]
+indent_size = 2
+
+[*.{yml, yaml}]
+indent_size = 2
+
+#
+# VisualStudio settings
+#
+cpp_generate_documentation_comments = doxygen_slash_star
