@@ -3,5 +3,37 @@
     "version": 10,
     "include": [ "CMakeGenericPresets.json" ],
     "configurePresets": [
+        {
+            "name": "linux-base",
+            "$comment": [ "Base configuration fow Linux" ],
+            "hidden": true,
+            "inherits": [ "base-config" ],
+            "environment": {},
+            "cacheVariables": {}
+        },
+        {
+            "name": "multi-config",
+            "displayName": "Ninja Multi-Config",
+            "description": "Ninja Multi-Config",
+            "inherits" :[ "linux-base" ],
+            "generator": "Ninja Multi-Config"
+        }
+    ],
+    "buildPresets": [
+      {
+        "name": "Debug",
+        "configurePreset": "multi-config",
+        "configuration": "Debug"
+      },
+      {
+        "name": "RelWithDebInfo",
+        "configurePreset": "multi-config",
+        "configuration": "RelWithDebInfo"
+      },
+      {
+        "name": "Release",
+        "configurePreset": "multi-config",
+        "configuration": "Release"
+      }
     ]
 }
