@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 4.0.0)
+
+# Ensure non-empty default build type for single-config
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE is empty.")
+endif()
+
+project(Fuse VERSION 0.1.0 LANGUAGES C CXX)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+
+add_subdirectory(src)

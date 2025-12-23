@@ -1,0 +1,37 @@
+{
+    "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
+    "version": 10,
+    "include": [ "CMakeGenericPresets.json" ],
+    "configurePresets": [
+        {
+            "name": "windows-base",
+            "$comment": [ "Base configuration fow Windows" ],
+            "hidden": true,
+            "inherits": [ "base-config" ],
+            "environment": {},
+            "cacheVariables": {}
+        },
+        {
+            "name": "vs2026",
+            "displayName": "vs2026",
+            "description": "vs2026",
+            "inherits" :[ "windows-base" ],
+            "generator": "Visual Studio 18 2026",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        },
+        {
+            "name": "vs2022",
+            "displayName": "vs2022",
+            "description": "vs2022",
+            "inherits" :[ "windows-base" ],
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            }
+        }
+    ]
+}

@@ -4,3 +4,5 @@
 # editor
 .vscode
 .vs
+
+CMakeUserPresets.json

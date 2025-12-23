@@ -1,0 +1,20 @@
+{
+  "$schema": "https://cmake.org/cmake/help/latest/_downloads/3e2d73bff478d88a7de0de736ba5e361/schema.json",
+  "version": 10,
+  "configurePresets": [
+    {
+      "name": "base-config",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "environment": {},
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": true,
+        "CMAKE_CXX_EXTENSIONS": false,
+        "CMAKE_CXX_SCAN_FOR_MODULES": false,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+      }
+    }
+  ]
+}
