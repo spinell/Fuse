@@ -1,0 +1,6 @@
+# Build output
+/out
+
+# editor
+.vscode
+.vs
