@@ -57,7 +57,7 @@ runs:
         echo "cache-path=${{ runner.temp }}/CMake-${{ inputs.version }}" >> ${GITHUB_OUTPUT}
 
         # The key use for cache restore/save
-        echo "cache-key=CMake-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}" >> ${GITHUB_OUTPUT}
+        echo "cache-key=${archive}" >> ${GITHUB_OUTPUT}
 
       # restore CMake from cache
     - uses: actions/cache/restore@v4

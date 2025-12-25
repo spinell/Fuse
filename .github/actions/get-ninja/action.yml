@@ -28,18 +28,23 @@ runs:
         case "${{ runner.os }}-${{ runner.arch }}" in
           "Linux-X64")
             archive="ninja-linux.zip"
+            cacheKey="Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}"
             ;;
           "Linux-ARM64")
             archive="ninja-linux-aarch64.zip"
+            cacheKey="Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}"
             ;;
           "macOS-X64" | "macOS-ARM64")
             archive="ninja-mac.zip"
+            cacheKey="Ninja-${{ inputs.version }}-${{ runner.os }}"
             ;;
           "Windows-X64")
             archive="ninja-win.zip"
+            cacheKey="Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}"
             ;;
           "Windows-ARM64")
             archive="ninja-winarm64.zip"
+            cacheKey="Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}"
             ;;
           *)
             echo "Unsupported ${{ runner.os }}-${{ runner.arch }}"
@@ -56,7 +61,7 @@ runs:
         echo "cache-path=${{ runner.temp }}/Ninja-${{ inputs.version }}" >> ${GITHUB_OUTPUT}
 
         # The key use for cache restore/save
-        echo "cache-key=Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}" >> ${GITHUB_OUTPUT}
+        echo "cache-key=$cacheKey" >> ${GITHUB_OUTPUT}
 
       # restore Ninja from cache
     - uses: actions/cache/restore@v4
