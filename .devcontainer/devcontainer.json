@@ -1,0 +1,31 @@
+//
+// dev container for building with the docker image.
+//
+{
+  "name": "Build-dev",
+  "image": "ghcr.io/spinell/fuse-build-ubuntu-25.10:1.0.0",
+  "runArgs": [
+    "--name=fuse-dev"
+  ],
+
+  "containerEnv": {},
+  "remoteEnv": {},
+
+  // Default directory that Visual Studio Code should open inside the container.
+  // This is distinct from the physical mount point of your source code.
+  "workspaceFolder": "${localWorkspaceFolder}",
+  "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "mhutchie.git-graph",
+        "vadimcn.vscode-lldb",
+        "cheshirekow.cmake-format",
+        "editorconfig.editorconfig"
+      ]
+    }
+  }
+}
