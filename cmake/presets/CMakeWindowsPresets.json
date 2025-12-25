@@ -12,6 +12,13 @@
             "cacheVariables": {}
         },
         {
+            "name": "default",
+            "displayName": "default",
+            "description": "default",
+            "inherits" :[ "windows-base" ],
+            "generator": "Ninja"
+        },
+        {
             "name": "vs2026",
             "displayName": "vs2026",
             "description": "vs2026",

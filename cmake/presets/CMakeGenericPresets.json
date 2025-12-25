@@ -3,10 +3,36 @@
   "version": 10,
   "configurePresets": [
     {
+      "name": "vcpkg-base",
+      "$comment":[
+        "VCPKG_MANIFEST_INSTALL        : controls whether vcpkg will be automatically run to install your dependencies during your configure step",
+        "VCPKG_APPLOCAL_DEPS           : Copy DLL into build directory.",
+        "VCPKG_INSTALLED_DIR           : location where libraries will be installed and consumed from",
+        "VCPKG_MANIFEST_INSTALL        : controls whether vcpkg will be automatically run to install your dependencies during your configure step.",
+        "X_VCPKG_APPLOCAL_DEPS_INSTALL : Copy DLL into install directory"
+      ],
+      "hidden": true,
+      "environment": {
+        "VCPKG_ROOT": "${sourceDir}/submodules/vcpkg/"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_INSTALL_OPTIONS": "--no-print-usage",
+        "VCPKG_TRACE_FIND_PACKAGE": false,
+        "VCPKG_MANIFEST_INSTALL": true,
+        "VCPKG_APPLOCAL_DEPS": true,
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/out",
+        "VCPKG_MANIFEST_FEATURES": null,
+        "VCPKG_VERBOSE": true,
+        "X_VCPKG_APPLOCAL_DEPS_INSTALL": true
+      }
+    },
+    {
       "name": "base-config",
       "hidden": true,
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
+      "inherits": ["vcpkg-base"],
       "environment": {},
       "cacheVariables": {
       }

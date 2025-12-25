@@ -12,6 +12,13 @@
             "cacheVariables": {}
         },
         {
+            "name": "default",
+            "displayName": "default",
+            "description": "default",
+            "inherits" :[ "linux-base" ],
+            "generator": "Ninja"
+        },
+        {
             "name": "multi-config",
             "displayName": "Ninja Multi-Config",
             "description": "Ninja Multi-Config",

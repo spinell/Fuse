@@ -30,6 +30,36 @@ RUN    apt-get -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Required for Vcpkg
+RUN apt-get -y update && \
+    apt-get -y --no-install-recommends --no-install-suggests install pkg-config \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+#######################################################################
+# SDL3 dependencies
+# https://github.com/libsdl-org/SDL/blob/main/docs/README-linux.md
+#######################################################################
+# libasound2-dev      (libasound.so.2)       : alsa driver
+# libpulse-dev        (libpulse.so.0)        : pulseaudio driver
+# libpipewire-0.3-dev (libpipewire-0.3.so.0) : pipewire driver
+# libaudio-dev        (libaudio.so.2)        : nas driver
+# libjack-dev         ( libjack.so.0)        : jack driver
+# libsndio-dev        (libsndio.so.7)        : sndio driver
+RUN apt-get -y update && \
+    apt-get -y --no-install-recommends --no-install-suggests install \
+        # Ubuntu 18.04
+        libasound2-dev libpulse-dev libaudio-dev libjack-dev libsndio-dev \
+        libfribidi-dev libx11-dev libxext-dev \
+        libxrandr-dev   libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+        libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+        libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev \
+        # Ubuntu 22.04+
+        libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev \
+    && apt-get clean    \
+    && rm -rf /var/lib/apt/lists/*
+
+
 # Install Ninja
 RUN wget -O ninja.zip https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-linux.zip \
     && unzip ninja.zip -d /opt/ninja-${ninja_version} \
