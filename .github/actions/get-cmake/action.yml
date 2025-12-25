@@ -75,11 +75,18 @@ runs:
 
       # Extract CMake
     - name: 'Extract CMake'
-      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' && runner.os != 'MacOS' }}
       shell: pwsh
       run: |
         mkdir "${{ steps.setup-variables.outputs.cache-path }}"
         tar -xf "${{ steps.setup-variables.outputs.archive-path }}" -C ${{ steps.setup-variables.outputs.cache-path }} --strip-components=1
+
+    - name: 'Extract CMake'
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' && runner.os == 'MacOS' }}
+      shell: pwsh
+      run: |
+        mkdir "${{ steps.setup-variables.outputs.cache-path }}"
+        tar -xf "${{ steps.setup-variables.outputs.archive-path }}" -C ${{ steps.setup-variables.outputs.cache-path }} --strip-components=3
 
       # Cache CMake
     - uses: actions/cache/save@v4
