@@ -5,11 +5,10 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-action"
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "sunday"
       time: "00:00"
-      timezone: EDT
-      
+      timezone: "America/Montreal"
