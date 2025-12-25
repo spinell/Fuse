@@ -1,0 +1,98 @@
+#
+# Custom action to download Ninja from GitHub
+# This action will append Ninja's path into PATH
+# and also set Ninja's path as output (ninja-path).
+#
+# It's wil also use GitHub Action Cache.
+#
+name: 'Get ninja'
+description: 'Download ninja and add it to the PATH environment variable'
+inputs:
+  version:
+    description: 'Ninja version'
+    default: '1.13.2'
+
+outputs:
+  ninja-path:
+    description: "The Ninja's path"
+    value: ${{ steps.set-output.outputs.ninja-path }} # Map to the internal step's output
+
+runs:
+  using: 'composite'
+  steps:
+      # Setup variable that are use in fallowing steps.
+    - name: 'Setup variables'
+      id: setup-variables
+      shell: sh
+      run: |
+        case "${{ runner.os }}-${{ runner.arch }}" in
+          "Linux-X64")
+            archive="ninja-linux.zip"
+            ;;
+          "Linux-ARM64")
+            archive="ninja-linux-aarch64.zip"
+            ;;
+          "macOS-X64" | "macOS-ARM64")
+            archive="ninja-mac.zip"
+            ;;
+          "Windows-X64")
+            archive="ninja-win.zip"
+            ;;
+          "Windows-ARM64")
+            archive="ninja-winarm64.zip"
+            ;;
+          *)
+            echo "Unsupported ${{ runner.os }}-${{ runner.arch }}"
+            exit 1;
+            ;;
+        esac
+
+        echo "archive=${archive}" >> ${GITHUB_OUTPUT}
+
+        # The path where the download file will be.
+        echo "archive-path=${{ runner.temp }}/${archive}" >> ${GITHUB_OUTPUT}
+
+        # The path use for cache restore/save
+        echo "cache-path=${{ runner.temp }}/Ninja-${{ inputs.version }}" >> ${GITHUB_OUTPUT}
+
+        # The key use for cache restore/save
+        echo "cache-key=Ninja-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}" >> ${GITHUB_OUTPUT}
+
+      # restore Ninja from cache
+    - uses: actions/cache/restore@v4
+      id: cache-restore
+      with:
+        path: ${{ steps.setup-variables.outputs.cache-path }}
+        key: ${{ steps.setup-variables.outputs.cache-key }}
+
+      # Download Ninja if cache miss
+    - name: Download Ninja ${{ inputs.version }}
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      shell: pwsh
+      run: |
+        Invoke-WebRequest "https://github.com/ninja-build/ninja/releases/download/v${{ inputs.version }}/${{ steps.setup-variables.outputs.archive }}" -OutFile "${{ steps.setup-variables.outputs.archive-path }}"
+
+      # Extract Ninja
+    - name: 'Extract ninja'
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      shell: pwsh
+      run: |
+        7z "-o${{ steps.setup-variables.outputs.cache-path }}" x "${{ steps.setup-variables.outputs.archive-path }}"
+
+      # Cache Ninja
+    - uses: actions/cache/save@v4
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      with:
+        path: ${{ steps.setup-variables.outputs.cache-path }}
+        key: ${{ steps.setup-variables.outputs.cache-key }}
+
+      # Set Ninja's path as output
+    - name: 'Set output variables'
+      id: set-output
+      shell: bash
+      run: echo "ninja-path=${{ steps.setup-variables.outputs.cache-path }}" >> $GITHUB_OUTPUT
+
+      # Append Ninja's path in PATH
+    - name: 'Add Ninja to PATH'
+      shell: bash
+      run: echo "${{ steps.setup-variables.outputs.cache-path }}" >> $GITHUB_PATH

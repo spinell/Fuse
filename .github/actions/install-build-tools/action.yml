@@ -18,13 +18,6 @@ runs:
     if: ${{ runner.os == 'Linux' }}
     run: sudo apt-get -y --no-install-recommends --no-install-suggests install lcov gcovr
 
-  - name: Install CMake and Ninja
-    uses: lukka/get-cmake@v4.2.1
-    id: cmake-and-ninja
-    with:
-      cmakeVersion: 4.2.0
-      ninjaVersion: 1.13.2
-
   - name: Install Doxygen
     uses: ssciwr/doxygen-install@v1.6.4
     with:

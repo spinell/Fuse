@@ -1,0 +1,98 @@
+# Test Workflow to test custom actions
+name: Test
+
+
+run-name: "[${{github.event_name}}] on ${{github.ref_name}} - ${{ github.event.head_commit.message }} (${{github.sha}})"
+
+
+on:
+  workflow_dispatch:
+    inputs:
+      CMAKE_VERSION:
+        required: true
+        default: 4.2.0
+        type: choice
+        options:
+          - 4.2.0
+          - 4.1.0
+          - 4.0.0
+      NINJA_VERSION:
+        required: true
+        default: 1.13.2
+        type: choice
+        options:
+          - 1.13.2
+
+jobs:
+  test:
+    name: test-${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, ubuntu-24.04-arm, windows-2025, windows-2022, windows-11-arm, macos-15-intel, macos-26]
+    steps:
+      - uses: actions/checkout@v6
+        name: Clone repository
+        with:
+          submodules: true
+
+       # =================================
+       #             Ninja
+       # =================================
+
+      - name: 'Check Current Ninja'
+        shell: bash
+        run: |
+          ninja --version
+          which ninja
+
+      - name: Install Ninja
+        id: ninja
+        uses: ./.github/actions/get-ninja
+        with:
+          version: ${{ inputs.NINJA_VERSION }}
+
+
+      - name: 'Check Ninja'
+        shell: bash
+        run: |
+          path=$(which ninja)
+          folder=$(dirname "$path")
+          version=$(ninja --version)
+
+          echo "ninja path    : ${path}"
+          echo "ninja folder  : ${folder}"
+          echo "ninja version : ${version}"
+          [[ "$version" = "${{ inputs.NINJA_VERSION }}" ]]
+          #[[ "$folder"  = "${{ steps.ninja.outputs.ninja-path }}" ]]
+
+
+       # =================================
+       #             CMake
+       # =================================
+
+      - name: 'Check current CMake'
+        shell: bash
+        run: |
+          cmake --version
+          which cmake
+
+      - name: Install CMake
+        id: cmake
+        uses: ./.github/actions/get-cmake
+        with:
+          version: ${{ inputs.CMAKE_VERSION }}
+
+      - name: 'Check CMake'
+        shell: bash
+        run: |
+          path=$(which cmake)
+          folder=$(dirname "$path")
+          version=$(cmake --version | head -n 1 | cut -d ' ' -f 3)
+
+          echo "cmake path    : ${path}"
+          echo "cmake folder  : ${folder}"
+          echo "cmake version : ${version}"
+          [[ "$version" = "${{ inputs.CMAKE_VERSION }}" ]]
+          #[[ "$folder"  = "${{steps.cmake.outputs.cmake-path}}" ]]

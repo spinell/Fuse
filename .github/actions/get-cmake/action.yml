@@ -1,0 +1,100 @@
+#
+# Custom action to download CMake from GitHub
+# This action will append CMake's path into PATH
+# and also set CMake's path as output (cmake-path).
+#
+# It's wil also use GitHub Action Cache.
+#
+name: 'Get CMake'
+description: 'Download cmake and add it to the PATH environment variable'
+inputs:
+  version:
+    description: 'CMake version'
+    default: '4.2.1'
+
+outputs:
+  cmake-path:
+    description: "The CMake's path"
+    value: ${{ steps.set-output.outputs.cmake-path }} # Map to the internal step's output
+
+runs:
+  using: 'composite'
+  steps:
+      # Setup variable that are use in fallowing steps.
+    - name: 'Setup variables'
+      id: setup-variables
+      shell: sh
+      run: |
+        case "${{ runner.os }}-${{ runner.arch }}" in
+          "Linux-X64")
+            archive="cmake-${{ inputs.version }}-linux-x86_64.tar.gz"
+            ;;
+          "Linux-ARM64")
+            archive="cmake-${{ inputs.version }}-linux-aarch64.tar.gz"
+            ;;
+          "Windows-X64")
+            archive="cmake-${{ inputs.version }}-windows-x86_64.zip"
+            ;;
+          "Windows-ARM64")
+            archive="cmake-${{ inputs.version }}-windows-arm64.zip"
+            ;;
+          "macOS-X64" | "macOS-ARM64")
+            archive="cmake-${{ inputs.version }}-macos-universal.tar.gz"
+            ;;
+          *)
+            echo "Unsupported ${{ runner.os }}-${{ runner.arch }}"
+            exit 1;
+            ;;
+        esac
+
+
+        echo "archive=${archive}" >> ${GITHUB_OUTPUT}
+
+        # The path where the download file will be.
+        echo "archive-path=${{ runner.temp }}/${archive}" >> ${GITHUB_OUTPUT}
+
+        # The path use for cache restore/save
+        echo "cache-path=${{ runner.temp }}/CMake-${{ inputs.version }}" >> ${GITHUB_OUTPUT}
+
+        # The key use for cache restore/save
+        echo "cache-key=CMake-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}" >> ${GITHUB_OUTPUT}
+
+      # restore CMake from cache
+    - uses: actions/cache/restore@v4
+      id: cache-restore
+      with:
+        path: ${{ steps.setup-variables.outputs.cache-path }}
+        key: ${{ steps.setup-variables.outputs.cache-key }}
+
+      # Download CMake if cache miss
+    - name: Download CMake ${{ inputs.version }}
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      shell: pwsh
+      run: |
+        Invoke-WebRequest "https://github.com/Kitware/CMake/releases/download/v${{ inputs.version }}/${{ steps.setup-variables.outputs.archive }}" -OutFile "${{ steps.setup-variables.outputs.archive-path }}"
+
+      # Extract CMake
+    - name: 'Extract CMake'
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      shell: pwsh
+      run: |
+        mkdir "${{ steps.setup-variables.outputs.cache-path }}"
+        tar -xf "${{ steps.setup-variables.outputs.archive-path }}" -C ${{ steps.setup-variables.outputs.cache-path }} --strip-components=1
+
+      # Cache CMake
+    - uses: actions/cache/save@v4
+      if: ${{ steps.cache-restore.outputs.cache-hit != 'true' }}
+      with:
+        path: ${{ steps.setup-variables.outputs.cache-path }}
+        key: ${{ steps.setup-variables.outputs.cache-key }}
+
+      # Set CMake's path as output
+    - name: 'Set output variables'
+      id: set-output
+      shell: bash
+      run: echo "cmake-path=${{ steps.setup-variables.outputs.cache-path }}/bin" >> $GITHUB_OUTPUT
+
+      # Append CMake's path in PATH
+    - name: 'Add CMake to PATH'
+      shell: bash
+      run: echo "${{ steps.set-output.outputs.cmake-path }}" >> $GITHUB_PATH

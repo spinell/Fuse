@@ -40,6 +40,12 @@ jobs:
         with:
           submodules: true
 
+      - name: Install CMake
+        uses: ./.github/actions/get-cmake
+
+      - name: Install Ninja
+        uses: ./.github/actions/get-ninja
+
       - name: Install build tools
         uses: ./.github/actions/install-build-tools
 
