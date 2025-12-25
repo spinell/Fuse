@@ -6,9 +6,10 @@ if(NOT isMultiConfig AND NOT CMAKE_BUILD_TYPE)
     message(FATAL_ERROR "CMAKE_BUILD_TYPE is empty.")
 endif()
 
-project(Fuse VERSION 0.1.0 LANGUAGES C CXX)
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
+include(PreventInSourceBuild)
+
+project(Fuse VERSION 0.1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
