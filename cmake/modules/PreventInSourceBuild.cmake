@@ -1,3 +1,5 @@
+include_guard()
+
 #
 # Prevent in source build
 #
