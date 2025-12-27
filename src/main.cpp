@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <print>
+#include <utility>
 
 constexpr int kScreenWidth{640};
 constexpr int kScreenHeight{480};
