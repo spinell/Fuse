@@ -19,15 +19,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Print information (Can be useful for debugging)
 include(FusePrintUtils)
-include(FusePrintUtils)
 fuse_print_system_info()
 fuse_print_generator_info()
 fuse_print_compiler_info()
 fuse_print_compiler_flags()
 fuse_print_linker_flags()
 
-
-
+add_subdirectory(externals)
 add_subdirectory(src)
 
 set_directory_properties(PROPERTIES
