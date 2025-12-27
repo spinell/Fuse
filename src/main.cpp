@@ -1,6 +1,10 @@
 #include <SDL3/SDL.h>
 #include <glad/gl.h>
 
+#include "imgui.h"
+#include <backends/imgui_impl_sdl3.h>
+#include <backends/imgui_impl_opengl3.h>
+
 #include <cassert>
 #include <print>
 #include <utility>
@@ -196,6 +200,18 @@ int main(int, char **)
     //std::println("OpenGL Extension     : {}", (const char *)glExtension);
 
 
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL3_InitForOpenGL(gWindow, gl_context);
+    ImGui_ImplOpenGL3_Init();
+
     GLint glVersionMajor{};
     GLint glVersionMinor{};
     GLint glExtensionCount{};
@@ -260,7 +276,13 @@ int main(int, char **)
                 // End the main loop
                 quit = true;
             }
+            ImGui_ImplSDL3_ProcessEvent(&e);
         }
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow(); // Show demo window! :)
 
         glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -269,11 +291,16 @@ int main(int, char **)
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
         SDL_GL_SwapWindow(gWindow);
     }
 
-
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
+    ImGui::DestroyContext();
 
     SDL_GL_DestroyContext(gl_context);
     SDL_DestroyWindow(gWindow);

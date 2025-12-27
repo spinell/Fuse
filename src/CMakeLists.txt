@@ -8,5 +8,6 @@ target_link_libraries(Fuse
     PRIVATE
         SDL3::SDL3
         glad2::glad2
+        ImGui::ImGui
 )
 install(TARGETS Fuse DESTINATION .)
