@@ -31,6 +31,9 @@ fuse_print_linker_flags()
 add_subdirectory(externals)
 add_subdirectory(src)
 
+enable_testing()
+add_subdirectory(tests)
+
 set_directory_properties(PROPERTIES
     VS_STARTUP_PROJECT Fuse
 )

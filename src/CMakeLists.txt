@@ -1,3 +1,6 @@
+
+add_subdirectory(lib)
+
 find_package(SDL3 3.2.28 CONFIG REQUIRED)
 message(STATUS "SDL3_DIR     : " ${SDL3_DIR})
 message(STATUS "SDL3_VERSION : " ${SDL3_VERSION})
