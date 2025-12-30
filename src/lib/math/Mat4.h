@@ -1,12 +1,14 @@
 #pragma once
 #include "Vec4.h"
 
+
 namespace fuse {
 
 /// @brief 4x4 homogeneous matrix (column-major memory layout).
+/// @ingroup Math
 class Mat4 {
 public:
-    /// @brief Default constructor, does not initialise the matrix members.
+    /// @brief Default constructor, <b>does not</b> initialise the matrix members.
     Mat4() = default;
 
     /// @brief Constructor which allow specifying which member.
@@ -45,17 +47,14 @@ public:
         // clang-format on
     }
 
-    /// @brief Direct access to elements.
+    /// @{
+    /// @brief Direct access to elements @p row / @p col.
+    /// @param[in] row The row index
+    /// @param[in] col The col index
     float& operator()(int row, int col) noexcept { return mData[col][row]; }
 
-    /// @copydoc operator()(int,int)
+    /// @copydoc operator()(int, int)
     float operator()(int row, int col) const noexcept { return mData[col][row]; }
-
-    /// @brief Matrix multiplication.
-    Mat4& operator*=(const Mat4&) noexcept;
-
-    /// @brief Matrix multiplication.
-    [[nodiscard]] Mat4 operator*(const Mat4&) const noexcept;
 
     /// @brief Direct access to the underlying data.
     [[nodiscard]] float* data() noexcept { return reinterpret_cast<float*>(mData); }
@@ -65,12 +64,44 @@ public:
         return reinterpret_cast<const float*>(mData);
     }
 
+    /// @}
+
+    /// @{
+    /// @brief Addition this matrix with another matrix.
+    Mat4& operator+=(const Mat4&) noexcept;
+    /// @brief Substract this matrix with another matrix.
+    Mat4& operator-=(const Mat4&) noexcept;
+    /// @brief Multiply this matrix with another matrix.
+    Mat4& operator*=(const Mat4&) noexcept;
+    /// @}
+
+    /// @{
+    /// @brief Addition 2 matrix..
+    [[nodiscard]] Mat4 operator+(const Mat4&) const noexcept;
+    /// @brief Substract 2 matrix.
+    [[nodiscard]] Mat4 operator-(const Mat4&) const noexcept;
+    /// @brief Multiply 2 matrix.
+    [[nodiscard]] Mat4 operator*(const Mat4&) const noexcept;
+    /// @}
+
 private:
     float mData[4][4];
 };
 
-/// @relates Mat4
+/// @ingroup  Math
+/// @related  Mat4
+/// @{
+/// @brief Multiply a matrix by a value.
+[[nodiscard]] Mat4 operator*(const Mat4&, float) noexcept;
+
+/// @copydoc operator*(const Mat4&, float)
+[[nodiscard]] Mat4 operator*(float value, const Mat4& mat) noexcept;
+
+/// @brief Multiply a matrix by a value.
+Mat4& operator*=(Mat4&, float) noexcept;
+
 /// @brief Multiply the column vector @b v by the matrix @b m
 [[nodiscard]] Vec4 operator*(const Mat4& m, const Vec4& v) noexcept;
+/// @}
 
 } // namespace fuse

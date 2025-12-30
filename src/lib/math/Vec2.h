@@ -1,7 +1,13 @@
 #pragma once
 
+/// @addtogroup Math
+/// @brief This is the group's brief description.
+///
+/// This is the group's detailed description.
+
 namespace fuse {
 
+/// @ingroup Math
 struct Vec2 {
 
     Vec2() = default;

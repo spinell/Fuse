@@ -4,9 +4,10 @@
 namespace fuse {
 
 /// @brief 3D matrix (column-major memory layout).
+/// @ingroup Math
 class Mat3 {
 public:
-    /// @brief Default constructor, does not initialise the matrix members.
+    /// @brief Default constructor, <b>does not</b> initialise the matrix members.
     Mat3() = default;
 
     /// @brief Constructor which allow specifying which member.
@@ -30,9 +31,7 @@ public:
     /// @param col0 The first column of the matrix.
     /// @param col1 The second column of the matrix.
     /// @param col2 The third column of the matrix.
-    constexpr Mat3(const Vec3& col0,
-                   const Vec3& col1,
-                   const Vec3& col2) noexcept {
+    constexpr Mat3(const Vec3& col0, const Vec3& col1, const Vec3& col2) noexcept {
         // clang-format off
         mData[0][0] = col0.x; mData[0][1] = col0.y; mData[0][2] = col0.z;
         mData[1][0] = col1.x; mData[1][1] = col1.y; mData[1][2] = col1.z;
@@ -40,17 +39,14 @@ public:
         // clang-format on
     }
 
-    /// @brief Direct access to elements.
+    /// @{
+    /// @brief Direct access to elements @p row / @p col.
+    /// @param[in] row The row index
+    /// @param[in] col The col index
     float& operator()(int row, int col) noexcept { return mData[col][row]; }
 
-    /// @copydoc operator()(int,int)
+    /// @copydoc operator()(int, int)
     float operator()(int row, int col) const noexcept { return mData[col][row]; }
-
-    /// @brief Matrix multiplication.
-    Mat3& operator*=(const Mat3&) noexcept;
-
-    /// @brief Matrix multiplication.
-    [[nodiscard]] Mat3 operator*(const Mat3&) const noexcept;
 
     /// @brief Direct access to the underlying data.
     [[nodiscard]] float* data() noexcept { return reinterpret_cast<float*>(mData); }
@@ -60,12 +56,44 @@ public:
         return reinterpret_cast<const float*>(mData);
     }
 
+    /// @}
+
+    /// @{
+    /// @brief Addition this matrix with another matrix.
+    Mat3& operator+=(const Mat3&) noexcept;
+    /// @brief Substract this matrix with another matrix.
+    Mat3& operator-=(const Mat3&) noexcept;
+    /// @brief Multiply this matrix with another matrix.
+    Mat3& operator*=(const Mat3&) noexcept;
+    /// @}
+
+    /// @{
+    /// @brief Addition 2 matrix..
+    [[nodiscard]] Mat3 operator+(const Mat3&) const noexcept;
+    /// @brief Substract 2 matrix.
+    [[nodiscard]] Mat3 operator-(const Mat3&) const noexcept;
+    /// @brief Multiply 2 matrix.
+    [[nodiscard]] Mat3 operator*(const Mat3&) const noexcept;
+    /// @}
+
 private:
     float mData[3][3];
 };
 
-/// @relates Mat3
+/// @ingroup  Math
+/// @related  Mat3
+/// @{
+/// @brief Multiply a matrix by a value.
+[[nodiscard]] Mat3 operator*(const Mat3&, float) noexcept;
+
+/// @copydoc operator*(const Mat3&, float)
+[[nodiscard]] Mat3 operator*(float value, const Mat3& mat) noexcept;
+
+/// @brief Multiply a matrix by a value.
+Mat3& operator*=(Mat3&, float) noexcept;
+
 /// @brief Multiply the column vector @b v by the matrix @b m
 [[nodiscard]] Vec3 operator*(const Mat3& m, const Vec3& v) noexcept;
+/// @}
 
 } // namespace fuse

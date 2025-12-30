@@ -39,8 +39,107 @@ TEST(Mat4, ctor_by_vec3) {
 }
 
 // ============================================
+//                  Addition
+// ============================================
+TEST(Mat3, addition) {
+    const Mat3 matrix(0, 1, 2, 3, 4, 5, 6, 7, 8);
+
+    {
+        const Mat3 r = matrix + matrix;
+
+        // clang-format off
+        EXPECT_EQ(r(0,0),  0); EXPECT_EQ(r(0,1),  2); EXPECT_EQ(r(0,2),  4); // row 0
+        EXPECT_EQ(r(1,0),  6); EXPECT_EQ(r(1,1),  8); EXPECT_EQ(r(1,2), 10); // row 1
+        EXPECT_EQ(r(2,0), 12); EXPECT_EQ(r(2,1), 14); EXPECT_EQ(r(2,2), 16); // row 2
+        // clang-format on
+    }
+
+    {
+        Mat3       m(matrix);
+        const Mat3 r = m += m;
+
+        // clang-format off
+        EXPECT_EQ(m(0,0),  0); EXPECT_EQ(m(0,1),  2); EXPECT_EQ(m(0,2),  4); // mow 0
+        EXPECT_EQ(m(1,0),  6); EXPECT_EQ(m(1,1),  8); EXPECT_EQ(m(1,2), 10); // mow 1
+        EXPECT_EQ(m(2,0), 12); EXPECT_EQ(m(2,1), 14); EXPECT_EQ(m(2,2), 16); // mow 2
+
+        EXPECT_EQ(r(0,0),  0); EXPECT_EQ(r(0,1),  2); EXPECT_EQ(r(0,2),  4); // row 0
+        EXPECT_EQ(r(1,0),  6); EXPECT_EQ(r(1,1),  8); EXPECT_EQ(r(1,2), 10); // row 1
+        EXPECT_EQ(r(2,0), 12); EXPECT_EQ(r(2,1), 14); EXPECT_EQ(r(2,2), 16); // row 2
+        // clang-format on
+    }
+}
+
+// ============================================
+//                  Substation
+// ============================================
+TEST(Mat3, substract) {
+    const Mat3 matrix(0, 1, 2, 3, 4, 5, 6, 7, 8);
+    {
+        const Mat3 r = matrix - matrix;
+
+        // clang-format off
+        EXPECT_EQ(r(0,0), 0);  EXPECT_EQ(r(0,1), 0); EXPECT_EQ(r(0,2), 0); // row 0
+        EXPECT_EQ(r(1,0), 0);  EXPECT_EQ(r(1,1), 0); EXPECT_EQ(r(1,2), 0); // row 1
+        EXPECT_EQ(r(2,0), 0);  EXPECT_EQ(r(2,1), 0); EXPECT_EQ(r(2,2), 0); // row 2
+        // clang-format on
+    }
+
+    {
+        Mat3       m(matrix);
+        const Mat3 r = m -= m;
+
+        // clang-format off
+        EXPECT_EQ(m(0,0), 0);  EXPECT_EQ(m(0,1), 0); EXPECT_EQ(m(0,2), 0); // mow 0
+        EXPECT_EQ(m(1,0), 0);  EXPECT_EQ(m(1,1), 0); EXPECT_EQ(m(1,2), 0); // mow 1
+        EXPECT_EQ(m(2,0), 0);  EXPECT_EQ(m(2,1), 0); EXPECT_EQ(m(2,2), 0); // mow 2
+
+        EXPECT_EQ(r(0,0), 0);  EXPECT_EQ(r(0,1), 0); EXPECT_EQ(r(0,2), 0); // row 0
+        EXPECT_EQ(r(1,0), 0);  EXPECT_EQ(r(1,1), 0); EXPECT_EQ(r(1,2), 0); // row 1
+        EXPECT_EQ(r(2,0), 0);  EXPECT_EQ(r(2,1), 0); EXPECT_EQ(r(2,2), 0); // row 2
+        // clang-format on
+    }
+}
+
+// ============================================
 //              Multiplication
 // ============================================
+
+TEST(Mat3, mul_by_scalar) {
+    const Mat3 matrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+    {
+        const Mat3 r = matrix * 2;
+
+        // clang-format off
+        EXPECT_EQ(r(0, 0),  2); EXPECT_EQ(r(0, 1),  4); EXPECT_EQ(r(0, 2),  6);
+        EXPECT_EQ(r(1, 0),  8); EXPECT_EQ(r(1, 1), 10); EXPECT_EQ(r(1, 2), 12);
+        EXPECT_EQ(r(2, 0), 14); EXPECT_EQ(r(2, 1), 16); EXPECT_EQ(r(2, 2), 18);
+        // clang-format on
+
+        const Mat3 r2 = 2 * matrix;
+        // clang-format off
+        EXPECT_EQ(r2(0, 0),  2); EXPECT_EQ(r2(0, 1),  4); EXPECT_EQ(r2(0, 2),  6);
+        EXPECT_EQ(r2(1, 0),  8); EXPECT_EQ(r2(1, 1), 10); EXPECT_EQ(r2(1, 2), 12);
+        EXPECT_EQ(r2(2, 0), 14); EXPECT_EQ(r2(2, 1), 16); EXPECT_EQ(r2(2, 2), 18);
+        // clang-format on
+    }
+    {
+        Mat3       m(matrix);
+        const Mat3 r = m *= 2;
+
+        // clang-format off
+        EXPECT_EQ(m(0, 0),  2); EXPECT_EQ(m(0, 1),  4); EXPECT_EQ(m(0, 2),  6);
+        EXPECT_EQ(m(1, 0),  8); EXPECT_EQ(m(1, 1), 10); EXPECT_EQ(m(1, 2), 12);
+        EXPECT_EQ(m(2, 0), 14); EXPECT_EQ(m(2, 1), 16); EXPECT_EQ(m(2, 2), 18);
+
+        EXPECT_EQ(r(0, 0),  2); EXPECT_EQ(r(0, 1),  4); EXPECT_EQ(r(0, 2),  6);
+        EXPECT_EQ(r(1, 0),  8); EXPECT_EQ(r(1, 1), 10); EXPECT_EQ(r(1, 2), 12);
+        EXPECT_EQ(r(2, 0), 14); EXPECT_EQ(r(2, 1), 16); EXPECT_EQ(r(2, 2), 18);
+        // clang-format on
+    }
+}
+
 
 TEST(Mat3, mul_by_vec3) {
     //
@@ -68,49 +167,39 @@ TEST(Mat3, mul_by_mat3) {
     // 4  5  6  X  9  12 2 =  105 106  74
     // 7  8  9     8  5  6    165 169 119
     //
-    // clang-format off
-    const Mat3  matrix1(
+    const Mat3 matrix1(
+      // clang-format off
         1, 2, 3,
         4, 5, 6,
         7, 8, 9
+      // clang-format on
     );
-    const Mat3  matrix2(
+    const Mat3 matrix2(
+      // clang-format off
         3,   4,  7,
         9,  12,  2,
         8,   5,  6
+      // clang-format on
     );
-    const auto  result = matrix1 * matrix2;
-    EXPECT_EQ(result(0, 0),  45); EXPECT_EQ(result(0, 1),  43); EXPECT_EQ(result(0, 2),  29);
-    EXPECT_EQ(result(1, 0), 105); EXPECT_EQ(result(1, 1), 106); EXPECT_EQ(result(1, 2),  74);
-    EXPECT_EQ(result(2, 0), 165); EXPECT_EQ(result(2, 1), 169); EXPECT_EQ(result(2, 2), 119);
-    // clang-format on
-}
 
-TEST(Mat3, mul_by_mat3_and_assign) {
-    //
-    // 1  2  3     3  4  7     45  43  29
-    // 4  5  6  X  9  12 2 =  105 106  74
-    // 7  8  9     8  5  6    165 169 119
-    //
-    // clang-format off
-    Mat3  matrix1(
-        1, 2, 3,
-        4, 5, 6,
-        7, 8, 9
-    );
-    const Mat3  matrix2(
-        3,   4,  7,
-        9,  12,  2,
-        8,   5,  6
-    );
-    const auto  result = matrix1 *= matrix2;
+    {
+        const auto result = matrix1 * matrix2;
+        // clang-format off
+        EXPECT_EQ(result(0, 0), 45);  EXPECT_EQ(result(0, 1), 43);  EXPECT_EQ(result(0, 2), 29);
+        EXPECT_EQ(result(1, 0), 105); EXPECT_EQ(result(1, 1), 106); EXPECT_EQ(result(1, 2), 74);
+        EXPECT_EQ(result(2, 0), 165); EXPECT_EQ(result(2, 1), 169); EXPECT_EQ(result(2, 2), 119);
+        // clang-format on
+    }
 
-    EXPECT_EQ(matrix1(0, 0),  45); EXPECT_EQ(matrix1(0, 1),  43); EXPECT_EQ(matrix1(0, 2),  29);
-    EXPECT_EQ(matrix1(1, 0), 105); EXPECT_EQ(matrix1(1, 1), 106); EXPECT_EQ(matrix1(1, 2),  74);
-    EXPECT_EQ(matrix1(2, 0), 165); EXPECT_EQ(matrix1(2, 1), 169); EXPECT_EQ(matrix1(2, 2), 119);
+    {
+        Mat3 m (matrix1);
+        const auto  result = m *= matrix2;
+        EXPECT_EQ(m(0, 0),  45); EXPECT_EQ(m(0, 1),  43); EXPECT_EQ(m(0, 2),  29);
+        EXPECT_EQ(m(1, 0), 105); EXPECT_EQ(m(1, 1), 106); EXPECT_EQ(m(1, 2),  74);
+        EXPECT_EQ(m(2, 0), 165); EXPECT_EQ(m(2, 1), 169); EXPECT_EQ(m(2, 2), 119);
 
-    EXPECT_EQ(result(0, 0),  45); EXPECT_EQ(result(0, 1),  43); EXPECT_EQ(result(0, 2),  29);
-    EXPECT_EQ(result(1, 0), 105); EXPECT_EQ(result(1, 1), 106); EXPECT_EQ(result(1, 2),  74);
-    EXPECT_EQ(result(2, 0), 165); EXPECT_EQ(result(2, 1), 169); EXPECT_EQ(result(2, 2), 119);
-    // clang-format on
+        EXPECT_EQ(result(0, 0),  45); EXPECT_EQ(result(0, 1),  43); EXPECT_EQ(result(0, 2),  29);
+        EXPECT_EQ(result(1, 0), 105); EXPECT_EQ(result(1, 1), 106); EXPECT_EQ(result(1, 2),  74);
+        EXPECT_EQ(result(2, 0), 165); EXPECT_EQ(result(2, 1), 169); EXPECT_EQ(result(2, 2), 119);
+    }
 }

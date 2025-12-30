@@ -2,6 +2,7 @@
 
 namespace fuse {
 
+/// @ingroup Math
 struct Vec3 {
 
     Vec3() = default;
