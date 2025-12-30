@@ -11,6 +11,9 @@ include(PreventInSourceBuild)
 
 project(Fuse VERSION 0.1.0 LANGUAGES C CXX)
 
+include(CMakeDependentOption)
+cmake_dependent_option(FUSE_BUILD_DOC     "Build doxygen documentation" ON PROJECT_IS_TOP_LEVEL OFF)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -31,3 +34,11 @@ add_subdirectory(src)
 set_directory_properties(PROPERTIES
     VS_STARTUP_PROJECT Fuse
 )
+
+
+if(FUSE_BUILD_DOC)
+    message(STATUS "Building documentation.")
+    add_subdirectory(docs)
+else()
+    message(STATUS "Skipping documentation")
+endif()
