@@ -1,4 +1,4 @@
-#include "GtestUtils.h"
+#include "GTestUtils.h"
 
 #include <gtest/gtest.h>
 #include <math/Vec4.h>

@@ -1,4 +1,3 @@
-#pragma once
 #include "Mat2.h"
 
 namespace fuse {
