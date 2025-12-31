@@ -184,9 +184,9 @@ inline constexpr Vec3 Vec3::kUnitYNeg(0.F, -1.F, 0.F);
 inline constexpr Vec3 Vec3::kUnitZ(0.F, 0.F, 1.F);
 inline constexpr Vec3 Vec3::kUnitZNeg(0.F, 0.F, -1.F);
 
+/// @brief Negates the vector, flipping the sign of each component.
 /// @related Vec3
 /// @ingroup Math
-/// @brief Negates the vector, flipping the sign of each component.
 [[nodiscard]] constexpr Vec3 operator-(const Vec3& v) noexcept { return {-v.x, -v.y, -v.z}; }
 
 /// @name Scalar / Vec3 Operations
@@ -205,7 +205,7 @@ inline constexpr Vec3 Vec3::kUnitZNeg(0.F, 0.F, -1.F);
 }
 
 /// @copydoc operator*(const Vec3&, float)
-[[nodiscard]] constexpr Vec3 operator*=(Vec3& v, float s) noexcept { return v = v * s; }
+[[nodiscard]] constexpr Vec3& operator*=(Vec3& v, float s) noexcept { return v = v * s; }
 
 /// @brief
 [[nodiscard]] constexpr Vec3 operator/(const Vec3& v, float s) noexcept {
@@ -214,7 +214,7 @@ inline constexpr Vec3 Vec3::kUnitZNeg(0.F, 0.F, -1.F);
 }
 
 /// @copydoc operator/(const Vec3&, float)
-[[nodiscard]] constexpr Vec3 operator/=(Vec3& v, float s) noexcept { return v = v / s; }
+[[nodiscard]] constexpr Vec3& operator/=(Vec3& v, float s) noexcept { return v = v / s; }
 
 /// @}
 

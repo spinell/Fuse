@@ -1,14 +1,10 @@
 #include "GtestUtils.h"
 
-#include <math/Vec3.h>
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <math/Vec3.h>
 
-//using fuse::Angle;
 using fuse::Vec3;
-
-//using namespace fuse::literals;
 
 TEST(Vec3, traits) {
     static_assert(std::is_trivially_copy_constructible_v<Vec3>);
@@ -20,11 +16,9 @@ TEST(Vec3, traits) {
 
 TEST(Vec3, constants) {
     static_assert(Vec3::kZero == Vec3(0.F, 0.F, 0.F), "Vec3::kZero should be (0, 0, 0)");
-
     static_assert(Vec3::kUnitX == Vec3(1.F, 0.F, 0.F), "Vec3::kUnitX should be (1, 0, 0)");
     static_assert(Vec3::kUnitY == Vec3(0.F, 1.F, 0.F), "Vec3::kUnitY should be (0, 1, 0)");
     static_assert(Vec3::kUnitZ == Vec3(0.F, 0.F, 1.F), "Vec3::kUnitZ should be (0, 0, 1)");
-
     static_assert(Vec3::kUnitXNeg == Vec3(-1.F, 0.F, 0.F), "Vec3::kUnitX should be (-1, 0, 0)");
     static_assert(Vec3::kUnitYNeg == Vec3(0.F, -1.F, 0.F), "Vec3::kUnitY should be (0, -1, 0)");
     static_assert(Vec3::kUnitZNeg == Vec3(0.F, 0.F, -1.F), "Vec3::kUnitZ should be (0, 0, -1)");
@@ -90,6 +84,7 @@ TEST(Vec3, not_equals) {
 // ==============================================
 
 TEST(Vec3, add_two_vector) {
+    // operator+(Vec3, Vec3)
     {
         const auto v1 = Vec3(1.F, 2.F, 3.F);
         const auto v2 = Vec3(10.F, 20.F, 30.F);
@@ -98,6 +93,7 @@ TEST(Vec3, add_two_vector) {
         EXPECT_FLOAT_EQ(r.y, 22.F);
         EXPECT_FLOAT_EQ(r.z, 33.F);
     }
+    // operator+=(vec4, vec4)
     {
         auto        v1 = Vec3(1.F, 2.F, 3.F);
         const auto  v2 = Vec3(10.F, 20.F, 30.F);
@@ -120,6 +116,7 @@ TEST(Vec3, add_two_vector) {
 // ==============================================
 
 TEST(Vec3, substract_two_vector) {
+    // operator-(Vec3, Vec3)
     {
         const auto v1 = Vec3(1.F, 2.F, 3.F);
         const auto v2 = Vec3(10.F, 20.F, 30.F);
@@ -129,6 +126,7 @@ TEST(Vec3, substract_two_vector) {
         EXPECT_FLOAT_EQ(r.z, -27.F);
     }
 
+    // operator-=(Vec3, Vec3)
     {
         auto        v1 = Vec3(1.F, 2.F, 3.F);
         const auto  v2 = Vec3(10.F, 20.F, 30.F);
@@ -193,12 +191,15 @@ TEST(Vec3, multiple_by_scalar) {
 
 TEST(Vec3, division_by_scalar) {
     const auto v = Vec3(10.F, 20.F, 30.F);
+    // operator/(Vec3, scalar)
     {
         const auto& r = v / 2.F;
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);
         EXPECT_FLOAT_EQ(r.z, 15.F);
     }
+
+    // operator/=(Vec3, scalar)
     {
         auto        v1 = Vec3(10.F, 20.F, 30.F);
         const auto& r  = v1 /= 2.F;
@@ -388,7 +389,7 @@ TEST(Vec3, length) {
     EXPECT_FLOAT_EQ(Vec3(-3, -4, -5).length(), 7.0710678F);
 }
 
-TEST(Vec3, lengthSq) {
+TEST(Vec3, lengthSquared) {
     EXPECT_FLOAT_EQ(Vec3::kZero.lengthSquared(), 0.0F);
 
     EXPECT_FLOAT_EQ(Vec3(1, 0, 0).lengthSquared(), 1.0F);
@@ -407,7 +408,7 @@ TEST(Vec3, lengthSq) {
     EXPECT_FLOAT_EQ(Vec3(-3, -4, -5).lengthSquared(), 50.0F);
 }
 
-TEST(Vec3, normalized) {
+TEST(Vec3, normalize) {
     EXPECT_EQ(Vec3(1, 0, 0).normalize(), Vec3(1.F, 0.F, 0.F));
     EXPECT_EQ(Vec3(0, 1, 0).normalize(), Vec3(0.F, 1.F, 0.F));
     EXPECT_EQ(Vec3(0, 0, 1).normalize(), Vec3(0.F, 0.F, 1.F));

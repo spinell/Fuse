@@ -5,6 +5,7 @@ add_executable(TestFuseCore
     GTestUtils.cpp
     TestVec2.cpp
     TestVec3.cpp
+    TestVec4.cpp
     TestMat2.cpp
     TestMat3.cpp
     TestMat4.cpp

@@ -1,14 +1,9 @@
 #include "GtestUtils.h"
 
+#include <gtest/gtest.h>
 #include <math/Vec2.h>
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-
-//using fuse::Angle;
 using fuse::Vec2;
-
-//using namespace fuse::literals;
 
 TEST(Vec2, traits) {
     static_assert(std::is_trivially_copy_constructible_v<Vec2>);
@@ -80,6 +75,7 @@ TEST(Vec2, not_equals) {
 // ==============================================
 
 TEST(Vec2, add_two_vector) {
+    // operator+(Vec2, Vec2)
     {
         const auto v1 = Vec2(1.F, 2.F);
         const auto v2 = Vec2(10.F, 20.F);
@@ -87,6 +83,7 @@ TEST(Vec2, add_two_vector) {
         EXPECT_FLOAT_EQ(r.x, 11.F);
         EXPECT_FLOAT_EQ(r.y, 22.F);
     }
+    // operator+=(vec4, vec4)
     {
         auto        v1 = Vec2(1.F, 2.F);
         const auto  v2 = Vec2(10.F, 20.F);
@@ -107,6 +104,7 @@ TEST(Vec2, add_two_vector) {
 // ==============================================
 
 TEST(Vec2, substract_two_vector) {
+    // operator-(Vec2, Vec2)
     {
         const auto v1 = Vec2(1.F, 2.F);
         const auto v2 = Vec2(10.F, 20.F);
@@ -115,6 +113,7 @@ TEST(Vec2, substract_two_vector) {
         EXPECT_FLOAT_EQ(r.y, -18.F);
     }
 
+    // operator-=(Vec2, Vec2)
     {
         auto        v1 = Vec2(1.F, 2.F);
         const auto  v2 = Vec2(10.F, 20.F);
@@ -172,12 +171,15 @@ TEST(Vec2, multiple_by_scalar) {
 
 
 TEST(Vec2, division_by_scalar) {
+    // operator/(Vec2, scalar)
     const auto v = Vec2(10.F, 20.F);
     {
         const auto& r = v / 2.F;
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);
     }
+
+    // operator/=(Vec2, scalar)
     {
         auto        v1 = Vec2(10.F, 20.F);
         const auto& r  = v1 /= 2.F;

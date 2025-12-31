@@ -24,7 +24,7 @@ struct Vec2 {
     constexpr Vec2() noexcept = default;
 
     /// @brief Construct a vector component by component.
-    /// @param x,y,Component of the vector.
+    /// @param x,y Component of the vector.
     constexpr Vec2(float x, float y)
         : x{x}
         , y{y} {}
@@ -113,7 +113,7 @@ inline constexpr Vec2 Vec2::kUnitYNeg(0.F, -1.F);
 }
 
 /// @copydoc operator*(const Vec2&, float)
-[[nodiscard]] constexpr Vec2 operator*=(Vec2& v, float s) noexcept { return v = v * s; }
+[[nodiscard]] constexpr Vec2& operator*=(Vec2& v, float s) noexcept { return v = v * s; }
 
 /// @brief
 [[nodiscard]] constexpr Vec2 operator/(const Vec2& v, float s) noexcept {
@@ -122,7 +122,7 @@ inline constexpr Vec2 Vec2::kUnitYNeg(0.F, -1.F);
 }
 
 /// @copydoc operator/(const Vec2&, float)
-[[nodiscard]] constexpr Vec2 operator/=(Vec2& v, float s) noexcept { return v = v / s; }
+[[nodiscard]] constexpr Vec2& operator/=(Vec2& v, float s) noexcept { return v = v / s; }
 
 /// @}
 
