@@ -1,9 +1,9 @@
-//#include "GtestUtils.h"
+#include "GtestUtils.h"
+
+#include <math/Vec2.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <math/Vec2.h>
-
 
 //using fuse::Angle;
 using fuse::Vec2;

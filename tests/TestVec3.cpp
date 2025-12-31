@@ -1,8 +1,9 @@
-//#include "GtestUtils.h"
+#include "GtestUtils.h"
+
+#include <math/Vec3.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <math/Vec3.h>
 
 //using fuse::Angle;
 using fuse::Vec3;
@@ -30,7 +31,7 @@ TEST(Vec3, constants) {
 
     EXPECT_EQ(Vec3::kZero, Vec3(0.F, 0.F, 0.F));
     EXPECT_EQ(Vec3::kUnitX, Vec3(1.F, 0.F, 0.F));
-    EXPECT_EQ(Vec3::kUnitY, Vec3(0.F, 1.F, 0.F));
+    EXPECT_EQ(Vec3::kUnitY, Vec3(0.F, .F, 0.F));
     EXPECT_EQ(Vec3::kUnitZ, Vec3(0.F, 0.F, 1.F));
     EXPECT_EQ(Vec3::kUnitXNeg, Vec3(-1.F, 0.F, 0.F));
     EXPECT_EQ(Vec3::kUnitYNeg, Vec3(0.F, -1.F, 0.F));

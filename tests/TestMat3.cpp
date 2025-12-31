@@ -1,3 +1,5 @@
+#include "GtestUtils.h"
+
 #include <gtest/gtest.h>
 #include <math/Mat3.h>
 
@@ -140,7 +142,6 @@ TEST(Mat3, mul_by_scalar) {
     }
 }
 
-
 TEST(Mat3, mul_by_vec3) {
     //
     // 1  2 3     10    140
@@ -192,14 +193,26 @@ TEST(Mat3, mul_by_mat3) {
     }
 
     {
-        Mat3 m (matrix1);
-        const auto  result = m *= matrix2;
-        EXPECT_EQ(m(0, 0),  45); EXPECT_EQ(m(0, 1),  43); EXPECT_EQ(m(0, 2),  29);
-        EXPECT_EQ(m(1, 0), 105); EXPECT_EQ(m(1, 1), 106); EXPECT_EQ(m(1, 2),  74);
-        EXPECT_EQ(m(2, 0), 165); EXPECT_EQ(m(2, 1), 169); EXPECT_EQ(m(2, 2), 119);
+        Mat3       m(matrix1);
+        const auto result = m *= matrix2;
+        EXPECT_EQ(m(0, 0), 45);
+        EXPECT_EQ(m(0, 1), 43);
+        EXPECT_EQ(m(0, 2), 29);
+        EXPECT_EQ(m(1, 0), 105);
+        EXPECT_EQ(m(1, 1), 106);
+        EXPECT_EQ(m(1, 2), 74);
+        EXPECT_EQ(m(2, 0), 165);
+        EXPECT_EQ(m(2, 1), 169);
+        EXPECT_EQ(m(2, 2), 119);
 
-        EXPECT_EQ(result(0, 0),  45); EXPECT_EQ(result(0, 1),  43); EXPECT_EQ(result(0, 2),  29);
-        EXPECT_EQ(result(1, 0), 105); EXPECT_EQ(result(1, 1), 106); EXPECT_EQ(result(1, 2),  74);
-        EXPECT_EQ(result(2, 0), 165); EXPECT_EQ(result(2, 1), 169); EXPECT_EQ(result(2, 2), 119);
+        EXPECT_EQ(result(0, 0), 45);
+        EXPECT_EQ(result(0, 1), 43);
+        EXPECT_EQ(result(0, 2), 29);
+        EXPECT_EQ(result(1, 0), 105);
+        EXPECT_EQ(result(1, 1), 106);
+        EXPECT_EQ(result(1, 2), 74);
+        EXPECT_EQ(result(2, 0), 165);
+        EXPECT_EQ(result(2, 1), 169);
+        EXPECT_EQ(result(2, 2), 119);
     }
 }

@@ -1,6 +1,8 @@
 find_package(GTest 1.17.0 EXACT CONFIG REQUIRED)
 
 add_executable(TestFuseCore
+    GTestUtils.h
+    GTestUtils.cpp
     TestVec2.cpp
     TestVec3.cpp
     TestMat2.cpp

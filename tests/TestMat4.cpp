@@ -1,5 +1,7 @@
-#include <gtest/gtest.h>
+#include "GtestUtils.h"
 #include <math/Mat4.h>
+
+#include <gtest/gtest.h>
 
 
 using namespace fuse;

@@ -1,3 +1,5 @@
+#include "GtestUtils.h"
+
 #include <gtest/gtest.h>
 #include <math/Mat2.h>
 
@@ -122,7 +124,6 @@ TEST(Mat2, mul_by_scalar) {
     }
 }
 
-
 TEST(Mat2, mul_by_vec2) {
     //
     // 1  2     10    50
@@ -168,7 +169,7 @@ TEST(Mat2, mul_by_mat2) {
     }
 
     {
-        Mat2 m(matrix1);
+        Mat2       m(matrix1);
         const auto result = m *= matrix2;
         // clang-format off
         EXPECT_EQ(m(0, 0), 21); EXPECT_EQ(m(0, 1), 28);
