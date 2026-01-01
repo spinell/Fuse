@@ -1,4 +1,4 @@
-#include "GtestUtils.h"
+#include "GTestUtils.h"
 
 #include <math/Mat2.h>
 #include <math/Mat3.h>
@@ -23,8 +23,10 @@ void PrintTo(const Vec4& v, std::ostream* os) {
     *os << std::format("[{}, {}, {}, {}]", v.x, v.y, v.z, v.w);
 }
 
-void PrintTo(const Mat2& v, std::ostream* os) {
-    /// @todo Implement me
+void PrintTo(const Mat2& m, std::ostream* os) {
+    const auto row0 = std::format("{}, {}", m(0,0), m(0,1));
+    const auto row1 = std::format("{}, {}", m(1,0), m(1,1));
+     *os << std::format("[{}] [{}]", row0, row1);
 }
 
 void PrintTo(const Mat3& v, std::ostream* os) {
