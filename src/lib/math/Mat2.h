@@ -17,8 +17,8 @@ public:
     ///  - @b j is the column
     ///
     // clang-format off
-    Mat2(float m00, float m01,
-         float m10, float m11) noexcept {
+    constexpr Mat2(float m00, float m01,
+                   float m10, float m11) noexcept {
             mData[0][0] = m00; mData[0][1] = m10;
             mData[1][0] = m01; mData[1][1] = m11;
          }
@@ -34,6 +34,9 @@ public:
         mData[1][0] = col1.x; mData[1][1] = col1.y;
         // clang-format on
     }
+
+    /// @brief Strict comparaison component by component.
+    [[nodiscard]] constexpr bool operator==(const Mat2&) const noexcept = default;
 
     /// @{
     /// @brief Direct access to elements @p row / @p col.
@@ -53,6 +56,36 @@ public:
     }
 
     /// @}
+
+    /// @brief Compute the determinant of this matrix.
+    [[nodiscard]] float determinant() const noexcept {
+        return mData[0][0] * mData[1][1] - mData[1][0] * mData[0][1];
+    }
+
+    /// @brief Compute the inverse of this matrix.
+    /// @todo Handle zero determinant case.
+    [[nodiscard]] Mat2 inverse() const noexcept {
+        const float det    = determinant();
+        const float invDet = 1.0f / det;
+        const Mat2& r      = *this;
+        return Mat2(
+          // clang-format off
+         r(1, 1) * invDet, -r(0, 1) * invDet,
+        -r(1, 0) * invDet,  r(0, 0) * invDet
+          // clang-format on
+        );
+    }
+
+    /// @brief Compute the transpose of this matrix.
+    [[nodiscard]] Mat2 transpose() const noexcept {
+        const Mat2& r = *this;
+        return Mat2(
+          // clang-format off
+            r(0,0), r(1,0),
+            r(0,1), r(1,1)
+          // clang-format on
+        );
+    }
 
     /// @{
     /// @brief Addition this matrix with another matrix.

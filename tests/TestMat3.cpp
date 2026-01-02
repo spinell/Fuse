@@ -1,4 +1,4 @@
-#include "GtestUtils.h"
+#include "GTestUtils.h"
 
 #include <gtest/gtest.h>
 #include <math/Mat3.h>
@@ -6,6 +6,10 @@
 
 using namespace fuse;
 using namespace testing;
+
+constexpr Mat3 zero3x3{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+constexpr Mat3 identity3x3{1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
 TEST(Mat3, ctor_by_elements) {
     // clang-format off
@@ -215,4 +219,113 @@ TEST(Mat3, mul_by_mat3) {
         EXPECT_EQ(result(2, 1), 169);
         EXPECT_EQ(result(2, 2), 119);
     }
+}
+
+TEST(Mat3, determinant_and_inverse) {
+    // identity matrix
+    {
+        EXPECT_EQ(identity3x3.determinant(), 1);
+        EXPECT_EQ(identity3x3.inverse(), identity3x3);
+    }
+    {
+        // 1 2 3
+        // 4 5 6
+        // 7 8 9
+        EXPECT_EQ(Mat3(1, 2, 3, 4, 5, 6, 7, 8, 9).determinant(), 0);
+    }
+
+    const Mat3 m(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
+    EXPECT_EQ(m.inverse(), Mat3(0.375f, -0.5f, 0.875f, -1.0f, 1.0f, -1.0f, 0.875f, -0.5f, 0.375f));
+
+    {
+        // 1 5 4
+        // 8 2 1
+        // 4 6 7
+        const Mat3 matrix(1, 5, 4, 8, 2, 1, 4, 6, 7);
+        EXPECT_EQ(matrix.determinant(), -92);
+
+        const auto inverse = matrix.inverse();
+        EXPECT_FLOAT_EQ(inverse(0, 0), -0.0869565f);
+        EXPECT_FLOAT_EQ(inverse(0, 1), 0.11956522f);
+        EXPECT_FLOAT_EQ(inverse(0, 2), 0.0326087f);
+        EXPECT_FLOAT_EQ(inverse(1, 0), 0.56521738f);
+        EXPECT_FLOAT_EQ(inverse(1, 1), 0.0978261f);
+        EXPECT_FLOAT_EQ(inverse(1, 2), -0.33695653f);
+        EXPECT_FLOAT_EQ(inverse(2, 0), -0.43478262f);
+        EXPECT_FLOAT_EQ(inverse(2, 1), -0.15217392f);
+        EXPECT_FLOAT_EQ(inverse(2, 2), 0.4130435f);
+
+        EXPECT_EQ(inverse, 1 / 92.f * Mat3(-8, 11, 3, 52, 9, - 31, -40, -14, 38));
+    }
+    {
+        // -1  5 4
+        //  8 -2 5
+        // -4  6 1
+        const Mat3 matrix(-1, 5, 4, 8, -2, 5, -4, 6, 1);
+        EXPECT_EQ(matrix.determinant(), 52);
+
+        const auto inverse = matrix.inverse();
+        EXPECT_EQ(inverse, 1 / 52.f * Mat3(-32, 19, 33, -28, 15, 37, 40, -14, -38));
+    }
+    {
+        // 1 2 3
+        // 3 2 1
+        // 2 1 3
+        const Mat3 matrix(1, 2, 3, 3, 2, 1, 2, 1, 3);
+        EXPECT_EQ(matrix.determinant(), -12);
+
+        const auto inverse = matrix.inverse();
+        EXPECT_FLOAT_EQ(inverse(0, 0), -0.4166666865);
+        EXPECT_FLOAT_EQ(inverse(0, 1), 0.25);
+        EXPECT_FLOAT_EQ(inverse(0, 2), 0.3333333433);
+        EXPECT_FLOAT_EQ(inverse(1, 0), 0.5833333731);
+        EXPECT_FLOAT_EQ(inverse(1, 1), 0.25);
+        EXPECT_FLOAT_EQ(inverse(1, 2), -0.6666666865);
+        EXPECT_FLOAT_EQ(inverse(2, 0), 0.083333336);
+        EXPECT_FLOAT_EQ(inverse(2, 1), -0.25);
+        EXPECT_FLOAT_EQ(inverse(2, 2), 0.3333333433);
+
+        EXPECT_EQ(inverse, 1 / 12.f * Mat3(-5, 3, 4, 7, 3, -8, 1, -3, 4));
+    }
+    {
+        // 2 5 1
+        // 4 8 9
+        // 7 6 3
+        const Mat3 matrix(2, 5, 1, 4, 8, 9, 7, 6, 3);
+        EXPECT_EQ(matrix.determinant(), 163);
+
+        const auto inverse = matrix.inverse();
+        EXPECT_FLOAT_EQ(inverse(0, 0), -0.18404907);
+        EXPECT_FLOAT_EQ(inverse(0, 1), -0.05521472);
+        EXPECT_FLOAT_EQ(inverse(0, 2), 0.22699386);
+        EXPECT_FLOAT_EQ(inverse(1, 0), 0.31288344);
+        EXPECT_FLOAT_EQ(inverse(1, 1), -0.006134969);
+        EXPECT_FLOAT_EQ(inverse(1, 2), -0.08588957);
+        EXPECT_FLOAT_EQ(inverse(2, 0), -0.19631901);
+        EXPECT_FLOAT_EQ(inverse(2, 1), 0.1411043);
+        EXPECT_FLOAT_EQ(inverse(2, 2), -0.024539877);
+
+        EXPECT_EQ(inverse, 1 / 163.f * Mat3(-30, -9, 37, 51, -1, -14, -32, 23, -4));
+    }
+}
+
+TEST(Mat3, transpose) {
+    // 1 2 3 => 1 4 7
+    // 4 5 6    2 5 8
+    // 7 8 9    3 6 9
+    const Mat3 m(
+      // clang-format off
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9
+      // clang-format on
+    );
+    const Mat3 t(
+      // clang-format off
+        1, 4, 7,
+        2, 5, 8,
+        3, 6, 9
+      // clang-format on
+    );
+    EXPECT_EQ(m.transpose(), t);
 }

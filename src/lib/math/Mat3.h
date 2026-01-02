@@ -17,9 +17,9 @@ public:
     ///  - @b j is the column
     ///
     // clang-format off
-    Mat3(float m00, float m01, float m02,
-         float m10, float m11, float m12,
-         float m20, float m21, float m22) noexcept {
+    constexpr Mat3(float m00, float m01, float m02,
+                   float m10, float m11, float m12,
+                   float m20, float m21, float m22) noexcept {
             mData[0][0] = m00; mData[0][1] = m10; mData[0][2] = m20;
             mData[1][0] = m01; mData[1][1] = m11; mData[1][2] = m21;
             mData[2][0] = m02; mData[2][1] = m12; mData[2][2] = m22;
@@ -39,6 +39,9 @@ public:
         // clang-format on
     }
 
+    /// @brief Strict comparaison component by component.
+    [[nodiscard]] constexpr bool operator==(const Mat3&) const noexcept = default;
+
     /// @{
     /// @brief Direct access to elements @p row / @p col.
     /// @param[in] row The row index
@@ -57,6 +60,62 @@ public:
     }
 
     /// @}
+
+    /// @brief Compute the determinant of this matrix.
+    /// @note
+    ///  - The determinant of the identity matrix is 1.
+    ///  - The determinant of a matrix product is the product of the determinants.
+    ///  - The determinant of a matrix is equals to the determinant of its transpose.
+    ///  - If the determinant is zero, the matrix is singular (not invertible).
+    ///  - If the determinant is positive, the orientation is preserved.
+    ///  - If the determinant is negative, the orientation is reversed.
+    /// @return The determinant value.
+    [[nodiscard]] float determinant() const noexcept {
+        // Uses the rule of Sarrus.
+        const float a = mData[0][0] * (mData[1][1] * mData[2][2] - mData[1][2] * mData[2][1]);
+        const float b = mData[0][1] * (mData[1][0] * mData[2][2] - mData[1][2] * mData[2][0]);
+        const float c = mData[0][2] * (mData[1][0] * mData[2][1] - mData[1][1] * mData[2][0]);
+        return a - b + c;
+    }
+
+    /// @brief Compute the inverse of this matrix.
+    /// @todo Handle zero determinant case.
+    [[nodiscard]] Mat3 inverse() const noexcept {
+        const float det    = determinant();
+        const float invDet = 1.0f / det;
+        const Mat3& r      = *this;
+        // clang-format off
+        const float m00 = (r(1,1) * r(2,2) - r(1,2) * r(2,1)) * invDet;
+        const float m01 = (r(0,2) * r(2,1) - r(0,1) * r(2,2)) * invDet;
+        const float m02 = (r(0,1) * r(1,2) - r(0,2) * r(1,1)) * invDet;
+        const float m10 = (r(1,2) * r(2,0) - r(1,0) * r(2,2)) * invDet;
+        const float m11 = (r(0,0) * r(2,2) - r(0,2) * r(2,0)) * invDet;
+        const float m12 = (r(0,2) * r(1,0) - r(0,0) * r(1,2)) * invDet;
+        const float m20 = (r(1,0) * r(2,1) - r(1,1) * r(2,0)) * invDet;
+        const float m21 = (r(0,1) * r(2,0) - r(0,0) * r(2,1)) * invDet;
+        const float m22 = (r(0,0) * r(1,1) - r(0,1) * r(1,0)) * invDet;
+        // clang-format on
+
+        return Mat3(
+          // clang-format off
+          m00, m01, m02,
+          m10, m11, m12,
+          m20, m21, m22
+          // clang-format on
+        );
+    }
+
+    /// @brief Compute the transpose of this matrix.
+    [[nodiscard]] Mat3 transpose() const noexcept {
+        const Mat3& r = *this;
+        return Mat3(
+          // clang-format off
+            r(0, 0), r(1, 0), r(2, 0),
+            r(0, 1), r(1, 1), r(2, 1),
+            r(0, 2), r(1, 2), r(2, 2)
+          // clang-format on
+        );
+    }
 
     /// @{
     /// @brief Addition this matrix with another matrix.

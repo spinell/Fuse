@@ -1,4 +1,4 @@
-#include "GtestUtils.h"
+#include "GTestUtils.h"
 
 #include <gtest/gtest.h>
 #include <math/Mat2.h>
@@ -6,6 +6,9 @@
 
 using namespace fuse;
 using namespace testing;
+
+constexpr Mat2 zero2x2{0.0f, 0.0f, 0.0f, 0.0f};
+constexpr Mat2 identity2x2{1.0f, 0.0f, 0.0f, 1.0f};
 
 TEST(Mat2, ctor_by_elements) {
     // clang-format off
@@ -179,4 +182,35 @@ TEST(Mat2, mul_by_mat2) {
         EXPECT_EQ(result(1, 0), 45); EXPECT_EQ(result(1, 1), 60);
         // clang-format on
     }
+}
+
+TEST(Mat2, determinant) {
+
+    // zero matrix
+    EXPECT_EQ(zero2x2.determinant(), 0);
+    // identity matrix
+    EXPECT_EQ(identity2x2.determinant(), 1);
+
+    // 1 2
+    // 3 4
+    EXPECT_EQ(Mat2(1, 2, 3, 4).determinant(), -2);
+
+    // -1 -2
+    // -3 -4
+    EXPECT_EQ(Mat2(-1, -2, -3, -4).determinant(), -2);
+}
+
+TEST(Mat2, inverse) {
+    // identity matrix
+    EXPECT_EQ(identity2x2.inverse(), identity2x2);
+
+    // 1 2
+    // 3 4
+    EXPECT_EQ(Mat2(1, 2, 3, 4).inverse(), Mat2(-2, 1, 3/2.f, -1/2.f));
+}
+
+TEST(Mat2, transpose) {
+    // 1 2 => 1 3
+    // 3 4    2 4
+    EXPECT_EQ(Mat2(1, 2, 3, 4).transpose(), Mat2(1, 3, 2, 4));
 }

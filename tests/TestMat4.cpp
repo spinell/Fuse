@@ -1,11 +1,17 @@
-#include "GtestUtils.h"
-#include <math/Mat4.h>
+#include "GTestUtils.h"
 
 #include <gtest/gtest.h>
+#include <math/Mat4.h>
 
 
 using namespace fuse;
 using namespace testing;
+
+constexpr Mat4 zero4x4{
+  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+constexpr Mat4 identity4x4{
+  1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
 TEST(Mat4, ctor_by_elements) {
     // clang-format off
@@ -162,7 +168,6 @@ TEST(Mat4, mul_by_scalar) {
     }
 }
 
-
 TEST(Mat4, mul_by_vec4) {
     //
     // 1  2  3  4      10    300
@@ -221,8 +226,8 @@ TEST(Mat4, mul_by_mat4) {
     }
 
     {
-        Mat4  m(matrix1);
-        const Mat4  result = m *= matrix2;
+        Mat4       m(matrix1);
+        const Mat4 result = m *= matrix2;
         // clang-format off
         EXPECT_EQ(m(0, 0), 105); EXPECT_EQ(m(0, 1), 131); EXPECT_EQ(m(0, 2), 133); EXPECT_EQ(m(0, 3), 70);
         EXPECT_EQ(m(1, 0), 245); EXPECT_EQ(m(1, 1), 303); EXPECT_EQ(m(1, 2), 297); EXPECT_EQ(m(1, 3), 170);
@@ -235,4 +240,84 @@ TEST(Mat4, mul_by_mat4) {
         EXPECT_EQ(result(3, 0), 525); EXPECT_EQ(result(3, 1), 647); EXPECT_EQ(result(3, 2), 625); EXPECT_EQ(result(3, 3), 370);
         // clang-format on
     }
+}
+
+TEST(Mat4, determinant) {
+    EXPECT_EQ(zero4x4.determinant(), 0.0f);
+    EXPECT_EQ(identity4x4.determinant(), 1.0f);
+
+    const Mat4 matrix1(
+      // clang-format off
+         1,  2,  3,  4,
+         5,  6,  7,  8,
+         9, 10, 11, 12,
+        13, 14, 15, 16
+      // clang-format on
+    );
+    EXPECT_EQ(matrix1.determinant(), 0.0f);
+
+    const Mat4 matrix2(
+      // clang-format off
+         2,  2,  3,  4,
+         5,  6,  7,  8,
+         9,  3, 11, 12,
+        13, 14, 15, 16
+      // clang-format on
+    );
+    EXPECT_EQ(matrix2.determinant(), -56.f);
+
+    const Mat4 matrix3(
+      // clang-format off
+         2,  1,  2,  3,
+         4,  5,  6,  7,
+         8,  3, 10, 11,
+        12, 13, 14, 15
+      // clang-format on
+    );
+    EXPECT_EQ(matrix3.determinant(), -96.f);
+}
+
+TEST(Mat4, inverse) {
+    {
+        // | 2  2  3  4|      |  56 -84  0  28|
+        // | 5  6  7  8|   => |   0   4 -8   4| * (1 / 56)
+        // | 9  3 11 12|      |-168 132 16 -36|
+        // |13 14 15   |      | 112 -59 -8  11|
+        const auto matrix = Mat4(2, 2, 3, 4, 5, 6, 7, 8, 9, 3, 11, 12, 13, 14, 15, 16);
+        const auto inverse =
+          Mat4(56, -84, 0, 28, 0, 4, -8, 4, -168, 132, 16, -36, 112, -59, -8, 11) * (1 / 56.f);
+        EXPECT_EQ(matrix.determinant(), -56.f);
+        EXPECT_EQ(matrix.inverse(), inverse);
+    }
+    {
+        //  | 2  1  2  3|    | 12 -18  0  6|
+        //  | 4  5  6  7| => |  0   2 -4  2| * (1/24)
+        //  | 8  3 10 11|    |-36   5  8 -1|
+        //  |12 13 14 15|    | 24   8 -4 -4|
+        const Mat4 matrix(2, 1, 2, 3, 4, 5, 6, 7, 8, 3, 10, 11, 12, 13, 14, 15);
+        const auto inverse =
+          Mat4(12, -18, 0, 6, 0, 2, -4, 2, -36, 5, 8, -1, 24, 8, -4, -4) * (1 / 24.f);
+        EXPECT_EQ(matrix.determinant(), -96.f);
+        EXPECT_EQ(matrix.inverse(), inverse);
+    }
+}
+
+TEST(Mat4, transpose) {
+    const Mat4 m(
+      // clang-format off
+       1,  2,  3,  4,
+       5,  6,  7,  8,
+       9, 10, 11, 12,
+      13, 14, 15, 16
+      // clang-format on
+    );
+    const Mat4 t(
+      // clang-format off
+      1, 5,  9, 13,
+      2, 6, 10, 14,
+      3, 7, 11, 15,
+      4, 8, 12, 16
+      // clang-format on
+    );
+    EXPECT_EQ(m.transpose(), t);
 }

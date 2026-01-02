@@ -29,12 +29,19 @@ void PrintTo(const Mat2& m, std::ostream* os) {
      *os << std::format("[{}] [{}]", row0, row1);
 }
 
-void PrintTo(const Mat3& v, std::ostream* os) {
-    /// @todo Implement me
+void PrintTo(const Mat3& m, std::ostream* os) {
+    const auto row0 = std::format("{}, {}, {}", m(0,0), m(0,1), m(0,2));
+    const auto row1 = std::format("{}, {}, {}", m(1,0), m(1,1), m(1,2));
+    const auto row2 = std::format("{}, {}, {}", m(1,0), m(1,1), m(2,2));
+     *os << std::format("[{}] [{}] [{}]", row0, row1, row2);
 }
 
-void PrintTo(const Mat4& v, std::ostream* os) {
-    /// @todo Implement me
+void PrintTo(const Mat4& m, std::ostream* os) {
+    const auto row0 = std::format("{}, {}, {}, {}", m(0,0), m(0,1), m(0,2), m(0,3));
+    const auto row1 = std::format("{}, {}, {}, {}", m(1,0), m(1,1), m(1,2), m(1,3));
+    const auto row2 = std::format("{}, {}, {}, {}", m(1,0), m(1,1), m(2,2), m(2,3));
+    const auto row3 = std::format("{}, {}, {}, {}", m(1,0), m(1,1), m(2,2), m(3,3));
+     *os << std::format("[{}] [{}] [{}] [{}]", row0, row1, row2, row3);
 }
 
 
