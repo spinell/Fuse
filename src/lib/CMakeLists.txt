@@ -1,5 +1,7 @@
 
 add_library(FuseLib
+    math/Angle.h
+    math/Angle.cpp
     math/Vec2.h
     math/Vec3.h
     math/Vec4.h

@@ -1,5 +1,6 @@
 #include "GTestUtils.h"
 
+#include <math/Angle.h>
 #include <math/Mat2.h>
 #include <math/Mat3.h>
 #include <math/Mat4.h>
@@ -10,6 +11,10 @@
 #include <format>
 
 namespace fuse {
+
+void PrintTo(const Angle& a, std::ostream* os) {
+    *os << std::format("deg={} radian={}", a.asDegrees(), a.asRadians());
+}
 
 void PrintTo(const Vec2& v, std::ostream* os) {
     *os << std::format("[{}, {}]", v.x, v.y);
