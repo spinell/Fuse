@@ -31,30 +31,19 @@ void PrintTo(const Quaternion&, std::ostream* os);
 //
 // Custom Assert to test Angle
 //
-::testing::AssertionResult AssertAngleNear(const char*        expr1,
-                                           const char*        expr2,
-                                           const fuse::Angle& expected,
-                                           const fuse::Angle& actual);
+::testing::AssertionResult AssertAngleNear(const char* expr1, const char* expr2,
+                                           const fuse::Angle& expected, const fuse::Angle& actual);
 
-::testing::AssertionResult AssertVec2Near(const char*        expr1,
-                                          const char*        expr2,
-                                          const fuse::Vec2& expected,
-                                          const fuse::Vec2& actual);
+::testing::AssertionResult AssertVec2Near(const char* expr1, const char* expr2,
+                                          const fuse::Vec2& expected, const fuse::Vec2& actual);
 
 
-
-
-::testing::AssertionResult AssertVec3Near(const char*        expr1,
-                                          const char*        expr2,
-                                          const fuse::Vec3& expected,
-                                          const fuse::Vec3& actual);
+::testing::AssertionResult AssertVec3Near(const char* expr1, const char* expr2,
+                                          const fuse::Vec3& expected, const fuse::Vec3& actual);
 
 ::testing::AssertionResult AssertQuaternionNear(
-  const char*             expr1,
-  const char*             expr2,
-  const fuse::Quaternion& expected,
-  const fuse::Quaternion& actual,
-  float                   tolerance = std::numeric_limits<float>::epsilon());
+  const char* expr1, const char* expr2, const fuse::Quaternion& expected,
+  const fuse::Quaternion& actual, float tolerance = std::numeric_limits<float>::epsilon());
 
 
 #define EXPECT_ANGLE_NEAR(expected, actual) EXPECT_PRED_FORMAT2(AssertAngleNear, expected, actual)
@@ -65,5 +54,7 @@ void PrintTo(const Quaternion&, std::ostream* os);
 #define EXPECT_VEC3_NEAR(expected, actual) EXPECT_PRED_FORMAT2(AssertVec3Near, expected, actual)
 #define ASSERT_VEC3_NEAR(expected, actual) ASSERT_PRED_FORMAT2(AssertVec3Near, expected, actual)
 
-#define EXPECT_QUAT_NEAR(expected, actual) EXPECT_PRED_FORMAT2(AssertQuaternionNear, expected, actual)
-#define ASSERT_QUAT_NEAR(expected, actual) ASSERT_PRED_FORMAT2(AssertQuaternionNear, expected, actual)
+#define EXPECT_QUAT_NEAR(expected, actual) \
+    EXPECT_PRED_FORMAT2(AssertQuaternionNear, expected, actual)
+#define ASSERT_QUAT_NEAR(expected, actual) \
+    ASSERT_PRED_FORMAT2(AssertQuaternionNear, expected, actual)

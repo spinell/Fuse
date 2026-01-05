@@ -4,21 +4,17 @@ namespace fuse {
 
 Mat2 operator*(const Mat2& mat, float value) noexcept {
     Mat2 result;
-    for(unsigned i = 0; i < 2; i++){
-        for(unsigned j = 0; j < 2; j++){
-            result(i,j) = mat(i,j) * value;
+    for (unsigned i = 0; i < 2; i++) {
+        for (unsigned j = 0; j < 2; j++) {
+            result(i, j) = mat(i, j) * value;
         }
     }
     return result;
 }
 
-Mat2 operator*(float value, const Mat2& mat) noexcept {
-    return mat * value;
-}
+Mat2 operator*(float value, const Mat2& mat) noexcept { return mat * value; }
 
-Mat2& operator*=(Mat2& mat, float value) noexcept {
-    return mat = mat * value;
-}
+Mat2& operator*=(Mat2& mat, float value) noexcept { return mat = mat * value; }
 
 Vec2 operator*(const Mat2& m, const Vec2& v) noexcept {
     const auto x = m(0, 0) * v.x + m(0, 1) * v.y;

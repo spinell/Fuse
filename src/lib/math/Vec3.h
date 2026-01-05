@@ -1,5 +1,6 @@
 #pragma once
 #include "Angle.h"
+
 #include <cmath>
 #include <format>
 
@@ -80,7 +81,7 @@ struct Vec3 {
     ///  - If both vectors are normalized, the cross product result will be a normalized perpendicular vector.
     /// @warning Cross product between 2 vectors are not commutative. ( \f$ \vec{a} \times \vec{b} = -\vec{b} \times \vec{a} \f$ )
     [[nodiscard]] constexpr Vec3 cross(const Vec3& other) const noexcept {
-        return {y * other.z - z * other.y,z * other.x - x * other.z, x * other.y - y * other.x};
+        return {y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x};
     }
 
     /// @brief Returns the distance to another vector.

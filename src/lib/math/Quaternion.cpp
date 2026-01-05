@@ -13,10 +13,10 @@ Quaternion::Quaternion(const Vec3& axis, const Angle& angle) noexcept {
 std::array<Vec3, 3> Quaternion::axis() const noexcept {
     // Ensure quaternion is normalized to produce orthonormal axes
     //const float len = std::sqrt(x * x + y * y + z * z + w * w);
-    float       qx  = x;
-    float       qy  = y;
-    float       qz  = z;
-    float       qw  = w;
+    float qx = x;
+    float qy = y;
+    float qz = z;
+    float qw = w;
     //if (len > 0.f) {
     //    const float inv = 1.f / len;
     //    qx *= inv;
@@ -149,20 +149,20 @@ void Quaternion::toAxisAngle(Vec3& pAxis, Angle& pAngle) const noexcept {
 }
 
 Quaternion Quaternion::MakeRotationX(Angle angle) noexcept {
-    const auto cos = std::cos(angle* 0.5F);
-    const auto sin = std::sin(angle* 0.5F);
+    const auto cos = std::cos(angle * 0.5F);
+    const auto sin = std::sin(angle * 0.5F);
     return {sin, 0.0F, 0.0F, cos};
 }
 
 Quaternion Quaternion::MakeRotationY(Angle angle) noexcept {
-    const auto cos = std::cos(angle* 0.5F);
-    const auto sin = std::sin(angle* 0.5F);
+    const auto cos = std::cos(angle * 0.5F);
+    const auto sin = std::sin(angle * 0.5F);
     return {0.0F, sin, 0.0F, cos};
 }
 
 Quaternion Quaternion::MakeRotationZ(Angle angle) noexcept {
-    const auto cos = std::cos(angle* 0.5F);
-    const auto sin = std::sin(angle* 0.5F);
+    const auto cos = std::cos(angle * 0.5F);
+    const auto sin = std::sin(angle * 0.5F);
     return {0.0F, 0.0F, sin, cos};
 }
 

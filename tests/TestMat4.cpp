@@ -1,10 +1,11 @@
 #include "GTestUtils.h"
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
 #include <math/Angle.h>
 #include <math/Mat4.h>
 #include <math/Vec3.h>
+
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using namespace fuse;
 using namespace testing;
@@ -532,25 +533,25 @@ TEST(Mat4, CreateViewLookAt) {
     // target   (5, 1, -3)
     // up       (0, 1,  0)
     {
-        const auto view = Mat4::CreateViewLookAt(Vec3(5, 1, 3), Vec3(5, 1, -3), Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
-        const Vec3 pos   = Vec3(view(0,3), view(1,3), view(2,3));
+        const auto view  = Mat4::CreateViewLookAt(Vec3(5, 1, 3), Vec3(5, 1, -3), Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
+        const Vec3 pos   = Vec3(view(0, 3), view(1, 3), view(2, 3));
         EXPECT_EQ(viewX, Vec3::kUnitX);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitZ);
-        EXPECT_EQ(pos, Vec3(-5,-1,-3));
+        EXPECT_EQ(pos, Vec3(-5, -1, -3));
     }
 
     // position ( 0, 0, 0)
     // target   (-1, 0, 0) (rotation 90 degrees around Y)
     // up       ( 0, 1, 0)
     {
-        const auto view = Mat4::CreateViewLookAt(Vec3::kZero, Vec3::kUnitXNeg, Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
+        const auto view  = Mat4::CreateViewLookAt(Vec3::kZero, Vec3::kUnitXNeg, Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
         EXPECT_EQ(viewX, Vec3::kUnitZNeg);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitX);
@@ -560,15 +561,15 @@ TEST(Mat4, CreateViewLookAt) {
     // target   (-1, 0, 0) (rotation 90 degrees around Y)
     // up       ( 0, 1, 0)
     {
-        const auto view = Mat4::CreateViewLookAt(Vec3(5, 0, 0), Vec3::kUnitXNeg, Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
-        const Vec3 pos   = Vec3(view(0,3), view(1,3), view(2,3));
+        const auto view  = Mat4::CreateViewLookAt(Vec3(5, 0, 0), Vec3::kUnitXNeg, Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
+        const Vec3 pos   = Vec3(view(0, 3), view(1, 3), view(2, 3));
         EXPECT_EQ(viewX, Vec3::kUnitZNeg);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitX);
-        EXPECT_EQ(pos, Vec3(0,0,-5));
+        EXPECT_EQ(pos, Vec3(0, 0, -5));
     }
 }
 
@@ -585,25 +586,25 @@ TEST(Mat4, CreateViewLookTo) {
     // direction (0, 0,-1)
     // up        (0, 1, 0)
     {
-        const auto view = Mat4::CreateViewLookTo(Vec3(5, 1, 3), Vec3::kUnitZNeg, Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
-        const Vec3 pos   = Vec3(view(0,3), view(1,3), view(2,3));
+        const auto view  = Mat4::CreateViewLookTo(Vec3(5, 1, 3), Vec3::kUnitZNeg, Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
+        const Vec3 pos   = Vec3(view(0, 3), view(1, 3), view(2, 3));
         EXPECT_EQ(viewX, Vec3::kUnitX);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitZ);
-        EXPECT_EQ(pos, Vec3(-5,-1,-3));
+        EXPECT_EQ(pos, Vec3(-5, -1, -3));
     }
 
     // position ( 0, 0, 0)
     // target   (-1, 0, 0) (rotation 90 degrees around Y)
     // up       ( 0, 1, 0)
     {
-        const auto view = Mat4::CreateViewLookTo(Vec3::kZero, Vec3::kUnitXNeg, Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
+        const auto view  = Mat4::CreateViewLookTo(Vec3::kZero, Vec3::kUnitXNeg, Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
         EXPECT_EQ(viewX, Vec3::kUnitZNeg);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitX);
@@ -613,15 +614,15 @@ TEST(Mat4, CreateViewLookTo) {
     // target   (-2, 0, 0) (rotation 90 degrees around Y)
     // up       ( 0, 1, 0)
     {
-        const auto view = Mat4::CreateViewLookTo(Vec3(5, 0, 0), Vec3::kUnitXNeg * 2, Vec3::kUnitY);
-        const Vec3 viewX = Vec3(view(0,0), view(0,1), view(0,2));
-        const Vec3 viewY = Vec3(view(1,0), view(1,1), view(1,2));
-        const Vec3 viewZ = Vec3(view(2,0), view(2,1), view(2,2));
-        const Vec3 pos   = Vec3(view(0,3), view(1,3), view(2,3));
+        const auto view  = Mat4::CreateViewLookTo(Vec3(5, 0, 0), Vec3::kUnitXNeg * 2, Vec3::kUnitY);
+        const Vec3 viewX = Vec3(view(0, 0), view(0, 1), view(0, 2));
+        const Vec3 viewY = Vec3(view(1, 0), view(1, 1), view(1, 2));
+        const Vec3 viewZ = Vec3(view(2, 0), view(2, 1), view(2, 2));
+        const Vec3 pos   = Vec3(view(0, 3), view(1, 3), view(2, 3));
         EXPECT_EQ(viewX, Vec3::kUnitZNeg);
         EXPECT_EQ(viewY, Vec3::kUnitY);
         EXPECT_EQ(viewZ, Vec3::kUnitX);
-        EXPECT_EQ(pos, Vec3(0,0,-5));
+        EXPECT_EQ(pos, Vec3(0, 0, -5));
     }
 }
 

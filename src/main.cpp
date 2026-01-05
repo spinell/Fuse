@@ -52,13 +52,8 @@ void main()
 
 using namespace fuse;
 
-void openglDebugCallback(GLenum        source,
-                         GLenum        type,
-                         GLuint        id,
-                         GLenum        severity,
-                         GLsizei       length,
-                         const GLchar* message,
-                         const void*   userParam) {
+void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+                         const GLchar* message, const void* userParam) {
 
     // ignore these non-significant error codes
     // 131169 :
@@ -134,6 +129,7 @@ static GLuint createShader(const char* source, GLenum shaderType) {
 }
 
 float vertices[] = {
+  // clang-format off
     // back red
     -0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
      0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
@@ -176,6 +172,7 @@ float vertices[] = {
      0.5f,  0.5f,  0.5f, 1.f, 0.f, 1.f, 1.f,
     -0.5f,  0.5f,  0.5f, 1.f, 0.f, 1.f, 1.f,
     -0.5f,  0.5f, -0.5f, 1.f, 0.f, 1.f, 1.f,
+  // clang-format on
 };
 
 Mat4 projectionMatrix;
@@ -350,7 +347,8 @@ int main(int, char**) {
     glUseProgram(shaderProgram);
     glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
 
-    const auto transform = fuse::Mat4::kIdentity;//fuse::Mat4::CreateRotationZ(fuse::degrees(1) * SDL_GetTicks());
+    const auto transform =
+      fuse::Mat4::kIdentity; //fuse::Mat4::CreateRotationZ(fuse::degrees(1) * SDL_GetTicks());
     //glUniformMatrix4fv(viewLocation, 1,  GL_FALSE, fuse::Mat4::CreateTranslation({0,0,-10}).data());
     glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
 
@@ -380,7 +378,8 @@ int main(int, char**) {
 
     glEnable(GL_DEPTH_TEST);
 
-    projectionMatrix = fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45), 800.f / 600.f, 0.01f, 1000.f);
+    projectionMatrix =
+      fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45), 800.f / 600.f, 0.01f, 1000.f);
 
     bool quit = false;
     while (!quit) {
@@ -395,7 +394,10 @@ int main(int, char**) {
                 const auto width  = e.window.data1;
                 const auto height = e.window.data2;
                 glViewport(0, 0, width, height);
-                projectionMatrix = fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45), 800.f / 600.f, 0.01f, 1000.f);
+                projectionMatrix = fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45),
+                                                                               800.f / 600.f,
+                                                                               0.01f,
+                                                                               1000.f);
             }
             ImGui_ImplSDL3_ProcessEvent(&e);
         }
@@ -409,23 +411,30 @@ int main(int, char**) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glUniformMatrix4fv(projLocation, 1,  GL_FALSE, projectionMatrix.data());
-        glUniformMatrix4fv(viewLocation, 1,  GL_FALSE, fuse::Mat4::CreateViewLookAt({0,0,20}, {0,0,-1}, Vec3::kUnitY).data());
+        glUniformMatrix4fv(projLocation, 1, GL_FALSE, projectionMatrix.data());
+        glUniformMatrix4fv(
+          viewLocation,
+          1,
+          GL_FALSE,
+          fuse::Mat4::CreateViewLookAt({0, 0, 20}, {0, 0, -1}, Vec3::kUnitY).data());
 
         glBindVertexArray(VAO);
 
         // first cube
-        auto transform = fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f, fuse::Vec3(0,1,0).normalize());
+        auto transform = fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f,
+                                                    fuse::Vec3(0, 1, 0).normalize());
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // second cube
-        transform = fuse::Mat4::CreateTranslation({-10,0,0}) * fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f, fuse::Vec3(0,1,0).normalize());
+        transform = fuse::Mat4::CreateTranslation({-10, 0, 0}) *
+                    fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f,
+                                               fuse::Vec3(0, 1, 0).normalize());
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        const auto transform2 = fuse::Mat4::CreateTranslation({+10,0,0});
-        transform = transform * transform2;
+        const auto transform2 = fuse::Mat4::CreateTranslation({+10, 0, 0});
+        transform             = transform * transform2;
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform2.data());
         glDrawArrays(GL_TRIANGLES, 0, 36);
 

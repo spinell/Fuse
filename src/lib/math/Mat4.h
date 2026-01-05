@@ -21,27 +21,24 @@ public:
     ///  - @b i is the row
     ///  - @b j is the column
     ///
-    // clang-format off
-    constexpr Mat4(float m00, float m01, float m02, float m03,
-                   float m10, float m11, float m12, float m13,
-                   float m20, float m21, float m22, float m23,
-                   float m30, float m31, float m32, float m33) noexcept {
+    constexpr Mat4(float m00, float m01, float m02, float m03, float m10, float m11, float m12,
+                   float m13, float m20, float m21, float m22, float m23, float m30, float m31,
+                   float m32, float m33) noexcept {
+        // clang-format off
             mData[0][0] = m00; mData[0][1] = m10; mData[0][2] = m20; mData[0][3] = m30;
             mData[1][0] = m01; mData[1][1] = m11; mData[1][2] = m21; mData[1][3] = m31;
             mData[2][0] = m02; mData[2][1] = m12; mData[2][2] = m22; mData[2][3] = m32;
             mData[3][0] = m03; mData[3][1] = m13; mData[3][2] = m23; mData[3][3] = m33;
+        // clang-format on
     }
 
-    // clang-format on
 
     /// @brief Construct a 4x4 matrix from 4 column vectors.
     /// @param col0 The first column of the matrix.
     /// @param col1 The second column of the matrix.
     /// @param col2 The third column of the matrix.
     /// @param col3 The fourth column of the matrix.
-    constexpr Mat4(const Vec4& col0,
-                   const Vec4& col1,
-                   const Vec4& col2,
+    constexpr Mat4(const Vec4& col0, const Vec4& col1, const Vec4& col2,
                    const Vec4& col3) noexcept {
         // clang-format off
         mData[0][0] = col0.x; mData[0][1] = col0.y; mData[0][2] = col0.z; mData[0][3] = col0.w;
@@ -61,7 +58,9 @@ public:
     [[nodiscard]] constexpr float& operator()(int row, int col) noexcept { return mData[col][row]; }
 
     /// @copydoc operator()(int, int)
-    [[nodiscard]] constexpr float operator()(int row, int col) const noexcept { return mData[col][row]; }
+    [[nodiscard]] constexpr float operator()(int row, int col) const noexcept {
+        return mData[col][row];
+    }
 
     /// @brief Direct access to the underlying data.
     [[nodiscard]] float* data() noexcept { return reinterpret_cast<float*>(mData); }
@@ -252,8 +251,7 @@ public:
     /// @param [in] position Position of the camera.
     /// @param [in] target   Position of the reference point to look at.
     /// @param [in] upVector Up direction of the camera.
-    [[nodiscard]] static Mat4 CreateViewLookAt(const Vec3& position,
-                                               const Vec3& target,
+    [[nodiscard]] static Mat4 CreateViewLookAt(const Vec3& position, const Vec3& target,
                                                const Vec3& upVector = Vec3::kUnitY) noexcept;
 
     /// @brief Builds a view matrix for a right-handed coordinate.
@@ -269,8 +267,7 @@ public:
     /// @param [in] position  Position of the camera.
     /// @param [in] direction Direction of the camera.
     /// @param [in] upVector  Up direction of the camera.
-    [[nodiscard]] static Mat4 CreateViewLookTo(const Vec3& position,
-                                               const Vec3& direction,
+    [[nodiscard]] static Mat4 CreateViewLookTo(const Vec3& position, const Vec3& direction,
                                                const Vec3& upVector = Vec3::kUnitY) noexcept;
     ///@}
 
@@ -283,10 +280,8 @@ public:
     /// This function is the equivalent of
     /// <b>ProjOrthoOffCenter(-width/2, width/2, -height/2, height/2, near, far)</b>
     /// @see ProjOrthoOffCenter()
-    [[nodiscard]] static Mat4 ProjOrtho(float width,
-                                        float height,
-                                        float near = -1.0F,
-                                        float far  = 1.0F) noexcept;
+    [[nodiscard]] static Mat4 ProjOrtho(float width, float height, float near = -1.0F,
+                                        float far = 1.0F) noexcept;
 
     /// @brief Create a orthographic projection matrix.
     ///
@@ -304,12 +299,8 @@ public:
     /// @param far    The distances to the farther depth clipping plane.
     ///               This distance is negative if the plane is to be behind the viewer.
     /// @return The projection matrix.
-    [[nodiscard]] static Mat4 ProjOrthoOffCenter(float left,
-                                                 float right,
-                                                 float bottom,
-                                                 float top,
-                                                 float near /* =-1*/,
-                                                 float far /*= 1*/) noexcept;
+    [[nodiscard]] static Mat4 ProjOrthoOffCenter(float left, float right, float bottom, float top,
+                                                 float near /* =-1*/, float far /*= 1*/) noexcept;
 
     /// @brief Create a customized, right-handed perspective projection matrix.
     ///
@@ -326,10 +317,8 @@ public:
     ///     However, if you flip these values so @b zFar is
     ///     less than @b zNear, the result is an inverted z buffer which can provide increased
     ///     floating-point precision.
-    [[nodiscard]] static Mat4 CreateProjectionPerspectiveOffCenter(float left,
-                                                                   float right,
-                                                                   float bottom,
-                                                                   float top,
+    [[nodiscard]] static Mat4 CreateProjectionPerspectiveOffCenter(float left, float right,
+                                                                   float bottom, float top,
                                                                    float zNear /* =-1*/,
                                                                    float zFar /*= 1*/) noexcept;
 
@@ -345,10 +334,8 @@ public:
     ///     However, if you flip these values so @b zFar is
     ///     less than @b zNear, the result is an inverted z buffer which can provide increased
     ///     floating-point precision.
-    [[nodiscard]] static Mat4 CreateProjectionPerspectiveFOVX(const Angle& fovx,
-                                                              float        aspectRatio,
-                                                              float        zNear,
-                                                              float        zFar);
+    [[nodiscard]] static Mat4 CreateProjectionPerspectiveFOVX(const Angle& fovx, float aspectRatio,
+                                                              float zNear, float zFar);
 
     /// @brief Create a right-handed perspective projection matrix based on a vertical field of view.
     ///
@@ -362,10 +349,8 @@ public:
     ///     However, if you flip these values so @b zFar is
     ///     less than @b zNear, the result is an inverted z buffer which can provide increased
     ///     floating-point precision.
-    [[nodiscard]] static Mat4 CreateProjectionPerspectiveFOVY(const Angle& fovY,
-                                                              float        aspectRatio,
-                                                              float        zNear,
-                                                              float        zFar);
+    [[nodiscard]] static Mat4 CreateProjectionPerspectiveFOVY(const Angle& fovY, float aspectRatio,
+                                                              float zNear, float zFar);
 
     ///@}
 
@@ -373,10 +358,10 @@ private:
     float mData[4][4];
 };
 
-inline constexpr Mat4 Mat4::kZero(
-  0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F);
-inline constexpr Mat4 Mat4::kIdentity(
-  1.F, 0.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 0.F, 1.F);
+inline constexpr Mat4 Mat4::kZero(0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F, 0.F,
+                                  0.F, 0.F, 0.F);
+inline constexpr Mat4 Mat4::kIdentity(1.F, 0.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 0.F, 1.F, 0.F,
+                                      0.F, 0.F, 0.F, 1.F);
 
 /// @ingroup  Math
 /// @related  Mat4

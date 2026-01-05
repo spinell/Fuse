@@ -1,8 +1,9 @@
 #include "GTestUtils.h"
 
-#include <gtest/gtest.h>
 #include <math/Angle.h>
 #include <math/Mat3.h>
+
+#include <gtest/gtest.h>
 
 
 using namespace fuse;

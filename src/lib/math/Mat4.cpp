@@ -274,8 +274,7 @@ Mat4 Mat4::CreateReflection(const Vec3& normal) noexcept {
 //                   View matrix
 // ======================================================
 
-Mat4 Mat4::CreateViewLookAt(const Vec3& position,
-                            const Vec3& target,
+Mat4 Mat4::CreateViewLookAt(const Vec3& position, const Vec3& target,
                             const Vec3& upVector) noexcept {
     assert(target != position);
     // View matrix
@@ -296,13 +295,13 @@ Mat4 Mat4::CreateViewLookAt(const Vec3& position,
 
     Mat4 mat = Mat4::kIdentity;
     // set the rotation part.
-    mat(0, 0) =  xAxis.x;
-    mat(0, 1) =  xAxis.y;
-    mat(0, 2) =  xAxis.z;
+    mat(0, 0) = xAxis.x;
+    mat(0, 1) = xAxis.y;
+    mat(0, 2) = xAxis.z;
 
-    mat(1, 0) =  yAxis.x;
-    mat(1, 1) =  yAxis.y;
-    mat(1, 2) =  yAxis.z;
+    mat(1, 0) = yAxis.x;
+    mat(1, 1) = yAxis.y;
+    mat(1, 2) = yAxis.z;
 
     mat(2, 0) = zAxis.x;
     mat(2, 1) = zAxis.y;
@@ -320,8 +319,7 @@ Mat4 Mat4::CreateViewLookAt(const Vec3& position,
     return mat;
 }
 
-Mat4 Mat4::CreateViewLookTo(const Vec3& position,
-                            const Vec3& direction,
+Mat4 Mat4::CreateViewLookTo(const Vec3& position, const Vec3& direction,
                             const Vec3& upVector) noexcept {
 
     const auto target = position + direction;
@@ -341,11 +339,7 @@ Mat4 Mat4::ProjOrtho(float width, float height, float near, float far) noexcept 
                               far);
 }
 
-Mat4 Mat4::ProjOrthoOffCenter(float left,
-                              float right,
-                              float bottom,
-                              float top,
-                              float near /* =-1*/,
+Mat4 Mat4::ProjOrthoOffCenter(float left, float right, float bottom, float top, float near /* =-1*/,
                               float far /*= 1*/) noexcept {
     // ============================================================
     //  P = A(ATA)−1AT
@@ -403,8 +397,8 @@ Mat4 Mat4::ProjOrthoOffCenter(float left,
     return mat;
 }
 
-Mat4 Mat4::CreateProjectionPerspectiveOffCenter(
-  float left, float right, float bottom, float top, float zNear, float zFar) noexcept {
+Mat4 Mat4::CreateProjectionPerspectiveOffCenter(float left, float right, float bottom, float top,
+                                                float zNear, float zFar) noexcept {
     // ============================================================
     //
     //  The projection matrix will be defined as fallow
@@ -451,10 +445,8 @@ Mat4 Mat4::CreateProjectionPerspectiveOffCenter(
     return matrix;
 }
 
-Mat4 Mat4::CreateProjectionPerspectiveFOVX(const Angle& fovx,
-                                           float        aspectRatio,
-                                           float        zNear,
-                                           float        zFar) {
+Mat4 Mat4::CreateProjectionPerspectiveFOVX(const Angle& fovx, float aspectRatio, float zNear,
+                                           float zFar) {
     // =====================================
     // Frustum view from top
     //
@@ -488,10 +480,8 @@ Mat4 Mat4::CreateProjectionPerspectiveFOVX(const Angle& fovx,
                                                 zFar);
 }
 
-Mat4 Mat4::CreateProjectionPerspectiveFOVY(const Angle& fovY,
-                                           float        aspectRatio,
-                                           float        zNear,
-                                           float        zFar) {
+Mat4 Mat4::CreateProjectionPerspectiveFOVY(const Angle& fovY, float aspectRatio, float zNear,
+                                           float zFar) {
     // =====================================
     //  Frustum view from side
     //

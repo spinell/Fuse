@@ -45,3 +45,12 @@ if(FUSE_BUILD_DOC)
 else()
     message(STATUS "Skipping documentation")
 endif()
+
+
+# Add a custom target to run clang-format on all source files
+add_custom_target(
+    ClangFormat
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/scripts/RunClangFormat.cmake
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running clang-format on source files"
+)

@@ -28,5 +28,7 @@ target_sources(
         imgui/backends/imgui_impl_sdl3.cpp
 )
 
-target_include_directories(ImGui PUBLIC imgui)
+target_include_directories(ImGui
+    PUBLIC imgui ${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_link_libraries(ImGui PUBLIC SDL3::SDL3)

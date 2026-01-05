@@ -1,7 +1,8 @@
 #include "GTestUtils.h"
 
-#include <gtest/gtest.h>
 #include <math/Vec2.h>
+
+#include <gtest/gtest.h>
 
 using fuse::Vec2;
 
@@ -388,10 +389,10 @@ TEST(Vec2, perpendicularOnto) {
 TEST(Vec2, reflect) {
     // test reflection with a plane on the X-axis
     {
-        EXPECT_EQ(Vec2(3, 4).reflect(Vec2::kUnitY),    Vec2(3, -4));
+        EXPECT_EQ(Vec2(3, 4).reflect(Vec2::kUnitY), Vec2(3, -4));
         EXPECT_EQ(Vec2(3, 4).reflect(Vec2::kUnitYNeg), Vec2(3, -4));
 
-        EXPECT_EQ(Vec2(3, -4).reflect(Vec2::kUnitY),    Vec2(3, 4));
+        EXPECT_EQ(Vec2(3, -4).reflect(Vec2::kUnitY), Vec2(3, 4));
         EXPECT_EQ(Vec2(3, -4).reflect(Vec2::kUnitYNeg), Vec2(3, 4));
 
         EXPECT_EQ(Vec2(-3, -4).reflect(Vec2::kUnitY), Vec2(-3, 4));
@@ -414,7 +415,6 @@ TEST(Vec2, reflect) {
         EXPECT_VEC2_NEAR(Vec2::kUnitXNeg.reflect(-normal), Vec2(0.f, 1.f));
     }
 }
-
 
 TEST(Vec2, ptr) {
 #if 0

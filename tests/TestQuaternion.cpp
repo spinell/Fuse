@@ -1,8 +1,9 @@
 #include "GTestUtils.h"
 
-#include <gtest/gtest.h>
 #include <math/Angle.h>
 #include <math/Quaternion.h>
+
+#include <gtest/gtest.h>
 
 using namespace fuse;
 
@@ -124,11 +125,11 @@ TEST(Quaternion, multiply) {
     }
 
     {
-        Quaternion q = Quaternion(1,2,3,4).inverse();
-        EXPECT_FLOAT_EQ(q.x, -1/30.f);
-        EXPECT_FLOAT_EQ(q.y, -1/15.f);
-        EXPECT_FLOAT_EQ(q.z, -1/10.f);
-        EXPECT_FLOAT_EQ(q.w, 2/15.f);
+        Quaternion q = Quaternion(1, 2, 3, 4).inverse();
+        EXPECT_FLOAT_EQ(q.x, -1 / 30.f);
+        EXPECT_FLOAT_EQ(q.y, -1 / 15.f);
+        EXPECT_FLOAT_EQ(q.z, -1 / 10.f);
+        EXPECT_FLOAT_EQ(q.w, 2 / 15.f);
     }
 }
 
@@ -186,11 +187,11 @@ TEST(Quaternion, inverse) {
         EXPECT_FLOAT_EQ(q.w, 0.3826834);
     }
     {
-        Quaternion q = Quaternion(1,2,3,4).inverse();
-        EXPECT_FLOAT_EQ(q.x, -1/30.f);
-        EXPECT_FLOAT_EQ(q.y, -1/15.f);
-        EXPECT_FLOAT_EQ(q.z, -1/10.f);
-        EXPECT_FLOAT_EQ(q.w, 2/15.f);
+        Quaternion q = Quaternion(1, 2, 3, 4).inverse();
+        EXPECT_FLOAT_EQ(q.x, -1 / 30.f);
+        EXPECT_FLOAT_EQ(q.y, -1 / 15.f);
+        EXPECT_FLOAT_EQ(q.z, -1 / 10.f);
+        EXPECT_FLOAT_EQ(q.w, 2 / 15.f);
     }
 }
 

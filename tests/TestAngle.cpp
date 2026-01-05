@@ -1,9 +1,9 @@
 #include "GTestUtils.h"
+#include "math/Angle.h"
 
-#include <math/Angle.h>
-
+#include "gmock/gmock-matchers.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock-matchers.h>
-#include <gtest/gtest.h>
 #include <gtest/gtest.h>
 
 #include <format>
@@ -45,8 +45,8 @@ TEST(Angle, operator_add) {
     ASSERT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
 
     // operator+=(Angle)
-    Angle angle = degrees(90.F);
-    const Angle& r = angle += degrees(45.F);
+    Angle        angle = degrees(90.F);
+    const Angle& r     = angle += degrees(45.F);
     ASSERT_EQ(angle, degrees(135.F));
     ASSERT_EQ(r, degrees(135.F));
     ASSERT_EQ(&r, &angle);
@@ -58,8 +58,8 @@ TEST(Angle, operator_sub) {
     ASSERT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
 
     // operator-=(Angle)
-    Angle angle = degrees(90.F);
-    const Angle& r = angle -= degrees(45.F);
+    Angle        angle = degrees(90.F);
+    const Angle& r     = angle -= degrees(45.F);
     ASSERT_EQ(angle, degrees(45.F));
     ASSERT_EQ(r, degrees(45.F));
     ASSERT_EQ(&r, &angle);
@@ -71,8 +71,8 @@ TEST(Angle, operator_mul) {
     ASSERT_EQ(degrees(90.F) / 2, degrees(45.F));
 
     // operator/=(float)
-    Angle angle = degrees(90.F);
-    const Angle& r = angle /= 2;
+    Angle        angle = degrees(90.F);
+    const Angle& r     = angle /= 2;
     ASSERT_EQ(angle, degrees(45.F));
     ASSERT_EQ(r, degrees(45.F));
     ASSERT_EQ(&r, &angle);
@@ -90,8 +90,8 @@ TEST(Angle, operator_div) {
     ASSERT_EQ(2 * degrees(90.F), degrees(180.F));
 
     // operator*=(float)
-    Angle angle = degrees(45.F);
-    const Angle& r = angle *= 2;
+    Angle        angle = degrees(45.F);
+    const Angle& r     = angle *= 2;
     ASSERT_EQ(angle, degrees(90.F));
     ASSERT_EQ(r, degrees(90.F));
     ASSERT_EQ(&r, &angle);

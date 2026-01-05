@@ -1,5 +1,6 @@
 #pragma once
 #include "Angle.h"
+
 #include <cmath>
 #include <format>
 
@@ -39,7 +40,6 @@ struct Vec2 {
     /// @brief Strict comparaison component by component.
     [[nodiscard]] constexpr bool operator==(const Vec2&) const noexcept = default;
 
-
     /// @brief Retrieves the angle required to rotate this vector into another vector.
     ///
     /// This function return the smallest angle between this vector and vector \p v
@@ -67,9 +67,7 @@ struct Vec2 {
     ///   - Negative sign, v1 need to move clock clock wise to join v2
     ///   - The absolute value of the 2D cross product is the sine of the angle in between the two vectors,
     ///     so taking the arc sine of it would give you the angle in radians.
-    [[nodiscard]] constexpr float cross(const Vec2& v) const noexcept {
-        return x * v.y - y * v.x;
-    }
+    [[nodiscard]] constexpr float cross(const Vec2& v) const noexcept { return x * v.y - y * v.x; }
 
     /// @brief Returns the distance to another vector.
     /// @return The distance to another vector.

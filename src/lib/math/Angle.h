@@ -52,6 +52,7 @@ public:
     /// @brief Default constructor. Create a angle of 0 degree.
     constexpr Angle() = default;
 
+    // clang-format off
     [[nodiscard]] constexpr auto operator<=>(const Angle&) const = default;
 
     [[nodiscard]] constexpr Angle operator+() const noexcept { return mValue; }

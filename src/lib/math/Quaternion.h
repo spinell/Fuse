@@ -96,7 +96,7 @@ public:
     /// @brief Convert a matrix to a quaternion.
     /// Sets the components of this quaternion to values that represents the same rotation as the
     /// one represented by the @b matrix.
-	///
+    ///
     /// @note This function expects the @b matrix to be orthogonal and have a determinant of +1.
     /// If these conditions are not met, then the results are unlikely to be meaningful.
     /// @param matrix The matrix to convert.
@@ -178,16 +178,12 @@ constexpr Quaternion& operator*=(Quaternion& q1, const Quaternion& q2) noexcept 
     // https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
     const Vec3  u(q.x, q.y, q.z);
     const float s = q.w;
-    return  2.0f * u.dot(v) * u +
-            (s * s - u.dot(u)) * v +
-            2.0f * s * u.cross(v);
+    return 2.0f * u.dot(v) * u + (s * s - u.dot(u)) * v + 2.0f * s * u.cross(v);
 #else
     // From Foundations of Game Engine Development Volume Mathematics
-    Vec3 b(q.x, q.y, q.z);
+    Vec3        b(q.x, q.y, q.z);
     const float b2 = b.x * b.x + b.y * b.y + b.z * b.z;
-    return  2.0F * v.dot(b) * b +
-            (q.w * q.w - b2) * v +
-            2.0F * q.w * b.cross(v);
+    return 2.0F * v.dot(b) * b + (q.w * q.w - b2) * v + 2.0F * q.w * b.cross(v);
 #endif
 #undef IMPL
 }

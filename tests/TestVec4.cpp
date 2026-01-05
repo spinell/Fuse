@@ -1,7 +1,8 @@
 #include "GTestUtils.h"
 
-#include <gtest/gtest.h>
 #include <math/Vec4.h>
+
+#include <gtest/gtest.h>
 
 using fuse::Vec4;
 
@@ -19,9 +20,12 @@ TEST(Vec4, constants) {
     static_assert(Vec4::kUnitY == Vec4(0.F, 1.F, 0.F, 0.F), "Vec4::kUnitY should be (0, 1, 0, 0)");
     static_assert(Vec4::kUnitZ == Vec4(0.F, 0.F, 1.F, 0.F), "Vec4::kUnitZ should be (0, 0, 1, 0)");
     static_assert(Vec4::kUnitW == Vec4(0.F, 0.F, 0.F, 1.F), "Vec4::kUnitZ should be (0, 0, 0, 1)");
-    static_assert(Vec4::kUnitXNeg == Vec4(-1.F, 0.F, 0.F, 0.F), "Vec4::kUnitX should be (-1, 0, 0, 0)");
-    static_assert(Vec4::kUnitYNeg == Vec4(0.F, -1.F, 0.F, 0.F), "Vec4::kUnitY should be (0, -1, 0, 0)");
-    static_assert(Vec4::kUnitZNeg == Vec4(0.F, 0.F, -1.F, 0.F), "Vec4::kUnitZ should be (0, 0, -1, 0)");
+    static_assert(Vec4::kUnitXNeg == Vec4(-1.F, 0.F, 0.F, 0.F),
+                  "Vec4::kUnitX should be (-1, 0, 0, 0)");
+    static_assert(Vec4::kUnitYNeg == Vec4(0.F, -1.F, 0.F, 0.F),
+                  "Vec4::kUnitY should be (0, -1, 0, 0)");
+    static_assert(Vec4::kUnitZNeg == Vec4(0.F, 0.F, -1.F, 0.F),
+                  "Vec4::kUnitZ should be (0, 0, -1, 0)");
 
     EXPECT_EQ(Vec4::kZero, Vec4(0.F, 0.F, 0.F, 0.f));
     EXPECT_EQ(Vec4::kUnitX, Vec4(1.F, 0.F, 0.F, 0.f));
@@ -144,7 +148,6 @@ TEST(Vec4, substract_two_vector) {
     }
 }
 
-
 // ==========================================================
 //                    Multiplication
 // ==========================================================
@@ -181,7 +184,6 @@ TEST(Vec4, multiple_by_scalar) {
         EXPECT_EQ(r.w, 8.f);
     }
 }
-
 
 // ===========================================================
 //                      Division
@@ -264,7 +266,4 @@ TEST(Vec4, normalize) {
     EXPECT_FLOAT_EQ(v.w, 0.73029673f);
 }
 
-
-TEST(Vec4, std_format) {
-    ASSERT_EQ(std::format("{}", Vec4(1, 2, 3, 4)), "[1, 2, 3, 4]");
-}
+TEST(Vec4, std_format) { ASSERT_EQ(std::format("{}", Vec4(1, 2, 3, 4)), "[1, 2, 3, 4]"); }

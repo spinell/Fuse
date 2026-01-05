@@ -1,6 +1,5 @@
 #include "GTestUtils.h"
 
-#include <gtest/gtest.h>
 #include <math/Angle.h>
 #include <math/Mat2.h>
 #include <math/Mat3.h>
@@ -9,6 +8,8 @@
 #include <math/Vec2.h>
 #include <math/Vec3.h>
 #include <math/Vec4.h>
+
+#include <gtest/gtest.h>
 
 #include <format>
 
@@ -58,10 +59,8 @@ bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::
     return std::abs(diff) < epsilon;
 }
 
-::testing::AssertionResult AssertAngleNear(const char*        expr1,
-                                           const char*        expr2,
-                                           const fuse::Angle& expected,
-                                           const fuse::Angle& actual) {
+::testing::AssertionResult AssertAngleNear(const char* expr1, const char* expr2,
+                                           const fuse::Angle& expected, const fuse::Angle& actual) {
     const auto diff = expected - actual;
     if (std::abs(diff.asRadians()) > std::numeric_limits<float>::epsilon()) {
         std::string msg = std::format("Expected equality of these angles\n", expr1, expr2, diff);
@@ -73,10 +72,8 @@ bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::
     return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult AssertVec2Near(const char*       expr1,
-                                          const char*       expr2,
-                                          const fuse::Vec2& expected,
-                                          const fuse::Vec2& actual) {
+::testing::AssertionResult AssertVec2Near(const char* expr1, const char* expr2,
+                                          const fuse::Vec2& expected, const fuse::Vec2& actual) {
     if (almostEquals(actual.x, expected.x) && almostEquals(actual.y, expected.y)) {
         return ::testing::AssertionSuccess();
     }
@@ -86,10 +83,8 @@ bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::
     return ::testing::AssertionFailure() << msg;
 }
 
-::testing::AssertionResult AssertVec3Near(const char*       expr1,
-                                          const char*       expr2,
-                                          const fuse::Vec3& expected,
-                                          const fuse::Vec3& actual) {
+::testing::AssertionResult AssertVec3Near(const char* expr1, const char* expr2,
+                                          const fuse::Vec3& expected, const fuse::Vec3& actual) {
     if (almostEquals(actual.x, expected.x, 1e-6) && almostEquals(actual.y, expected.y, 1e-6) &&
         almostEquals(actual.z, expected.z, 1e-6)) {
         return ::testing::AssertionSuccess();
@@ -100,11 +95,9 @@ bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::
     return ::testing::AssertionFailure() << msg;
 }
 
-::testing::AssertionResult AssertQuaternionNear(const char*             expr1,
-                                                const char*             expr2,
+::testing::AssertionResult AssertQuaternionNear(const char* expr1, const char* expr2,
                                                 const fuse::Quaternion& expected,
-                                                const fuse::Quaternion& actual,
-                                                float                   tolerance) {
+                                                const fuse::Quaternion& actual, float tolerance) {
     if (std::abs(expected.x - actual.x) <= tolerance &&
         std::abs(expected.y - actual.y) <= tolerance &&
         std::abs(expected.z - actual.z) <= tolerance &&
