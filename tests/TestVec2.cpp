@@ -97,6 +97,7 @@ TEST(Vec2, add_two_vector) {
         // test the return value
         EXPECT_FLOAT_EQ(r.x, 11.F);
         EXPECT_FLOAT_EQ(r.y, 22.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
@@ -127,6 +128,7 @@ TEST(Vec2, substract_two_vector) {
         // test the return value
         EXPECT_FLOAT_EQ(r.x, -9.F);
         EXPECT_FLOAT_EQ(r.y, -18.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
@@ -163,6 +165,7 @@ TEST(Vec2, multiple_by_scalar) {
         // test the return value
         EXPECT_FLOAT_EQ(r.x, 10.F);
         EXPECT_FLOAT_EQ(r.y, 20.F);
+        EXPECT_EQ(&r, &v);
     }
 }
 
@@ -175,21 +178,22 @@ TEST(Vec2, division_by_scalar) {
     // operator/(Vec2, scalar)
     const auto v = Vec2(10.F, 20.F);
     {
-        const auto& r = v / 2.F;
+        const auto r = v / 2.F;
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);
     }
 
     // operator/=(Vec2, scalar)
     {
-        auto        v1 = Vec2(10.F, 20.F);
-        const auto& r  = v1 /= 2.F;
+        auto        v = Vec2(10.F, 20.F);
+        const auto& r = v /= 2.F;
 
-        EXPECT_FLOAT_EQ(v1.x, 5.F);
-        EXPECT_FLOAT_EQ(v1.y, 10.F);
+        EXPECT_FLOAT_EQ(v.x, 5.F);
+        EXPECT_FLOAT_EQ(v.y, 10.F);
 
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);
+        EXPECT_EQ(&r, &v);
     }
 }
 

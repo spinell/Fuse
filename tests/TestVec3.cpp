@@ -109,6 +109,7 @@ TEST(Vec3, add_two_vector) {
         EXPECT_FLOAT_EQ(r.x, 11.F);
         EXPECT_FLOAT_EQ(r.y, 22.F);
         EXPECT_FLOAT_EQ(r.z, 33.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
@@ -142,6 +143,7 @@ TEST(Vec3, substract_two_vector) {
         EXPECT_FLOAT_EQ(r.x, -9.F);
         EXPECT_FLOAT_EQ(r.y, -18.F);
         EXPECT_FLOAT_EQ(r.z, -27.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
@@ -182,6 +184,7 @@ TEST(Vec3, multiple_by_scalar) {
         EXPECT_FLOAT_EQ(r.x, 10.F);
         EXPECT_FLOAT_EQ(r.y, 20.F);
         EXPECT_FLOAT_EQ(r.z, 30.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
@@ -212,6 +215,7 @@ TEST(Vec3, division_by_scalar) {
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);
         EXPECT_FLOAT_EQ(r.z, 15.F);
+        EXPECT_EQ(&r, &v1);
     }
 }
 

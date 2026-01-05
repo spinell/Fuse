@@ -22,79 +22,79 @@ TEST(Angle, traits) {
 
 TEST(Angle, operator_unitair) {
     // operator-
-    ASSERT_EQ(-degrees(90.F), degrees(-90.F));
+    EXPECT_EQ(-degrees(90.F), degrees(-90.F));
 
     // operator+
-    ASSERT_EQ(+degrees(90.F), degrees(90.F));
+    EXPECT_EQ(+degrees(90.F), degrees(90.F));
 }
 
 TEST(Angle, operator_comparaison) {
-    ASSERT_EQ(degrees(90.F), degrees(90.F)); // ==
-    ASSERT_NE(degrees(90.F), degrees(91.F)); // !=
-    ASSERT_LT(degrees(90.F), degrees(91.F)); // <
-    ASSERT_LE(degrees(90.F), degrees(91.F)); // <=
-    ASSERT_LE(degrees(91.F), degrees(91.F)); // <=
-    ASSERT_GT(degrees(91.F), degrees(90.F)); // >
-    ASSERT_GE(degrees(91.F), degrees(90.F)); // >=
-    ASSERT_GE(degrees(91.F), degrees(91.F)); // >=
+    EXPECT_EQ(degrees(90.F), degrees(90.F)); // ==
+    EXPECT_NE(degrees(90.F), degrees(91.F)); // !=
+    EXPECT_LT(degrees(90.F), degrees(91.F)); // <
+    EXPECT_LE(degrees(90.F), degrees(91.F)); // <=
+    EXPECT_LE(degrees(91.F), degrees(91.F)); // <=
+    EXPECT_GT(degrees(91.F), degrees(90.F)); // >
+    EXPECT_GE(degrees(91.F), degrees(90.F)); // >=
+    EXPECT_GE(degrees(91.F), degrees(91.F)); // >=
 }
 
 // Test addition operator
 TEST(Angle, operator_add) {
     // operator+(Angle,Angle)
-    ASSERT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
+    EXPECT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
 
     // operator+=(Angle)
     Angle        angle = degrees(90.F);
     const Angle& r     = angle += degrees(45.F);
-    ASSERT_EQ(angle, degrees(135.F));
-    ASSERT_EQ(r, degrees(135.F));
-    ASSERT_EQ(&r, &angle);
+    EXPECT_EQ(angle, degrees(135.F));
+    EXPECT_EQ(r, degrees(135.F));
+    EXPECT_EQ(&r, &angle);
 }
 
 // Test substact operator
 TEST(Angle, operator_sub) {
     // operator-(Angle,Angle)
-    ASSERT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
+    EXPECT_EQ(degrees(90.F) + degrees(45.F), degrees(135.F));
 
     // operator-=(Angle)
     Angle        angle = degrees(90.F);
     const Angle& r     = angle -= degrees(45.F);
-    ASSERT_EQ(angle, degrees(45.F));
-    ASSERT_EQ(r, degrees(45.F));
-    ASSERT_EQ(&r, &angle);
+    EXPECT_EQ(angle, degrees(45.F));
+    EXPECT_EQ(r, degrees(45.F));
+    EXPECT_EQ(&r, &angle);
 }
 
 // Test multiplication operator
 TEST(Angle, operator_mul) {
     // operator/(Angle, float)
-    ASSERT_EQ(degrees(90.F) / 2, degrees(45.F));
+    EXPECT_EQ(degrees(90.F) / 2, degrees(45.F));
 
     // operator/=(float)
     Angle        angle = degrees(90.F);
     const Angle& r     = angle /= 2;
-    ASSERT_EQ(angle, degrees(45.F));
-    ASSERT_EQ(r, degrees(45.F));
-    ASSERT_EQ(&r, &angle);
+    EXPECT_EQ(angle, degrees(45.F));
+    EXPECT_EQ(r, degrees(45.F));
+    EXPECT_EQ(&r, &angle);
 
     // operator/(Angle, Angle)
-    ASSERT_EQ(degrees(90.F) / degrees(90.F), 1.F);
+    EXPECT_EQ(degrees(90.F) / degrees(90.F), 1.F);
 }
 
 // Test division operator
 TEST(Angle, operator_div) {
     // operator*(Angle, float)
-    ASSERT_EQ(degrees(90.F) * 2, degrees(180.F));
+    EXPECT_EQ(degrees(90.F) * 2, degrees(180.F));
 
     // operator*(float, Angle)
-    ASSERT_EQ(2 * degrees(90.F), degrees(180.F));
+    EXPECT_EQ(2 * degrees(90.F), degrees(180.F));
 
     // operator*=(float)
     Angle        angle = degrees(45.F);
     const Angle& r     = angle *= 2;
-    ASSERT_EQ(angle, degrees(90.F));
-    ASSERT_EQ(r, degrees(90.F));
-    ASSERT_EQ(&r, &angle);
+    EXPECT_EQ(angle, degrees(90.F));
+    EXPECT_EQ(r, degrees(90.F));
+    EXPECT_EQ(&r, &angle);
 }
 
 TEST(Angle, wrap) {
@@ -137,64 +137,64 @@ TEST(Angle, wrap) {
 }
 
 TEST(Angle, wrapSigned) {
-    ASSERT_EQ(degrees(-90.F).wrapSigned(), degrees(-90.F));
-    ASSERT_EQ(degrees(-160.F).wrapSigned(), degrees(-160.F));
-    ASSERT_EQ(degrees(-270.F).wrapSigned(), degrees(90.F));
-    ASSERT_EQ(degrees(-360.F).wrapSigned(), degrees(0.F));
-    ASSERT_EQ(degrees(-450.F).wrapSigned(), degrees(-90.F));
-    ASSERT_EQ(degrees(-1000.F).wrapSigned(), degrees(80.F));
+    EXPECT_EQ(degrees(-90.F).wrapSigned(), degrees(-90.F));
+    EXPECT_EQ(degrees(-160.F).wrapSigned(), degrees(-160.F));
+    EXPECT_EQ(degrees(-270.F).wrapSigned(), degrees(90.F));
+    EXPECT_EQ(degrees(-360.F).wrapSigned(), degrees(0.F));
+    EXPECT_EQ(degrees(-450.F).wrapSigned(), degrees(-90.F));
+    EXPECT_EQ(degrees(-1000.F).wrapSigned(), degrees(80.F));
 
-    ASSERT_EQ(degrees(0.f).wrapSigned(), degrees(0.F));
+    EXPECT_EQ(degrees(0.f).wrapSigned(), degrees(0.F));
 
-    ASSERT_EQ(degrees(90.F).wrapSigned(), degrees(90.F));
-    ASSERT_EQ(degrees(180.F).wrapSigned(), degrees(180.F));
-    ASSERT_EQ(degrees(270.F).wrapSigned(), degrees(-90.F));
-    ASSERT_EQ(degrees(360.F).wrapSigned(), degrees(0.F));
-    ASSERT_EQ(degrees(405.F).wrapSigned(), degrees(45.F));
-    ASSERT_EQ(degrees(585.F).wrapSigned(), degrees(-135.F));
-    ASSERT_EQ(degrees(700.F).wrapSigned(), degrees(-20.F));
-    ASSERT_EQ(degrees(720.F).wrapSigned(), degrees(0.F));
-    ASSERT_EQ(degrees(750.F).wrapSigned(), degrees(30.F));
+    EXPECT_EQ(degrees(90.F).wrapSigned(), degrees(90.F));
+    EXPECT_EQ(degrees(180.F).wrapSigned(), degrees(180.F));
+    EXPECT_EQ(degrees(270.F).wrapSigned(), degrees(-90.F));
+    EXPECT_EQ(degrees(360.F).wrapSigned(), degrees(0.F));
+    EXPECT_EQ(degrees(405.F).wrapSigned(), degrees(45.F));
+    EXPECT_EQ(degrees(585.F).wrapSigned(), degrees(-135.F));
+    EXPECT_EQ(degrees(700.F).wrapSigned(), degrees(-20.F));
+    EXPECT_EQ(degrees(720.F).wrapSigned(), degrees(0.F));
+    EXPECT_EQ(degrees(750.F).wrapSigned(), degrees(30.F));
 }
 
 TEST(Angle, wrapUnsigned) {
-    ASSERT_EQ(degrees(-45.F).wrapUnsigned(), degrees(315.F));
-    ASSERT_EQ(degrees(-90.F).wrapUnsigned(), degrees(270.F));
-    ASSERT_EQ(degrees(-180.F).wrapUnsigned(), degrees(180.F));
-    ASSERT_EQ(degrees(-270.F).wrapUnsigned(), degrees(90.F));
-    ASSERT_EQ(degrees(-360.F).wrapUnsigned(), degrees(0.F));
-    ASSERT_EQ(degrees(-750.F).wrapUnsigned(), degrees(330.F));
+    EXPECT_EQ(degrees(-45.F).wrapUnsigned(), degrees(315.F));
+    EXPECT_EQ(degrees(-90.F).wrapUnsigned(), degrees(270.F));
+    EXPECT_EQ(degrees(-180.F).wrapUnsigned(), degrees(180.F));
+    EXPECT_EQ(degrees(-270.F).wrapUnsigned(), degrees(90.F));
+    EXPECT_EQ(degrees(-360.F).wrapUnsigned(), degrees(0.F));
+    EXPECT_EQ(degrees(-750.F).wrapUnsigned(), degrees(330.F));
 
-    ASSERT_EQ(degrees(0.f).wrapUnsigned(), degrees(0.F));
+    EXPECT_EQ(degrees(0.f).wrapUnsigned(), degrees(0.F));
 
-    ASSERT_EQ(degrees(45.F).wrapUnsigned(), degrees(45.F));
-    ASSERT_EQ(degrees(90.F).wrapUnsigned(), degrees(90.F));
-    ASSERT_EQ(degrees(180.F).wrapUnsigned(), degrees(180.F));
-    ASSERT_EQ(degrees(270.F).wrapUnsigned(), degrees(270.F));
-    ASSERT_EQ(degrees(360.F).wrapUnsigned(), degrees(0.F));
-    ASSERT_EQ(degrees(405.F).wrapUnsigned(), degrees(45.F));
-    ASSERT_EQ(degrees(585.F).wrapUnsigned(), degrees(225.F));
-    ASSERT_EQ(degrees(720.F).wrapUnsigned(), degrees(0.F));
-    ASSERT_EQ(degrees(750.F).wrapUnsigned(), degrees(30.F));
-    ASSERT_EQ(degrees(2880.F).wrapUnsigned(), degrees(0.F));
-    ASSERT_EQ(degrees(2885.F).wrapUnsigned(), degrees(5.F));
+    EXPECT_EQ(degrees(45.F).wrapUnsigned(), degrees(45.F));
+    EXPECT_EQ(degrees(90.F).wrapUnsigned(), degrees(90.F));
+    EXPECT_EQ(degrees(180.F).wrapUnsigned(), degrees(180.F));
+    EXPECT_EQ(degrees(270.F).wrapUnsigned(), degrees(270.F));
+    EXPECT_EQ(degrees(360.F).wrapUnsigned(), degrees(0.F));
+    EXPECT_EQ(degrees(405.F).wrapUnsigned(), degrees(45.F));
+    EXPECT_EQ(degrees(585.F).wrapUnsigned(), degrees(225.F));
+    EXPECT_EQ(degrees(720.F).wrapUnsigned(), degrees(0.F));
+    EXPECT_EQ(degrees(750.F).wrapUnsigned(), degrees(30.F));
+    EXPECT_EQ(degrees(2880.F).wrapUnsigned(), degrees(0.F));
+    EXPECT_EQ(degrees(2885.F).wrapUnsigned(), degrees(5.F));
 }
 
 // Test literal operator
 TEST(Angle, operator_literal) {
     using namespace literals;
-    ASSERT_EQ(180_deg, degrees(180.F));   // unsigned long long
-    ASSERT_EQ(180.0_deg, degrees(180.F)); // long double
+    EXPECT_EQ(180_deg, degrees(180.F));   // unsigned long long
+    EXPECT_EQ(180.0_deg, degrees(180.F)); // long double
 
-    ASSERT_EQ(1_rad, radians(1));      // unsigned long long
-    ASSERT_EQ(1.2_rad, radians(1.2F)); // long double
+    EXPECT_EQ(1_rad, radians(1));      // unsigned long long
+    EXPECT_EQ(1.2_rad, radians(1.2F)); // long double
 }
 
 // test custom std::format
 TEST(Angle, format) {
     const auto inDegree = std::format("{}", degrees(45.F));
-    ASSERT_EQ("45", inDegree);
+    EXPECT_EQ("45", inDegree);
 
     const auto inDegree2 = std::format("{:.6f}", degrees(45.F));
-    ASSERT_EQ("45.000000", inDegree2);
+    EXPECT_EQ("45.000000", inDegree2);
 }

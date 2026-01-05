@@ -103,7 +103,8 @@ TEST(Vec4, add_vec4) {
     // operator+=(vec4, vec4)
     {
         Vec4        v(1, 2, 3, 4);
-        const Vec4& r = v += Vec4(10, 20, 30, 40);
+        const Vec4 v2(10, 20, 30, 40);
+        const Vec4& r = v += v2;
 
         EXPECT_EQ(v.x, 11.f);
         EXPECT_EQ(v.y, 22.f);
@@ -114,6 +115,7 @@ TEST(Vec4, add_vec4) {
         EXPECT_EQ(r.y, 22.f);
         EXPECT_EQ(r.z, 33.f);
         EXPECT_EQ(r.w, 44.f);
+        EXPECT_EQ(&r, &v);
     }
 }
 
@@ -134,7 +136,8 @@ TEST(Vec4, substract_two_vector) {
     // operator-=(vec4, vec4)
     {
         Vec4        v(1, 2, 3, 4);
-        const Vec4& r = v -= Vec4(10, 20, 30, 40);
+        const Vec4 v2(10, 20, 30, 40);
+        const Vec4& r = v -= v2;
 
         EXPECT_EQ(v.x, -9.f);
         EXPECT_EQ(v.y, -18.f);
@@ -145,6 +148,7 @@ TEST(Vec4, substract_two_vector) {
         EXPECT_EQ(r.y, -18.f);
         EXPECT_EQ(r.z, -27.f);
         EXPECT_EQ(r.w, -36.f);
+        EXPECT_EQ(&r, &v);
     }
 }
 
@@ -182,6 +186,7 @@ TEST(Vec4, multiple_by_scalar) {
         EXPECT_EQ(r.y, 4.f);
         EXPECT_EQ(r.z, 6.f);
         EXPECT_EQ(r.w, 8.f);
+        EXPECT_EQ(&r, &v);
     }
 }
 
@@ -211,6 +216,7 @@ TEST(Vec4, div_scalar) {
         EXPECT_EQ(r.y, 10.f);
         EXPECT_EQ(r.z, 15.f);
         EXPECT_EQ(r.w, 20.f);
+        EXPECT_EQ(&r, &v);
     }
 }
 
