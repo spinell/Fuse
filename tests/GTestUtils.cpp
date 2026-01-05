@@ -54,7 +54,7 @@ void PrintTo(const Quaternion& q, std::ostream* os) {
 
 } // namespace fuse
 
-bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::epsilon()) {
+static bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::epsilon()) {
     const auto diff = a - b;
     return std::abs(diff) < epsilon;
 }
@@ -85,8 +85,8 @@ bool almostEquals(float a, float b, float epsilon = std::numeric_limits<float>::
 
 ::testing::AssertionResult AssertVec3Near(const char* expr1, const char* expr2,
                                           const fuse::Vec3& expected, const fuse::Vec3& actual) {
-    if (almostEquals(actual.x, expected.x, 1e-6) && almostEquals(actual.y, expected.y, 1e-6) &&
-        almostEquals(actual.z, expected.z, 1e-6)) {
+    if (almostEquals(actual.x, expected.x, 1e-6f) && almostEquals(actual.y, expected.y, 1e-6f) &&
+        almostEquals(actual.z, expected.z, 1e-6f)) {
         return ::testing::AssertionSuccess();
     }
     std::string msg = std::format("Expected equality of these Vec3\n");

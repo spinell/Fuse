@@ -30,7 +30,7 @@ TEST(Quaternion, ctor) {
     // Constructor with Axis/Angle
     {
         Quaternion q(Vec3(1, 1, 1).normalize(), fuse::degrees(45));
-        EXPECT_EQ(q, Quaternion(0.2209424, 0.2209424, 0.2209424, 0.9238795));
+        EXPECT_EQ(q, Quaternion(0.2209424f, 0.2209424f, 0.2209424f, 0.9238795f));
     }
 }
 
@@ -162,9 +162,9 @@ TEST(Quaternion, dot) {
 }
 
 TEST(Quaternion, inverse) {
-    constexpr Quaternion xAxis45(0.3826834, 0, 0, 0.9238795);  // 45  degrees around x-axis
-    constexpr Quaternion xAxis90(0.7071068, 0, 0, 0.7071068);  // 90  degrees around x-axis
-    constexpr Quaternion xAxis135(0.9238795, 0, 0, 0.3826834); // 135 degrees around x-axis
+    constexpr Quaternion xAxis45(0.3826834f, 0, 0, 0.9238795f);  // 45  degrees around x-axis
+    constexpr Quaternion xAxis90(0.7071068f, 0, 0, 0.7071068f);  // 90  degrees around x-axis
+    constexpr Quaternion xAxis135(0.9238795f, 0, 0, 0.3826834f); // 135 degrees around x-axis
     {
         Quaternion q = xAxis45.inverse();
         EXPECT_FLOAT_EQ(q.x, -0.3826834);
@@ -266,10 +266,10 @@ TEST(Quaternion, axis) {
         Vec3::kUnitXNeg,
         Vec3::kUnitYNeg,
         Vec3::kUnitZ},
-      {Quaternion(0.1736126, 0.1736126, 0.1736126, 0.953717),
-        Vec3(0.87943465, 0.39143723, -0.27087188),
-        Vec3(-0.27087188, 0.87943465, 0.39143723),
-        Vec3(0.39143723, -0.27087188, 0.87943465)}
+      {Quaternion(0.1736126f, 0.1736126f, 0.1736126f, 0.953717f),
+        Vec3(0.87943465f, 0.39143723f, -0.27087188f),
+        Vec3(-0.27087188f, 0.87943465f, 0.39143723f),
+        Vec3(0.39143723f, -0.27087188f, 0.87943465f)}
       // clang-format on
     };
 
@@ -333,7 +333,7 @@ TEST(Quaternion, asMatrix) {
 
     // 220 degrees rotation around [1,1,1].
     {
-        const auto mat = Quaternion(0.5425318f, 0.5425318f, 0.5425318f, -0.3420201).asMatrix();
+        const auto mat = Quaternion(0.5425318f, 0.5425318f, 0.5425318f, -0.3420201f).asMatrix();
         EXPECT_FLOAT_EQ(mat(0, 0), -0.17736292f);
         EXPECT_FLOAT_EQ(mat(0, 1), 0.9597951);
         EXPECT_FLOAT_EQ(mat(0, 2), 0.2175679f);
@@ -360,7 +360,7 @@ TEST(Quaternion, axisAngle) {
       {Vec3(1,1,0).normalize(), fuse::degrees(45), Quaternion(0.27059805f, 0.27059805f, 0, 0.9238795f)},
       {Vec3(1,1,1).normalize(), fuse::degrees(45), Quaternion(0.2209424f, 0.2209424f, 0.2209424f, 0.9238795f)},
       {Vec3(1,1,1).normalize(), fuse::degrees(180), Quaternion(0.57735026f, 0.57735026f, 0.57735026f, 0)},
-      {Vec3(1,1,1).normalize(), fuse::degrees(220), Quaternion(0.5425318, 0.5425318, 0.5425318, -0.3420201)}
+      {Vec3(1,1,1).normalize(), fuse::degrees(220), Quaternion(0.5425318f, 0.5425318f, 0.5425318f, -0.3420201f)}
       // clang-format on
     };
 

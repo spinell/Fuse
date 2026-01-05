@@ -6,13 +6,13 @@
 namespace fuse {
 
 class Angle;
-class Vec2;
-class Vec3;
-class Vec4;
+struct Vec2;
+struct Vec3;
+struct Vec4;
 class Mat2;
 class Mat3;
 class Mat4;
-class Quaternion;
+struct Quaternion;
 
 // teach gtest how to print data
 // they need be be in namespace fuse otherwise GTest will not find them.

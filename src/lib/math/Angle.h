@@ -17,7 +17,7 @@ namespace fuse {
 /// You can add or subtract two angles, multiply or divide
 /// an angle by a number, compare two angles, etc.
 ///
-/// Angle values also provide a custom <a
+/// Angle values also provide a custom <a>
 /// href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formater</a>. This
 /// formater extend the float formater and output the angle in degree.
 ///
@@ -146,7 +146,7 @@ constexpr Angle operator""_rad(unsigned long long angle) {
     return radians(static_cast<float>(angle));
 }
 
-}; // namespace literals
+} // namespace literals
 
 } // namespace fuse
 

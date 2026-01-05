@@ -13,6 +13,8 @@ add_executable(TestFuseCore
     TestQuaternion.cpp
 )
 
+fuse_target_set_compiler_flags(TestFuseCore)
+
 target_link_libraries(TestFuseCore
     PRIVATE
         GTest::gmock_main

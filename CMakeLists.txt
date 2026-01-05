@@ -28,6 +28,8 @@ fuse_print_compiler_info()
 fuse_print_compiler_flags()
 fuse_print_linker_flags()
 
+include(CompilerWarning)
+
 add_subdirectory(externals)
 add_subdirectory(src)
 

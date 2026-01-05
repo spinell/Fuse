@@ -487,11 +487,11 @@ TEST(Vec3, reflect) {
         EXPECT_VEC3_NEAR(Vec3(-1, -1, -1).reflect(normal), Vec3(1.f, 1.f, 1));
         EXPECT_VEC3_NEAR(Vec3(-1, -1, -1).reflect(-normal), Vec3(1.f, 1.f, 1));
 
-        EXPECT_VEC3_NEAR(Vec3::kUnitYNeg.reflect(normal), Vec3(0.6666666, -0.33333337, 0.6666666));
-        EXPECT_VEC3_NEAR(Vec3::kUnitYNeg.reflect(-normal), Vec3(0.6666666, -0.33333337, 0.6666666));
+        EXPECT_VEC3_NEAR(Vec3::kUnitYNeg.reflect(normal), Vec3(0.6666666f, -0.33333337f, 0.6666666f));
+        EXPECT_VEC3_NEAR(Vec3::kUnitYNeg.reflect(-normal), Vec3(0.6666666f, -0.33333337f, 0.6666666f));
 
-        EXPECT_VEC3_NEAR(Vec3::kUnitXNeg.reflect(normal), Vec3(-0.33333337, 0.6666666, 0.6666666));
-        EXPECT_VEC3_NEAR(Vec3::kUnitXNeg.reflect(-normal), Vec3(-0.33333337, 0.6666666, 0.6666666));
+        EXPECT_VEC3_NEAR(Vec3::kUnitXNeg.reflect(normal), Vec3(-0.33333337f, 0.6666666f, 0.6666666f));
+        EXPECT_VEC3_NEAR(Vec3::kUnitXNeg.reflect(-normal), Vec3(-0.33333337f, 0.6666666f, 0.6666666f));
     }
 }
 
