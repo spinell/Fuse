@@ -316,15 +316,15 @@ TEST(Mat3, determinant_and_inverse) {
         EXPECT_EQ(matrix.determinant(), -12);
 
         const auto inverse = matrix.inverse();
-        EXPECT_FLOAT_EQ(inverse(0, 0), -0.4166666865);
-        EXPECT_FLOAT_EQ(inverse(0, 1), 0.25);
-        EXPECT_FLOAT_EQ(inverse(0, 2), 0.3333333433);
-        EXPECT_FLOAT_EQ(inverse(1, 0), 0.5833333731);
-        EXPECT_FLOAT_EQ(inverse(1, 1), 0.25);
-        EXPECT_FLOAT_EQ(inverse(1, 2), -0.6666666865);
-        EXPECT_FLOAT_EQ(inverse(2, 0), 0.083333336);
-        EXPECT_FLOAT_EQ(inverse(2, 1), -0.25);
-        EXPECT_FLOAT_EQ(inverse(2, 2), 0.3333333433);
+        EXPECT_FLOAT_EQ(inverse(0, 0), -0.4166666865f);
+        EXPECT_FLOAT_EQ(inverse(0, 1), 0.25f);
+        EXPECT_FLOAT_EQ(inverse(0, 2), 0.3333333433f);
+        EXPECT_FLOAT_EQ(inverse(1, 0), 0.5833333731f);
+        EXPECT_FLOAT_EQ(inverse(1, 1), 0.25f);
+        EXPECT_FLOAT_EQ(inverse(1, 2), -0.6666666865f);
+        EXPECT_FLOAT_EQ(inverse(2, 0), 0.083333336f);
+        EXPECT_FLOAT_EQ(inverse(2, 1), -0.25f);
+        EXPECT_FLOAT_EQ(inverse(2, 2), 0.3333333433f);
 
         EXPECT_EQ(inverse, 1 / 12.f * Mat3(-5, 3, 4, 7, 3, -8, 1, -3, 4));
     }
@@ -336,15 +336,15 @@ TEST(Mat3, determinant_and_inverse) {
         EXPECT_EQ(matrix.determinant(), 163);
 
         const auto inverse = matrix.inverse();
-        EXPECT_FLOAT_EQ(inverse(0, 0), -0.18404907);
-        EXPECT_FLOAT_EQ(inverse(0, 1), -0.05521472);
-        EXPECT_FLOAT_EQ(inverse(0, 2), 0.22699386);
-        EXPECT_FLOAT_EQ(inverse(1, 0), 0.31288344);
-        EXPECT_FLOAT_EQ(inverse(1, 1), -0.006134969);
-        EXPECT_FLOAT_EQ(inverse(1, 2), -0.08588957);
-        EXPECT_FLOAT_EQ(inverse(2, 0), -0.19631901);
-        EXPECT_FLOAT_EQ(inverse(2, 1), 0.1411043);
-        EXPECT_FLOAT_EQ(inverse(2, 2), -0.024539877);
+        EXPECT_FLOAT_EQ(inverse(0, 0), -0.18404907f);
+        EXPECT_FLOAT_EQ(inverse(0, 1), -0.05521472f);
+        EXPECT_FLOAT_EQ(inverse(0, 2), 0.22699386f);
+        EXPECT_FLOAT_EQ(inverse(1, 0), 0.31288344f);
+        EXPECT_FLOAT_EQ(inverse(1, 1), -0.006134969f);
+        EXPECT_FLOAT_EQ(inverse(1, 2), -0.08588957f);
+        EXPECT_FLOAT_EQ(inverse(2, 0), -0.19631901f);
+        EXPECT_FLOAT_EQ(inverse(2, 1), 0.1411043f);
+        EXPECT_FLOAT_EQ(inverse(2, 2), -0.024539877f);
 
         EXPECT_EQ(inverse, 1 / 163.f * Mat3(-30, -9, 37, 51, -1, -14, -32, 23, -4));
     }

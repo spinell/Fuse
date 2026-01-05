@@ -167,24 +167,24 @@ TEST(Quaternion, inverse) {
     constexpr Quaternion xAxis135(0.9238795f, 0, 0, 0.3826834f); // 135 degrees around x-axis
     {
         Quaternion q = xAxis45.inverse();
-        EXPECT_FLOAT_EQ(q.x, -0.3826834);
+        EXPECT_FLOAT_EQ(q.x, -0.3826834f);
         EXPECT_FLOAT_EQ(q.y, 0);
         EXPECT_FLOAT_EQ(q.z, 0);
-        EXPECT_FLOAT_EQ(q.w, 0.9238795);
+        EXPECT_FLOAT_EQ(q.w, 0.9238795f);
     }
     {
         Quaternion q = xAxis90.inverse();
-        EXPECT_FLOAT_EQ(q.x, -0.7071068);
+        EXPECT_FLOAT_EQ(q.x, -0.7071068f);
         EXPECT_FLOAT_EQ(q.y, 0);
         EXPECT_FLOAT_EQ(q.z, 0);
-        EXPECT_FLOAT_EQ(q.w, 0.7071068);
+        EXPECT_FLOAT_EQ(q.w, 0.7071068f);
     }
     {
         Quaternion q = xAxis135.inverse();
-        EXPECT_FLOAT_EQ(q.x, -0.9238795);
+        EXPECT_FLOAT_EQ(q.x, -0.9238795f);
         EXPECT_FLOAT_EQ(q.y, 0);
         EXPECT_FLOAT_EQ(q.z, 0);
-        EXPECT_FLOAT_EQ(q.w, 0.3826834);
+        EXPECT_FLOAT_EQ(q.w, 0.3826834f);
     }
     {
         Quaternion q = Quaternion(1, 2, 3, 4).inverse();
@@ -335,11 +335,11 @@ TEST(Quaternion, asMatrix) {
     {
         const auto mat = Quaternion(0.5425318f, 0.5425318f, 0.5425318f, -0.3420201f).asMatrix();
         EXPECT_FLOAT_EQ(mat(0, 0), -0.17736292f);
-        EXPECT_FLOAT_EQ(mat(0, 1), 0.9597951);
+        EXPECT_FLOAT_EQ(mat(0, 1), 0.9597951f);
         EXPECT_FLOAT_EQ(mat(0, 2), 0.2175679f);
 
         EXPECT_FLOAT_EQ(mat(1, 0), 0.2175679f);
-        EXPECT_FLOAT_EQ(mat(1, 1), -0.17736292);
+        EXPECT_FLOAT_EQ(mat(1, 1), -0.17736292f);
         EXPECT_FLOAT_EQ(mat(1, 2), 0.9597951f);
 
         EXPECT_FLOAT_EQ(mat(2, 0), 0.9597951f);

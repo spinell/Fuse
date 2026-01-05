@@ -98,19 +98,19 @@ void Quaternion::setMatrix(const Mat3& rot) noexcept {
         y             = (rot(0, 2) - rot(2, 0)) * f;
         z             = (rot(1, 0) - rot(0, 1)) * f;
     } else if ((m00 > m11) && (m00 > m22)) {
-        x             = sqrt(m00 - m11 - m22 + 1.0F) * 0.5F;
+        x             = std::sqrt(m00 - m11 - m22 + 1.0F) * 0.5F;
         const float f = 0.25F / x;
         y             = (rot(1, 0) + rot(0, 1)) * f;
         z             = (rot(0, 2) + rot(2, 0)) * f;
         w             = (rot(2, 1) - rot(1, 2)) * f;
     } else if (m11 > m22) {
-        y             = sqrt(m11 - m00 - m22 + 1.0F) * 0.5F;
+        y             = std::sqrt(m11 - m00 - m22 + 1.0F) * 0.5F;
         const float f = 0.25F / y;
         x             = (rot(1, 0) + rot(0, 1)) * f;
         z             = (rot(2, 1) + rot(1, 2)) * f;
         w             = (rot(0, 2) - rot(2, 0)) * f;
     } else {
-        z             = sqrt(m22 - m00 - m11 + 1.0F) * 0.5F;
+        z             = std::sqrt(m22 - m00 - m11 + 1.0F) * 0.5F;
         const float f = 0.25F / z;
         x             = (rot(0, 2) + rot(2, 0)) * f;
         y             = (rot(2, 1) + rot(1, 2)) * f;

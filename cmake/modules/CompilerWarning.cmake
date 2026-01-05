@@ -64,7 +64,7 @@ function(fuse_target_set_compiler_flags target)
                 $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wall>
                 $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wextra>
                 -Wpedantic
-                #-Wno-comment             # this will trigger warning on doxygen comments which use latex matrix
+                -Wno-comment             # this will trigger warning on doxygen comments which use latex matrix
                 -Wnon-virtual-dtor        # warn the user if a class with virtual functions has a non-virtual destructor.
                 #-Wshadow                 # warn the user if a variable declaration shadows one from a parent context
                 #-Wold-style-cast         # warn for c-style casts
