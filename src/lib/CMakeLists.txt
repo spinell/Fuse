@@ -19,6 +19,6 @@ add_library(FuseLib
 )
 add_library(Fuse::Lib ALIAS FuseLib)
 
-fuse_target_set_compiler_flags(FuseLib)
+fuse_target_set_compiler_warnings(FuseLib)
 
 target_include_directories(FuseLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -1,4 +1,4 @@
-function(fuse_target_set_compiler_flags target)
+function(fuse_target_set_compiler_warnings target)
     # Enable some warning based on
     # https://github.com/cpp-best-practices/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
@@ -61,8 +61,7 @@ function(fuse_target_set_compiler_flags target)
                 # Instead, enable -W4 witch map to -Wall and -Wextra
                 $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:MSVC>,$<CXX_COMPILER_ID:Clang>>:-W4>
                 # GCC & Clang (GNU) specific
-                $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wall>
-                $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wextra>
+                $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wall -Wextra>
                 -Wpedantic
                 -Wno-comment             # this will trigger warning on doxygen comments which use latex matrix
                 -Wnon-virtual-dtor        # warn the user if a class with virtual functions has a non-virtual destructor.
@@ -122,4 +121,4 @@ function(fuse_target_set_compiler_flags target)
         endif()
 
     endif()
-endfunction(fuse_target_set_compiler_flags)
+endfunction(fuse_target_set_compiler_warnings)

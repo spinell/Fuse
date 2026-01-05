@@ -13,7 +13,7 @@ add_executable(TestFuseCore
     TestQuaternion.cpp
 )
 
-fuse_target_set_compiler_flags(TestFuseCore)
+fuse_target_set_compiler_warnings(TestFuseCore)
 
 target_link_libraries(TestFuseCore
     PRIVATE
