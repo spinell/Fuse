@@ -176,8 +176,8 @@ TEST(Vec2, multiple_by_scalar) {
 
 TEST(Vec2, division_by_scalar) {
     // operator/(Vec2, scalar)
-    const auto v = Vec2(10.F, 20.F);
     {
+        const auto v = Vec2(10.F, 20.F);
         const auto r = v / 2.F;
         EXPECT_FLOAT_EQ(r.x, 5.F);
         EXPECT_FLOAT_EQ(r.y, 10.F);

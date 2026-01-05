@@ -63,13 +63,13 @@ function(fuse_target_set_compiler_warnings target)
                 # GCC & Clang (GNU) specific
                 $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wall -Wextra>
                 -Wpedantic
-                -Wno-comment             # this will trigger warning on doxygen comments which use latex matrix
+                -Wno-comment              # this will trigger warning on doxygen comments which use latex matrix
                 -Wnon-virtual-dtor        # warn the user if a class with virtual functions has a non-virtual destructor.
-                #-Wshadow                 # warn the user if a variable declaration shadows one from a parent context
+                -Wshadow                  # warn the user if a variable declaration shadows one from a parent context
                 #-Wold-style-cast         # warn for c-style casts
                 #-Wcast-align             # warn for potential performance problem casts
                 -Wunused                  # warn on anything being unused
-                -Woverloaded-virtual     # warn if you overload (not override) a virtual function
+                -Woverloaded-virtual      # warn if you overload (not override) a virtual function
                 -Wconversion              # warn on type conversions that may lose data
                 #-Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
                 -Wnull-dereference        # warn if a null dereference is detected
