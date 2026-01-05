@@ -52,8 +52,8 @@ void main()
 
 using namespace fuse;
 
-void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                         const GLchar* message, const void* userParam) {
+static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei /*length*/,
+                         const GLchar* message, const void* /*userParam*/) {
 
     // ignore these non-significant error codes
     // 131169 :
@@ -76,7 +76,7 @@ void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
             default: assert(false && "Unhandled value!");
                 std::unreachable();
                 // clang-format on
-        };
+        }
     }();
 
     std::string_view typeStr = [type]() {
@@ -94,7 +94,7 @@ void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
             default: assert(false && "Unhandled value!");
                 std::unreachable();
                 // clang-format on
-        };
+        }
     }();
 
     std::string_view severityStr = [severity]() {
@@ -107,7 +107,7 @@ void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
             default: assert(false && "Unhandled value!");
                 std::unreachable();
                 // clang-format on
-        };
+        }
     }();
 
     std::println("[OpenGL][{}][{}][{}]({}) {}", typeStr, sourceStr, severityStr, id, message);
@@ -236,7 +236,7 @@ int main(int, char**) {
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_NO_ERROR, 1);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, contextFlag);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, (int)contextFlag);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GLContext gl_context = SDL_GL_CreateContext(gWindow);
@@ -263,9 +263,9 @@ int main(int, char**) {
     std::println("OpenGL Shader Version: {}", (const char*)glShaderVersion);
     GLint nbShaderLang{};
     glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &nbShaderLang);
-    for (GLint i = 0; i < nbShaderLang; i++) {
-        const GLubyte* version = glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
-        std::println(" - Shader Version: {}", (const char*)version);
+    for (GLuint  i = 0; i < (GLuint)nbShaderLang; i++) {
+        const GLubyte* shaderVersion = glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
+        std::println(" - Shader Version: {}", (const char*)shaderVersion);
     }
 
     // std::println("OpenGL Extension     : {}", (const char *)glExtension);
@@ -347,10 +347,10 @@ int main(int, char**) {
     glUseProgram(shaderProgram);
     glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
 
-    const auto transform =
-      fuse::Mat4::kIdentity; //fuse::Mat4::CreateRotationZ(fuse::degrees(1) * SDL_GetTicks());
+    //const auto transform =
+    //  fuse::Mat4::kIdentity; //fuse::Mat4::CreateRotationZ(fuse::degrees(1) * SDL_GetTicks());
     //glUniformMatrix4fv(viewLocation, 1,  GL_FALSE, fuse::Mat4::CreateTranslation({0,0,-10}).data());
-    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
+    //glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
 
     //glUniformMatrix4fv(projLocation, 1,  GL_FALSE, fuse::Mat4::ProjOrtho(10,10).data());
 
@@ -421,14 +421,14 @@ int main(int, char**) {
         glBindVertexArray(VAO);
 
         // first cube
-        auto transform = fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f,
+        auto transform = fuse::Mat4::CreateRotation(fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f,
                                                     fuse::Vec3(0, 1, 0).normalize());
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // second cube
         transform = fuse::Mat4::CreateTranslation({-10, 0, 0}) *
-                    fuse::Mat4::CreateRotation(fuse::degrees(35) * SDL_GetTicks() / 1000.f,
+                    fuse::Mat4::CreateRotation(fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f,
                                                fuse::Vec3(0, 1, 0).normalize());
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
         glDrawArrays(GL_TRIANGLES, 0, 36);

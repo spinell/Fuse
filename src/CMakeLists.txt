@@ -7,6 +7,8 @@ message(STATUS "SDL3_VERSION : " ${SDL3_VERSION})
 
 
 add_executable(Fuse main.cpp)
+fuse_target_set_compiler_flags(Fuse)
+
 target_link_libraries(Fuse
     PRIVATE
         SDL3::SDL3

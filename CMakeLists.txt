@@ -30,7 +30,7 @@ fuse_print_linker_flags()
 
 include(CompilerWarning)
 
-add_subdirectory(externals)
+add_subdirectory(externals SYSTEM)
 add_subdirectory(src)
 
 enable_testing()
