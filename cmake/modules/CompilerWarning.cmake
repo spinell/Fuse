@@ -82,6 +82,7 @@ function(fuse_target_set_compiler_warnings target)
                 -Wundef
                 -Wextra-semi             # warn about redundant semicolons
                 -Wsuggest-override       # warn about overriding virtual functions that are not marked with the override keyword.
+                -Werror=return-type
         )
 
         if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
