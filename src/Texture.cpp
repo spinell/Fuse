@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 
-Texture::Texture(GLsizei width, GLsizei height, void* data) {
+Texture::Texture(GLsizei /*width*/, GLsizei /*height*/, void* /*data*/) {
     glCreateTextures(GL_TEXTURE_2D, 1, &mId);
     glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

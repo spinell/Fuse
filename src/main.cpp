@@ -432,16 +432,11 @@ int main(int, char**) {
             }
             if (e.type == SDL_EVENT_MOUSE_MOTION) {
                 const bool isLeftDown  = (e.motion.state & SDL_BUTTON_LMASK) == SDL_BUTTON_LMASK;
-                const bool isRightDown = (e.motion.state & SDL_BUTTON_RMASK) == SDL_BUTTON_RMASK;
                 if (!ImGui::GetIO().WantCaptureMouse && isLeftDown) {
                     const auto yaw   = e.motion.xrel * fuse::degrees(0.125f);
                     const auto pitch = e.motion.yrel * fuse::degrees(0.125f);
                     camera.yaw(-yaw);
                     camera.pitch(-pitch);
-                }
-                if (!ImGui::GetIO().WantCaptureMouse && isRightDown) {
-                    const auto yaw   = e.motion.xrel * fuse::degrees(0.125f);
-                    const auto pitch = e.motion.yrel * fuse::degrees(0.125f);
                 }
             }
             if (e.type == SDL_EVENT_KEY_DOWN) {
@@ -501,7 +496,7 @@ int main(int, char**) {
         const float    spacing = 5.f;
         for (unsigned int i = 0; i < count; i++) {
             float x = (count / 2.f) * -5.f;
-            x += (i * spacing);
+            x += ((float)i * spacing);
             shader.setMatrix("model", fuse::Mat4::CreateTranslation({x, 1, -5}));
             shader.setVector("diffuseColor", {0.5, 0.5, 0.5, 1});
             renderMesh(cylinderMesh);
