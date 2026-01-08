@@ -1,59 +1,95 @@
-#include "imgui.h"
+#include "Buffer.h"
+#include "Camera.h"
+#include "GeometryGenerator.h"
 #include "math/Angle.h"
 #include "math/Mat4.h"
 #include "math/Vec3.h"
+#include "Shader.h"
+#include "Texture.h"
 
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_sdl3.h>
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
+
+#include "ImGui.h"
+#include <imgui.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
+#include <imgui/backends/imgui_impl_sdl3.h>
 
 #include <cassert>
 #include <print>
 #include <utility>
 
-constexpr int kScreenWidth{640};
-constexpr int kScreenHeight{480};
+constexpr int kScreenWidth{1024};
+constexpr int kScreenHeight{768};
 
+
+Camera       camera;
 SDL_Window*  gWindow{nullptr};
 SDL_Surface* gScreenSurface{nullptr};
 
-const char* vertex_shader_source = R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec4 aColor;
+struct Mesh {
+    Mesh() = default;
+    Buffer  vertexBuffer;
+    Buffer  indexBuffer;
+    GLsizei nbIndices;
 
-out vec4 oColor;
+    Mesh(const Mesh&)            = delete;
+    Mesh& operator=(const Mesh&) = delete;
+    Mesh(Mesh&&)                 = default;
+    Mesh& operator=(Mesh&&)      = default;
 
-uniform mat4 proj;
-uniform mat4 view;
-uniform mat4 model;
+    static Mesh CreateBox() {
+        Mesh              mesh;
+        GeometryGenerator geometryGenerator;
+        const auto        data = geometryGenerator.createBox(1, 1, 1, 3);
+        Upload(data, mesh);
+        return mesh;
+    }
+    static Mesh CreateGrid() {
+        Mesh              mesh;
+        GeometryGenerator geometryGenerator;
+        const auto        data = geometryGenerator.createGrid(10, 10, 10, 10);
+        Upload(data, mesh);
+        return mesh;
+    }
+    static Mesh CreateGeoSphere() {
+        Mesh              mesh;
+        GeometryGenerator geometryGenerator;
+        const auto        data = geometryGenerator.createGeoSphere(1, 4);
+        Upload(data, mesh);
+        return mesh;
+    }
+    static Mesh CreateSphere() {
+        Mesh              mesh;
+        GeometryGenerator geometryGenerator;
+        const auto        data = geometryGenerator.createSphere(1, 25, 25);
+        Upload(data, mesh);
+        return mesh;
+    }
+    static Mesh CreateCylinder() {
+        Mesh              mesh;
+        GeometryGenerator geometryGenerator;
+        const auto        data = geometryGenerator.createCylinder(1, 1, 3, 10, 2);
+        Upload(data, mesh);
+        return mesh;
+    }
 
-void main()
-{
-    gl_Position = proj * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
-    oColor = aColor;
-}
-)";
 
-const char* pixel_shader_source = R"(
-#version 330 core
-
-in vec4 oColor;
-out vec4 FragColor;
-
-uniform vec4 ourColor;
-
-void main()
-{
-    FragColor = ourColor * oColor;
-}
-)";
+    static void Upload(const GeometryGenerator::MeshData& data, Mesh& mesh) {
+        mesh.vertexBuffer =
+          Buffer((GLsizeiptr)(data.Vertices.size() * sizeof(GeometryGenerator::Vertex)),
+                 (void*)data.Vertices.data());
+        mesh.indexBuffer =
+          Buffer((GLsizeiptr)(data.Indices.size() * sizeof(unsigned)), (void*)data.Indices.data());
+        mesh.nbIndices = (GLsizei)data.Indices.size();
+    }
+};
 
 using namespace fuse;
 
-static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei /*length*/,
-                         const GLchar* message, const void* /*userParam*/) {
+static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                                GLsizei /*length*/, const GLchar* message,
+                                const void* /*userParam*/) {
 
     // ignore these non-significant error codes
     // 131169 :
@@ -113,69 +149,98 @@ static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum se
     std::println("[OpenGL][{}][{}][{}]({}) {}", typeStr, sourceStr, severityStr, id, message);
 }
 
-static GLuint createShader(const char* source, GLenum shaderType) {
-    GLuint shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &source, nullptr);
-    glCompileShader(shader);
 
-    int  success;
-    char infoLog[512];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::println("Shader compilation failed: {}", infoLog);
-    }
-    return shader;
+static void renderMesh(const Mesh& mesh) {
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.vertexBuffer.getId());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.indexBuffer.getId());
+
+    glVertexAttribPointer(0,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(GeometryGenerator::Vertex),
+                          (void*)offsetof(GeometryGenerator::Vertex, Position));
+    glVertexAttribPointer(1,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(GeometryGenerator::Vertex),
+                          (void*)offsetof(GeometryGenerator::Vertex, Normal));
+    glVertexAttribPointer(2,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(GeometryGenerator::Vertex),
+                          (void*)offsetof(GeometryGenerator::Vertex, TangentU));
+    glVertexAttribPointer(3,
+                          2,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          sizeof(GeometryGenerator::Vertex),
+                          (void*)offsetof(GeometryGenerator::Vertex, TexC));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+
+    glDrawElements(GL_TRIANGLES, mesh.nbIndices, GL_UNSIGNED_INT, 0);
 }
 
-float vertices[] = {
-  // clang-format off
-    // back red
-    -0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-     0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-     0.5f,  0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-     0.5f,  0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-    -0.5f,  0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-    -0.5f, -0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f,
-    // front green
-    -0.5f, -0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-     0.5f, -0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-     0.5f,  0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-     0.5f,  0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-    -0.5f,  0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-    -0.5f, -0.5f,  0.5f, 0.f, 1.f, 0.f, 1.f,
-    // left blue
-    -0.5f,  0.5f,  0.5f, 0.f, 0.f, 1.f, 1.f,
-    -0.5f,  0.5f, -0.5f, 0.f, 0.f, 1.f, 1.f,
-    -0.5f, -0.5f, -0.5f, 0.f, 0.f, 1.f, 1.f,
-    -0.5f, -0.5f, -0.5f, 0.f, 0.f, 1.f, 1.f,
-    -0.5f, -0.5f,  0.5f, 0.f, 0.f, 1.f, 1.f,
-    -0.5f,  0.5f,  0.5f, 0.f, 0.f, 1.f, 1.f,
-    // right yellow
-     0.5f,  0.5f,  0.5f, 1.f, 1.f, 0.f, 1.f,
-     0.5f,  0.5f, -0.5f, 1.f, 1.f, 0.f, 1.f,
-     0.5f, -0.5f, -0.5f, 1.f, 1.f, 0.f, 1.f,
-     0.5f, -0.5f, -0.5f, 1.f, 1.f, 0.f, 1.f,
-     0.5f, -0.5f,  0.5f, 1.f, 1.f, 0.f, 1.f,
-     0.5f,  0.5f,  0.5f, 1.f, 1.f, 0.f, 1.f,
-    // bottom cyan
-    -0.5f, -0.5f, -0.5f, 0.f, 1.f, 1.f, 1.f,
-     0.5f, -0.5f, -0.5f, 0.f, 1.f, 1.f, 1.f,
-     0.5f, -0.5f,  0.5f, 0.f, 1.f, 1.f, 1.f,
-     0.5f, -0.5f,  0.5f, 0.f, 1.f, 1.f, 1.f,
-    -0.5f, -0.5f,  0.5f, 0.f, 1.f, 1.f, 1.f,
-    -0.5f, -0.5f, -0.5f, 0.f, 1.f, 1.f, 1.f,
-    // top purple
-    -0.5f,  0.5f, -0.5f, 1.f, 0.f, 1.f, 1.f,
-     0.5f,  0.5f, -0.5f, 1.f, 0.f, 1.f, 1.f,
-     0.5f,  0.5f,  0.5f, 1.f, 0.f, 1.f, 1.f,
-     0.5f,  0.5f,  0.5f, 1.f, 0.f, 1.f, 1.f,
-    -0.5f,  0.5f,  0.5f, 1.f, 0.f, 1.f, 1.f,
-    -0.5f,  0.5f, -0.5f, 1.f, 0.f, 1.f, 1.f,
-  // clang-format on
-};
 
-Mat4 projectionMatrix;
+static void onImGuiRender() {
+    static bool wireframeEnable = false;
+    ImGui::ShowDemoWindow(); // Show demo window! :)
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::Begin("Debug info",
+                 nullptr,
+                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
+
+    if (ImGui::Checkbox("Wireframe", &wireframeEnable)) {
+        glPolygonMode(GL_FRONT_AND_BACK, wireframeEnable ? GL_LINE : GL_FILL);
+    }
+
+    fuse::Imgui::TextFmt("{:.3f} ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+    fuse::Imgui::TextFmt("{:.1f} FPS", ImGui::GetIO().Framerate);
+    ImGui::Separator();
+    fuse::Imgui::TextFmt("Fov          => {:.2f} / {:.2f}", camera.getFovY(), camera.getFovX());
+    fuse::Imgui::TextFmt("Aspect Ratio => {:.2f}", camera.getAspectRatio());
+    fuse::Imgui::TextFmt("Z Plane => {} | {}", camera.getZNear(), camera.getZFar());
+    fuse::Imgui::TextFmt("Near  Window => {:.4f} x {:.4f}",
+                         camera.getNearWindowWidth(),
+                         camera.getNearWindowHeight());
+    fuse::Imgui::TextFmt("Far   Window => {:.4f} x {:.4f}",
+                         camera.getFarWindowWidth(),
+                         camera.getFarWindowHeight());
+    ImGui::Separator();
+    fuse::Imgui::TextFmt("Direction : {: .5f}", camera.getDirection());
+    fuse::Imgui::TextFmt("Right     : {: .5f}", camera.getRight());
+    fuse::Imgui::TextFmt("Up        : {: .5f}", camera.getUp());
+    auto pos = camera.getPosition();
+    if (fuse::Imgui::dragVec3("Position  : ", pos)) {
+        camera.setPosition(pos);
+    }
+    auto pitch = camera.getPitch();
+    if (fuse::Imgui::dragAngle("pitch    : ", pitch)) {
+        camera.setPitch(pitch);
+    }
+    auto yaw = camera.getYaw();
+    if (fuse::Imgui::dragAngle("yaw      : ", yaw)) {
+        camera.setYaw(yaw);
+    }
+
+    fuse::Imgui::draw(camera.getViewMatrix());
+    fuse::Imgui::draw(camera.getProjectionMatrix());
+
+    ImGui::End();
+
+    ImGui::PopStyleVar(1);
+}
+
 
 int main(int, char**) {
     std::println("SDL compiled version: {}.{}.{}",
@@ -263,7 +328,7 @@ int main(int, char**) {
     std::println("OpenGL Shader Version: {}", (const char*)glShaderVersion);
     GLint nbShaderLang{};
     glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &nbShaderLang);
-    for (GLuint  i = 0; i < (GLuint)nbShaderLang; i++) {
+    for (GLuint i = 0; i < (GLuint)nbShaderLang; i++) {
         const GLubyte* shaderVersion = glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
         std::println(" - Shader Version: {}", (const char*)shaderVersion);
     }
@@ -328,58 +393,24 @@ int main(int, char**) {
                               true);
     }
 
-    // glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
-    GLuint vertexShader   = createShader(vertex_shader_source, GL_VERTEX_SHADER);
-    GLuint fragmentShader = createShader(pixel_shader_source, GL_FRAGMENT_SHADER);
 
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    int projLocation        = glGetUniformLocation(shaderProgram, "proj");
-    int viewLocation        = glGetUniformLocation(shaderProgram, "view");
-    int modelLocation       = glGetUniformLocation(shaderProgram, "model");
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-
-    glUseProgram(shaderProgram);
-    glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
-
-    //const auto transform =
-    //  fuse::Mat4::kIdentity; //fuse::Mat4::CreateRotationZ(fuse::degrees(1) * SDL_GetTicks());
-    //glUniformMatrix4fv(viewLocation, 1,  GL_FALSE, fuse::Mat4::CreateTranslation({0,0,-10}).data());
-    //glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
-
-    //glUniformMatrix4fv(projLocation, 1,  GL_FALSE, fuse::Mat4::ProjOrtho(10,10).data());
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+    Shader       shader;
+    Texture      texture(4, 4, nullptr);
+    auto         boxMesh       = Mesh::CreateBox();
+    auto         gridMesh      = Mesh::CreateGrid();
+    auto         geoSphereMesh = Mesh::CreateGeoSphere();
+    auto         sphereMesh    = Mesh::CreateSphere();
+    auto         cylinderMesh  = Mesh::CreateCylinder();
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, boxMesh.vertexBuffer.getId());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boxMesh.indexBuffer.getId());
 
-    //unsigned int EBO;
-    //glGenBuffers(1, &EBO);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glEnable(GL_DEPTH_TEST);
-
-    projectionMatrix =
-      fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45), 800.f / 600.f, 0.01f, 1000.f);
 
     bool quit = false;
     while (!quit) {
@@ -394,49 +425,106 @@ int main(int, char**) {
                 const auto width  = e.window.data1;
                 const auto height = e.window.data2;
                 glViewport(0, 0, width, height);
-                projectionMatrix = fuse::Mat4::CreateProjectionPerspectiveFOVY(fuse::degrees(45),
-                                                                               800.f / 600.f,
-                                                                               0.01f,
-                                                                               1000.f);
+                camera.setAspectRatio((float)width / (float)height);
             }
+            if (e.type == SDL_EVENT_MOUSE_WHEEL) {
+                camera.setFovY(camera.getFovY() + fuse::degrees(e.wheel.y * 10));
+            }
+            if (e.type == SDL_EVENT_MOUSE_MOTION) {
+                const bool isLeftDown  = (e.motion.state & SDL_BUTTON_LMASK) == SDL_BUTTON_LMASK;
+                const bool isRightDown = (e.motion.state & SDL_BUTTON_RMASK) == SDL_BUTTON_RMASK;
+                if (!ImGui::GetIO().WantCaptureMouse && isLeftDown) {
+                    const auto yaw   = e.motion.xrel * fuse::degrees(0.125f);
+                    const auto pitch = e.motion.yrel * fuse::degrees(0.125f);
+                    camera.yaw(-yaw);
+                    camera.pitch(-pitch);
+                }
+                if (!ImGui::GetIO().WantCaptureMouse && isRightDown) {
+                    const auto yaw   = e.motion.xrel * fuse::degrees(0.125f);
+                    const auto pitch = e.motion.yrel * fuse::degrees(0.125f);
+                }
+            }
+            if (e.type == SDL_EVENT_KEY_DOWN) {
+                if (e.key.key == SDLK_W) {
+                    camera.moveForward(1.f);
+                }
+                if (e.key.key == SDLK_S) {
+                    camera.moveForward(-1.f);
+                }
+                if (e.key.key == SDLK_D) {
+                    camera.moveRight(1.f);
+                }
+                if (e.key.key == SDLK_A) {
+                    camera.moveRight(-1.f);
+                }
+                if (e.key.key == SDLK_Q) {
+                    camera.moveUp(1.f);
+                }
+                if (e.key.key == SDLK_E) {
+                    camera.moveUp(-1.f);
+                }
+                if (e.key.key == SDLK_Z) {
+                    camera.moveUp(1.f, false);
+                }
+                if (e.key.key == SDLK_X) {
+                    camera.moveUp(-1.f, false);
+                }
+            }
+
             ImGui_ImplSDL3_ProcessEvent(&e);
         }
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
-        ImGui::ShowDemoWindow(); // Show demo window! :)
+
+        onImGuiRender();
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(projLocation, 1, GL_FALSE, projectionMatrix.data());
-        glUniformMatrix4fv(
-          viewLocation,
-          1,
-          GL_FALSE,
-          fuse::Mat4::CreateViewLookAt({0, 0, 20}, {0, 0, -1}, Vec3::kUnitY).data());
+        shader.bind();
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        shader.setMatrix("proj", camera.getProjectionMatrix());
+        shader.setMatrix("view", camera.getViewMatrix());
+        //shader.setMatrix("view",
+        //                 fuse::Mat4::CreateViewLookTo({0, 2, 15}, {0, 0, -1}, Vec3::kUnitY));
 
-        glBindVertexArray(VAO);
+        // first grid
+        {
+            shader.setMatrix("model", fuse::Mat4::CreateScaling({20, 1, 20}));
+            shader.setVector("diffuseColor", {0, 1, 0, 1});
+            renderMesh(gridMesh);
+        }
 
-        // first cube
-        auto transform = fuse::Mat4::CreateRotation(fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f,
-                                                    fuse::Vec3(0, 1, 0).normalize());
-        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        const unsigned count   = 10;
+        const float    spacing = 5.f;
+        for (unsigned int i = 0; i < count; i++) {
+            float x = (count / 2.f) * -5.f;
+            x += (i * spacing);
+            shader.setMatrix("model", fuse::Mat4::CreateTranslation({x, 1, -5}));
+            shader.setVector("diffuseColor", {0.5, 0.5, 0.5, 1});
+            renderMesh(cylinderMesh);
+        }
+
 
         // second cube
-        transform = fuse::Mat4::CreateTranslation({-10, 0, 0}) *
-                    fuse::Mat4::CreateRotation(fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f,
-                                               fuse::Vec3(0, 1, 0).normalize());
-        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform.data());
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        {
+            const auto        t     = fuse::Mat4::CreateTranslation({-10, 2, 0});
+            const fuse::Angle angle = fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f;
+            const auto r = fuse::Mat4::CreateRotation(angle, fuse::Vec3(0, 1, 0).normalize());
+            const auto transform = t * r;
+            shader.setMatrix("model", transform);
+            shader.setVector("diffuseColor", {1, 0, 1, 1});
+            renderMesh(sphereMesh);
+        }
 
-        const auto transform2 = fuse::Mat4::CreateTranslation({+10, 0, 0});
-        transform             = transform * transform2;
-        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, transform2.data());
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        {
+            const auto transform = fuse::Mat4::CreateTranslation({+10, 2, 0});
+            shader.setMatrix("model", transform);
+            shader.setVector("diffuseColor", {1, 1, 1, 1});
+            renderMesh(boxMesh);
+        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

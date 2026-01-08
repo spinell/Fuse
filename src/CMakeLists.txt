@@ -5,7 +5,21 @@ find_package(SDL3 3.2.28 CONFIG REQUIRED)
 message(STATUS "SDL3_DIR     : " ${SDL3_DIR})
 message(STATUS "SDL3_VERSION : " ${SDL3_VERSION})
 
-add_executable(Fuse main.cpp)
+add_executable(Fuse
+    main.cpp
+    Buffer.cpp
+    Buffer.h
+    Texture.cpp
+    Texture.h
+    Shader.cpp
+    Shader.h
+    Camera.h
+    Camera.cpp
+    ImGui.h
+    ImGui.cpp
+    GeometryGenerator.h
+    GeometryGenerator.cpp
+)
 fuse_target_set_compiler_warnings(Fuse)
 
 target_link_libraries(Fuse
