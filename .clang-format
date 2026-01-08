@@ -171,6 +171,8 @@ IncludeCategories:
   - Regex        : '^<Fuse.*'
     Priority     : 2
     # <gtest/ "gtest/ <gmock/ "gmock/
+  - Regex        : '^((<|")imgui*)'
+    Priority     : 5
   - Regex        : '^((<|")(gtest|gmock)/)'
     Priority     : 5
     # system headers

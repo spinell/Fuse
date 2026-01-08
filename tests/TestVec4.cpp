@@ -103,7 +103,7 @@ TEST(Vec4, add_vec4) {
     // operator+=(vec4, vec4)
     {
         Vec4        v(1, 2, 3, 4);
-        const Vec4 v2(10, 20, 30, 40);
+        const Vec4  v2(10, 20, 30, 40);
         const Vec4& r = v += v2;
 
         EXPECT_EQ(v.x, 11.f);
@@ -136,7 +136,7 @@ TEST(Vec4, substract_two_vector) {
     // operator-=(vec4, vec4)
     {
         Vec4        v(1, 2, 3, 4);
-        const Vec4 v2(10, 20, 30, 40);
+        const Vec4  v2(10, 20, 30, 40);
         const Vec4& r = v -= v2;
 
         EXPECT_EQ(v.x, -9.f);

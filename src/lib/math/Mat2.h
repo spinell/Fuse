@@ -42,7 +42,9 @@ public:
     /// @brief Direct access to elements @p row / @p col.
     /// @param[in] row The row index
     /// @param[in] col The col index
-    [[nodiscard]] constexpr float& operator()(unsigned row, unsigned col) noexcept { return mData[col][row]; }
+    [[nodiscard]] constexpr float& operator()(unsigned row, unsigned col) noexcept {
+        return mData[col][row];
+    }
 
     /// @copydoc operator()(int, int)
     [[nodiscard]] constexpr float operator()(unsigned row, unsigned col) const noexcept {
