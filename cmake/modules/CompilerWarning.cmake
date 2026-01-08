@@ -65,7 +65,7 @@ function(fuse_target_set_compiler_warnings target)
                 -Wpedantic
                 -Wno-comment              # this will trigger warning on doxygen comments which use latex matrix
                 -Wnon-virtual-dtor        # warn the user if a class with virtual functions has a non-virtual destructor.
-                -Wshadow                  # warn the user if a variable declaration shadows one from a parent context
+                #-Wshadow                  # warn the user if a variable declaration shadows one from a parent context
                 #-Wold-style-cast         # warn for c-style casts
                 #-Wcast-align             # warn for potential performance problem casts
                 -Wunused                  # warn on anything being unused
