@@ -430,6 +430,8 @@ GeometryGenerator::MeshData GeometryGenerator::createSphere(float radius, unsign
 //------------------------------------------------------------------------
 GeometryGenerator::MeshData GeometryGenerator::createFullscreenQuad() {
     MeshData meshData;
+    meshData.Vertices.resize(4);
+    meshData.Indices.resize(6);
 
     // Position coordinates specified in NDC space.
     meshData.Vertices[0] =
