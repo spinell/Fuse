@@ -281,7 +281,7 @@ int main(int, char**) {
     SDL_WindowFlags window_flags =
       SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
     if (gWindow =
-          SDL_CreateWindow("SDL3 Tutorial: Hello SDL3", kScreenWidth, kScreenHeight, window_flags);
+          SDL_CreateWindow("FuseTestbed", kScreenWidth, kScreenHeight, window_flags);
         gWindow == nullptr) {
         SDL_Log("Window could not be created! SDL error: %s\n", SDL_GetError());
         return -1;

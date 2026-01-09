@@ -1,11 +1,9 @@
 
-add_subdirectory(lib)
-
 find_package(SDL3 3.2.28 CONFIG REQUIRED)
 message(STATUS "SDL3_DIR     : " ${SDL3_DIR})
 message(STATUS "SDL3_VERSION : " ${SDL3_VERSION})
 
-add_executable(Fuse
+add_executable(FuseTestbed
     main.cpp
     Buffer.cpp
     Buffer.h
@@ -22,9 +20,9 @@ add_executable(Fuse
     TextureGenerator.h
     TextureGenerator.cpp
 )
-fuse_target_set_compiler_warnings(Fuse)
+fuse_target_set_compiler_warnings(FuseTestbed)
 
-target_link_libraries(Fuse
+target_link_libraries(FuseTestbed
     PRIVATE
         SDL3::SDL3
         glad2::glad2
@@ -32,8 +30,8 @@ target_link_libraries(Fuse
         Fuse::Lib
 )
 
-# The SDL INTERFACE_SYSTEM_INCLUDE_DIRECTORIES isnot propagated ....
+# The SDL INTERFACE_SYSTEM_INCLUDE_DIRECTORIES is not propagated ....
 get_target_property(sdl_include_dir SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(Fuse SYSTEM PRIVATE ${sdl_include_dir})
+target_include_directories(FuseTestbed SYSTEM PRIVATE ${sdl_include_dir})
 
-install(TARGETS Fuse DESTINATION .)
+install(TARGETS FuseTestbed DESTINATION .)
