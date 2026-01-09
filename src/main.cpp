@@ -490,13 +490,13 @@ int main(int, char**) {
             }
             if (e.type == SDL_EVENT_KEY_DOWN) {
                 if (e.key.scancode == SDL_SCANCODE_1) {
-                    floorTextureID = (floorTextureID + 1) % textures.size();
+                    floorTextureID = (floorTextureID + 1) % (unsigned)textures.size();
                 }
                 if (e.key.scancode == SDL_SCANCODE_2) {
                     floorTextureID = floorTextureID == 0u ? (unsigned)textures.size() - 1u : floorTextureID - 1u;
                 }
                 if (e.key.scancode == SDL_SCANCODE_KP_0) {
-                    cubeTextureID = (cubeTextureID + 1) % brickTextures.size();
+                    cubeTextureID = (cubeTextureID + 1) % (unsigned)brickTextures.size();
                 }
                 if (e.key.scancode == SDL_SCANCODE_KP_1) {
                     cubeTextureID = cubeTextureID == 0u ? (unsigned)brickTextures.size() - 1u : cubeTextureID - 1u;

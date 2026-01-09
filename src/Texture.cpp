@@ -45,7 +45,7 @@ Texture::Texture(unsigned width, unsigned height, void* data) {
     glTextureParameteri(mId, GL_TEXTURE_MAX_ANISOTROPY, maxAniso);
 
     const auto max = std::max(width, height);
-    const auto nbLevel = std::log2(max) + 1;
+    const auto nbLevel = GLsizei(std::log2(max)) + 1;
     glTextureStorage2D(mId, nbLevel, GL_RGBA8, width, height);
 
 
