@@ -1,6 +1,7 @@
 #include "Buffer.h"
 #include "Camera.h"
 #include "GeometryGenerator.h"
+#include "TextureGenerator.h"
 #include "math/Angle.h"
 #include "math/Mat4.h"
 #include "math/Vec3.h"
@@ -313,6 +314,13 @@ int main(int, char**) {
         printf("Error: SDL_GL_MakeCurrent(): %s\n", SDL_GetError());
         return 1;
     }
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "aaaaaaaaaaaaaaaaaaaaaaaa");
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "cccccccccccccccccc");
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "ddddddddddddddddddd");
+    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "eeeeeeeeeeeeeeeeeeee");
+    if(!SDL_GL_SetSwapInterval(0)) {
+        printf("Error: SDL_GL_SetSwapInterval(): %s\n", SDL_GetError());
+    }
 
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
     printf("Glad Version: %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
@@ -397,8 +405,49 @@ int main(int, char**) {
     glEnable(GL_CULL_FACE);
 
 
-    Shader       shader;
-    Texture      texture(4, 4, nullptr);
+    Shader               shader;
+    Texture debugMipmap = Texture::CreateDebugWithMipmap();
+    Texture blackWhiteCheckBoardtexture = Texture::CreateCheckerboard(64, 64, Texture::Color{0,0,0}, Texture::Color{255,255,255}, 8);
+    Texture checkBoardtexture = Texture::CreateCheckerboard(1024, 1024, Texture::Color{255,0,0}, Texture::Color{0,255,255}, 8);
+    Texture xorTexture = Texture::Create(TextureGenerator::generateXor(256,256));
+    Texture brickTexture1 = Texture::Create(TextureGenerator::generateBrickTexture1(1024,1024));
+    Texture brickTexture2 = Texture::Create(TextureGenerator::generateBrickTexture2(1024,1024));
+    Texture brickTexture3 = Texture::Create(TextureGenerator::generateBrickTexture3(1024,1024));
+    Texture brickTexture4 = Texture::Create(TextureGenerator::generateBrickTexture4(1024,1024));
+    Texture brickTexture5 = Texture::Create(TextureGenerator::generateBrickTexture5(512,512));
+    Texture brickTexture6 = Texture::Create(TextureGenerator::generateBrickTexture6(256,128));
+    Texture grass1 = Texture::Create(TextureGenerator::generateGrass(1024,1024));
+    Texture grass2 = Texture::Create(TextureGenerator::generateGrass2(1024,1024));
+    //Texture              btickTexture1     = Texture::CreateBrick1();
+    //Texture              btickTexture2     = Texture::CreateBrick2();
+    //Texture              btickTexture3     = Texture::CreateBrick3();
+    //Texture              btickTexture4     = Texture::CreateBrick4(1024, 1024, 40, 20, 5);
+    //Texture              grassTexture      = Texture::CreateGrass(1024, 1024);
+    //Texture              t1                = Texture::Create(1024, 1024, 1);
+    //auto textureData = TextureGenerator::generateBrickImage4(1024,1024, 40, 20, 5);
+    //t1.upload(0, 1024, 1024, (void*)textureData.data());
+    //textureData = TextureGenerator::generateGrass(512,512);
+    //t1.upload(1,  512,  512, (void*)textureData.data());
+    //textureData = TextureGenerator::generateBrickImage4(256,256, 40, 20, 5);
+    //t1.upload(1,  256,  256, (void*)textureData.data());
+    std::vector<Texture*> brickTextures = {
+        &brickTexture1, &brickTexture2, &brickTexture3, &brickTexture4, &brickTexture5, &brickTexture6};
+    std::vector<Texture*> textures = {
+        &debugMipmap,
+        &checkBoardtexture,
+        &xorTexture,
+        &brickTexture1,
+        &brickTexture2,
+        &brickTexture3,
+        &brickTexture4,
+        &brickTexture5,
+        &brickTexture6,
+        &grass1,
+        &grass2
+    };
+    unsigned int cubeTextureID = 0;
+    unsigned int floorTextureID = 0;
+
     auto         boxMesh       = Mesh::CreateBox();
     auto         gridMesh      = Mesh::CreateGrid();
     auto         geoSphereMesh = Mesh::CreateGeoSphere();
@@ -431,7 +480,7 @@ int main(int, char**) {
                 camera.setFovY(camera.getFovY() + fuse::degrees(e.wheel.y * 10));
             }
             if (e.type == SDL_EVENT_MOUSE_MOTION) {
-                const bool isLeftDown  = (e.motion.state & SDL_BUTTON_LMASK) == SDL_BUTTON_LMASK;
+                const bool isLeftDown = (e.motion.state & SDL_BUTTON_LMASK) == SDL_BUTTON_LMASK;
                 if (!ImGui::GetIO().WantCaptureMouse && isLeftDown) {
                     const auto yaw   = e.motion.xrel * fuse::degrees(0.125f);
                     const auto pitch = e.motion.yrel * fuse::degrees(0.125f);
@@ -440,28 +489,40 @@ int main(int, char**) {
                 }
             }
             if (e.type == SDL_EVENT_KEY_DOWN) {
-                if (e.key.key == SDLK_W) {
+                if (e.key.scancode == SDL_SCANCODE_1) {
+                    floorTextureID = (floorTextureID + 1) % textures.size();
+                }
+                if (e.key.scancode == SDL_SCANCODE_2) {
+                    floorTextureID = floorTextureID == 0u ? (unsigned)textures.size() - 1u : floorTextureID - 1u;
+                }
+                if (e.key.scancode == SDL_SCANCODE_KP_0) {
+                    cubeTextureID = (cubeTextureID + 1) % brickTextures.size();
+                }
+                if (e.key.scancode == SDL_SCANCODE_KP_1) {
+                    cubeTextureID = cubeTextureID == 0u ? (unsigned)brickTextures.size() - 1u : cubeTextureID - 1u;
+                }
+                if (e.key.scancode == SDL_SCANCODE_W) {
                     camera.moveForward(1.f);
                 }
-                if (e.key.key == SDLK_S) {
+                if (e.key.scancode == SDL_SCANCODE_S) {
                     camera.moveForward(-1.f);
                 }
-                if (e.key.key == SDLK_D) {
+                if (e.key.scancode == SDL_SCANCODE_D) {
                     camera.moveRight(1.f);
                 }
-                if (e.key.key == SDLK_A) {
+                if (e.key.scancode == SDL_SCANCODE_A) {
                     camera.moveRight(-1.f);
                 }
-                if (e.key.key == SDLK_Q) {
+                if (e.key.scancode == SDL_SCANCODE_Q) {
                     camera.moveUp(1.f);
                 }
-                if (e.key.key == SDLK_E) {
+                if (e.key.scancode == SDL_SCANCODE_E) {
                     camera.moveUp(-1.f);
                 }
-                if (e.key.key == SDLK_Z) {
+                if (e.key.scancode == SDL_SCANCODE_Z) {
                     camera.moveUp(1.f, false);
                 }
-                if (e.key.key == SDLK_X) {
+                if (e.key.scancode == SDL_SCANCODE_X) {
                     camera.moveUp(-1.f, false);
                 }
             }
@@ -479,45 +540,71 @@ int main(int, char**) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.bind();
-        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        glBindTexture(GL_TEXTURE_2D, textures[floorTextureID]->getId());
         shader.setMatrix("proj", camera.getProjectionMatrix());
         shader.setMatrix("view", camera.getViewMatrix());
-        //shader.setMatrix("view",
-        //                 fuse::Mat4::CreateViewLookTo({0, 2, 15}, {0, 0, -1}, Vec3::kUnitY));
 
         // first grid
         {
             shader.setMatrix("model", fuse::Mat4::CreateScaling({20, 1, 20}));
-            shader.setVector("diffuseColor", {0, 1, 0, 1});
+            shader.setVector("diffuseColor", {1, 1, 1, 1});
+            shader.setVector("uvScale", {1, 1, 0, 0});
             renderMesh(gridMesh);
         }
 
+        // Cylinder
+        glBindTexture(GL_TEXTURE_2D, blackWhiteCheckBoardtexture.getId());
         const unsigned count   = 10;
         const float    spacing = 5.f;
         for (unsigned int i = 0; i < count; i++) {
             float x = (count / 2.f) * -5.f;
             x += ((float)i * spacing);
             shader.setMatrix("model", fuse::Mat4::CreateTranslation({x, 1, -5}));
-            shader.setVector("diffuseColor", {0.5, 0.5, 0.5, 1});
+            shader.setVector("diffuseColor", {1, 1, 1, 1});
+            shader.setVector("uvScale", {1, 1, 0, 0});
             renderMesh(cylinderMesh);
         }
 
-
-        // second cube
+        // Sphere
         {
+            glBindTexture(GL_TEXTURE_2D, blackWhiteCheckBoardtexture.getId());
             const auto        t     = fuse::Mat4::CreateTranslation({-10, 2, 0});
             const fuse::Angle angle = fuse::degrees(35) * (float)SDL_GetTicks() / 1000.f;
             const auto r = fuse::Mat4::CreateRotation(angle, fuse::Vec3(0, 1, 0).normalize());
             const auto transform = t * r;
             shader.setMatrix("model", transform);
-            shader.setVector("diffuseColor", {1, 0, 1, 1});
+            shader.setVector("diffuseColor", {1, 1, 1, 1});
             renderMesh(sphereMesh);
         }
-
+        // wall of box
         {
-            const auto transform = fuse::Mat4::CreateTranslation({+10, 2, 0});
-            shader.setMatrix("model", transform);
+            glBindTexture(GL_TEXTURE_2D, brickTextures[cubeTextureID]->getId());
+            auto transform = fuse::Mat4::CreateTranslation({+10, 1, 5});
             shader.setVector("diffuseColor", {1, 1, 1, 1});
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 0});
+            shader.setMatrix("model", transform);
+            renderMesh(boxMesh);
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 1});
+            shader.setMatrix("model", transform);
+            renderMesh(boxMesh);
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 1});
+            shader.setMatrix("model", transform);
+            renderMesh(boxMesh);
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 1});
+            shader.setMatrix("model", transform);
+            renderMesh(boxMesh);
+
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 1});
+            shader.setMatrix("model", transform);
+            renderMesh(boxMesh);
+
+            transform *= fuse::Mat4::CreateTranslation({0, 0, 1});
+            shader.setMatrix("model", transform);
             renderMesh(boxMesh);
         }
 

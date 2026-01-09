@@ -13,7 +13,6 @@ layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec3 aTangent;
 layout(location = 3) in vec2 aUV;
 
-out vec4 oColor;
 out vec2 uv;
 
 uniform mat4 proj;
@@ -23,7 +22,6 @@ uniform mat4 model;
 void main()
 {
     gl_Position = proj * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
-    oColor = vec4(aNormal, 1.f);
     uv = aUV;
 }
 )";
@@ -31,16 +29,16 @@ void main()
 const char* pixel_shader_source = R"(
 #version 330 core
 
-in vec4 oColor;
 in vec2 uv;
 out vec4 FragColor;
 
 uniform sampler2D ourTexture;
 uniform vec4 diffuseColor;
+uniform vec4 uvScale = vec4(1,1,0,0);
 
 void main()
 {
-    FragColor = diffuseColor * oColor * texture(ourTexture, uv);
+    FragColor = diffuseColor * texture(ourTexture, uv * uvScale.xy + uvScale.zw);
 }
 )";
 

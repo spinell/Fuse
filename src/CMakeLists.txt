@@ -19,6 +19,8 @@ add_executable(Fuse
     ImGui.cpp
     GeometryGenerator.h
     GeometryGenerator.cpp
+    TextureGenerator.h
+    TextureGenerator.cpp
 )
 fuse_target_set_compiler_warnings(Fuse)
 
