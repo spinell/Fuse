@@ -86,7 +86,7 @@ ImageData generateBrickTexture2(unsigned width, unsigned height) {
             bool isMortar = (y_pos < mortarSize) || (x_pos < mortarSize);
 
             // Add some variation/noise to the bricks
-            const float noise     = (static_cast<float>(std::rand()) / RAND_MAX) * 0.1f;
+            const float noise     = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX) * 0.1f;
             const int   variation = static_cast<int>(noise * 50);
 
             unsigned char r, g, b;
@@ -302,9 +302,9 @@ ImageData generateGrass(unsigned width, unsigned height) {
             unsigned char b = 34;
 
             // Add some random variation for natural look
-            r += (std::rand() % 20) - 10;
-            g += (std::rand() % 30) - 15;
-            b += (std::rand() % 20) - 10;
+            r += static_cast<unsigned char>((std::rand() % 20) - 10);
+            g += static_cast<unsigned char>((std::rand() % 30) - 15);
+            b += static_cast<unsigned char>((std::rand() % 20) - 10);
 
             // Optional: a simple "blade" pattern near the bottom
             if (y > height / 2 && std::rand() % 10 < 1) {
