@@ -21,13 +21,13 @@ Texture Texture::Create(unsigned width, unsigned height, unsigned mipmap) {
 
     // compute the number of level in the texture (nbMipmap + 1).
     const unsigned level = [mipmap, width, height]() {
-        if (mipmap == -1u) {
+        if (mipmap == static_cast<unsigned>(-1)) {
             return static_cast<unsigned>(std::log2(std::max(width, height))) + 1;
         }
         return mipmap + 1;
     }();
 
-    glTextureStorage2D(tex.mId, level, GL_RGBA8, width, height);
+    glTextureStorage2D(tex.mId, (GLsizei)level, GL_RGBA8, (GLsizei)width, (GLsizei)height);
 
     return tex;
 }
@@ -40,16 +40,16 @@ Texture::Texture(unsigned width, unsigned height, void* data) {
     glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // Anisotropic filtering
-    GLint maxAniso = 0.0f;
+    GLint maxAniso = 0;
     glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &maxAniso);
     glTextureParameteri(mId, GL_TEXTURE_MAX_ANISOTROPY, maxAniso);
 
     const auto max = std::max(width, height);
     const auto nbLevel = GLsizei(std::log2(max)) + 1;
-    glTextureStorage2D(mId, nbLevel, GL_RGBA8, width, height);
+    glTextureStorage2D(mId, (GLsizei)nbLevel, GL_RGBA8, (GLsizei)width, (GLsizei)height);
 
 
-    glTextureSubImage2D(mId, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTextureSubImage2D(mId, 0, 0, 0, (GLsizei)width, (GLsizei)height, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateTextureMipmap(mId);
 
 
@@ -65,7 +65,7 @@ Texture::~Texture() { glDeleteTextures(1, &mId); }
 
 
 void Texture::upload(unsigned mipmap, unsigned width, unsigned height, void* data) {
-    glTextureSubImage2D(mId, mipmap, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTextureSubImage2D(mId, (GLsizei)mipmap, 0, 0, (GLsizei )width, (GLsizei)height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
 void Texture::bind() {}
