@@ -295,11 +295,11 @@ int main(int, char**) {
 
     SDL_GLContextFlag contextFlag = 0;
     contextFlag |= SDL_GL_CONTEXT_DEBUG_FLAG;
-    // contextFlag |= SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG;
-    // contextFlag |= SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG;
-    contextFlag |= SDL_GL_CONTEXT_RESET_ISOLATION_FLAG;
+    contextFlag |= SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG;
+    contextFlag |= SDL_GL_CONTEXT_ROBUST_ACCESS_FLAG;
+    //contextFlag |= SDL_GL_CONTEXT_RESET_ISOLATION_FLAG; // this cause context creation fail in WSL
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_NO_ERROR, 1);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_NO_ERROR, 1); // this cause context creation fail in WSL
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, (int)contextFlag);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
