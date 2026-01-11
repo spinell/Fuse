@@ -1,12 +1,13 @@
 #include "Buffer.h"
 #include "Camera.h"
 #include "GeometryGenerator.h"
-#include "TextureGenerator.h"
 #include "math/Angle.h"
 #include "math/Mat4.h"
 #include "math/Vec3.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "TextureGenerator.h"
+#include "Log.h"
 
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
@@ -17,7 +18,6 @@
 #include <imgui/backends/imgui_impl_sdl3.h>
 
 #include <cassert>
-#include <print>
 #include <utility>
 
 constexpr int kScreenWidth{1024};
@@ -49,7 +49,7 @@ struct Mesh {
     static Mesh CreateGrid() {
         Mesh              mesh;
         GeometryGenerator geometryGenerator;
-        const auto        data = geometryGenerator.createGrid(10, 10, 10, 10);
+        const auto        data = geometryGenerator.createGrid(1, 1, 2, 2);
         Upload(data, mesh);
         return mesh;
     }
@@ -147,7 +147,7 @@ static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum se
         }
     }();
 
-    std::println("[OpenGL][{}][{}][{}]({}) {}", typeStr, sourceStr, severityStr, id, message);
+    fuse::logInfo("[OpenGL][{}][{}][{}]({}) {}", typeStr, sourceStr, severityStr, id, message);
 }
 
 
@@ -205,6 +205,30 @@ static void onImGuiRender() {
         glPolygonMode(GL_FRONT_AND_BACK, wireframeEnable ? GL_LINE : GL_FILL);
     }
 
+    bool isSRgb = glIsEnabled(GL_FRAMEBUFFER_SRGB);
+    if (ImGui::Checkbox("SRGB", &isSRgb)) {
+        if (isSRgb) {
+            glEnable(GL_FRAMEBUFFER_SRGB);
+        } else {
+            glDisable(GL_FRAMEBUFFER_SRGB);
+        }
+    }
+    bool isDepthTest = glIsEnabled(GL_DEPTH_TEST);
+    if (ImGui::Checkbox("DepthTest", &isDepthTest)) {
+        if (isDepthTest) {
+            glEnable(GL_DEPTH_TEST);
+        } else {
+            glDisable(GL_DEPTH_TEST);
+        }
+    }
+    bool isMSAA = glIsEnabled(GL_MULTISAMPLE);
+    if (ImGui::Checkbox("MSAA", &isMSAA)) {
+        if (isMSAA) {
+            glEnable(GL_MULTISAMPLE);
+        } else {
+            glDisable(GL_MULTISAMPLE);
+        }
+    }
     fuse::Imgui::TextFmt("{:.3f} ms/frame", 1000.0f / ImGui::GetIO().Framerate);
     fuse::Imgui::TextFmt("{:.1f} FPS", ImGui::GetIO().Framerate);
     ImGui::Separator();
@@ -244,54 +268,56 @@ static void onImGuiRender() {
 
 
 int main(int, char**) {
-    std::println("SDL compiled version: {}.{}.{}",
+    fuse::logInfo("SDL compiled version: {}.{}.{}",
                  SDL_MAJOR_VERSION,
                  SDL_MINOR_VERSION,
                  SDL_MICRO_VERSION);
-    std::println("SDL runtime  version: {}.{}.{}",
+    fuse::logInfo("SDL runtime  version: {}.{}.{}",
                  SDL_VERSIONNUM_MAJOR(SDL_GetVersion()),
                  SDL_VERSIONNUM_MINOR(SDL_GetVersion()),
                  SDL_VERSIONNUM_MICRO(SDL_GetVersion()));
 
-    std::println("NumVideoDrivers {}", SDL_GetNumVideoDrivers());
+    fuse::logInfo("NumVideoDrivers {}", SDL_GetNumVideoDrivers());
     for (auto i = 0; i < SDL_GetNumVideoDrivers(); i++) {
-        std::println(" - {}", SDL_GetVideoDriver(i));
+        fuse::logInfo(" - {}", SDL_GetVideoDriver(i));
     }
 
-    std::println("NumAudioDrivers {}", SDL_GetNumAudioDrivers());
+    fuse::logInfo("NumAudioDrivers {}", SDL_GetNumAudioDrivers());
     for (auto i = 0; i < SDL_GetNumAudioDrivers(); i++) {
-        std::println(" - {}", SDL_GetAudioDriver(i));
+        fuse::logInfo(" - {}", SDL_GetAudioDriver(i));
     }
 
-    std::println("NumRenderDrivers {}", SDL_GetNumRenderDrivers());
+    fuse::logInfo("NumRenderDrivers {}", SDL_GetNumRenderDrivers());
     for (auto i = 0; i < SDL_GetNumRenderDrivers(); i++) {
-        std::println(" - {}", SDL_GetRenderDriver(i));
+        fuse::logInfo(" - {}", SDL_GetRenderDriver(i));
     }
 
-    std::println("NumGPUDrivers {}", SDL_GetNumGPUDrivers());
+    fuse::logInfo("NumGPUDrivers {}", SDL_GetNumGPUDrivers());
     for (auto i = 0; i < SDL_GetNumGPUDrivers(); i++) {
-        std::println(" - {}", SDL_GetGPUDriver(i));
+        fuse::logInfo(" - {}", SDL_GetGPUDriver(i));
     }
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        SDL_Log("SDL could not initialize! SDL error: %s\n", SDL_GetError());
+        fuse::logFatal("SDL could not initialize! SDL error: {}", SDL_GetError());
         return -1;
     }
 
-    SDL_WindowFlags window_flags =
-      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
-    if (gWindow =
-          SDL_CreateWindow("FuseTestbed", kScreenWidth, kScreenHeight, window_flags);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, 0);
+    SDL_GL_SetAttribute(SDL_GL_FLOATBUFFERS, 0);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_WindowFlags window_flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
+    if (gWindow = SDL_CreateWindow("FuseTestbed", kScreenWidth, kScreenHeight, window_flags);
         gWindow == nullptr) {
-        SDL_Log("Window could not be created! SDL error: %s\n", SDL_GetError());
-        return -1;
+        fuse::logFatal("Window could not be created! SDL error: {}", SDL_GetError());
     } else {
         gScreenSurface = SDL_GetWindowSurface(gWindow);
     }
 
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     SDL_GLContextFlag contextFlag = 0;
@@ -307,41 +333,36 @@ int main(int, char**) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GLContext gl_context = SDL_GL_CreateContext(gWindow);
     if (gl_context == nullptr) {
-        printf("Error: SDL_GL_CreateContext(): %s\n", SDL_GetError());
-        return 1;
+        fuse::logFatal("Unable to create OpenGLcontext: {}", SDL_GetError());
     }
     if (!SDL_GL_MakeCurrent(gWindow, gl_context)) {
-        printf("Error: SDL_GL_MakeCurrent(): %s\n", SDL_GetError());
-        return 1;
+        fuse::logFatal("Unable to bind OpenGL context: {}", SDL_GetError());
     }
-    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "aaaaaaaaaaaaaaaaaaaaaaaa");
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "cccccccccccccccccc");
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "ddddddddddddddddddd");
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "eeeeeeeeeeeeeeeeeeee");
-    if(!SDL_GL_SetSwapInterval(0)) {
-        printf("Error: SDL_GL_SetSwapInterval(): %s\n", SDL_GetError());
+
+    if (!SDL_GL_SetSwapInterval(0)) {
+        fuse::logWarn("Unable to set OpenGL Swap Interval: {}", SDL_GetError());
     }
 
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-    printf("Glad Version: %d.%d\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+    fuse::logInfo("Glad Version: {}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
     const GLubyte* glVersion       = glGetString(GL_VERSION);
     const GLubyte* glVendor        = glGetString(GL_VENDOR);
     const GLubyte* glRenderer      = glGetString(GL_RENDERER);
     const GLubyte* glShaderVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
     // const GLubyte *glExtension = glGetString(GL_EXTENSIONS );
-    std::println("OpenGL Version       : {}", (const char*)glVersion);
-    std::println("OpenGL vendor        : {}", (const char*)glVendor);
-    std::println("OpenGL renderer      : {}", (const char*)glRenderer);
-    std::println("OpenGL Shader Version: {}", (const char*)glShaderVersion);
+    fuse::logInfo("OpenGL Version       : {}", (const char*)glVersion);
+    fuse::logInfo("OpenGL vendor        : {}", (const char*)glVendor);
+    fuse::logInfo("OpenGL renderer      : {}", (const char*)glRenderer);
+    fuse::logInfo("OpenGL Shader Version: {}", (const char*)glShaderVersion);
     GLint nbShaderLang{};
     glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &nbShaderLang);
     for (GLuint i = 0; i < (GLuint)nbShaderLang; i++) {
         const GLubyte* shaderVersion = glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
-        std::println(" - Shader Version: {}", (const char*)shaderVersion);
+        fuse::logInfo(" - Shader Version: {}", (const char*)shaderVersion);
     }
 
-    // std::println("OpenGL Extension     : {}", (const char *)glExtension);
+    // fuse::logInfo("OpenGL Extension     : {}", (const char *)glExtension);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -376,16 +397,16 @@ int main(int, char**) {
     const bool isNoErrorContext =
       (flags & GL_CONTEXT_FLAG_NO_ERROR_BIT) == GL_CONTEXT_FLAG_NO_ERROR_BIT;
     if (isDebugContext) {
-        std::println("**** Debug context ***");
+        fuse::logInfo("**** Debug context ***");
     }
     if (isForwardContext) {
-        std::println("**** Forward context ***");
+        fuse::logInfo("**** Forward context ***");
     }
     if (isRobustContext) {
-        std::println("**** Robust context ***");
+        fuse::logInfo("**** Robust context ***");
     }
     if (isNoErrorContext) {
-        std::println("**** No Error context ***");
+        fuse::logInfo("**** No Error context ***");
     }
 
     if (isDebugContext) {
@@ -403,50 +424,48 @@ int main(int, char**) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_FRAMEBUFFER_SRGB);
 
-
-    Shader               shader;
-    Texture debugMipmap = Texture::CreateDebugWithMipmap();
-    Texture blackWhiteCheckBoardtexture = Texture::CreateCheckerboard(64, 64, Texture::Color{0,0,0}, Texture::Color{255,255,255}, 8);
-    Texture checkBoardtexture = Texture::CreateCheckerboard(1024, 1024, Texture::Color{255,0,0}, Texture::Color{0,255,255}, 8);
-    Texture xorTexture = Texture::Create(TextureGenerator::generateXor(256,256));
-    Texture brickTexture1 = Texture::Create(TextureGenerator::generateBrickTexture1(1024,1024));
-    Texture brickTexture2 = Texture::Create(TextureGenerator::generateBrickTexture2(1024,1024));
-    Texture brickTexture3 = Texture::Create(TextureGenerator::generateBrickTexture3(1024,1024));
-    Texture brickTexture4 = Texture::Create(TextureGenerator::generateBrickTexture4(1024,1024));
-    Texture brickTexture5 = Texture::Create(TextureGenerator::generateBrickTexture5(512,512));
-    Texture brickTexture6 = Texture::Create(TextureGenerator::generateBrickTexture6(256,128));
-    Texture grass1 = Texture::Create(TextureGenerator::generateGrass(1024,1024));
-    Texture grass2 = Texture::Create(TextureGenerator::generateGrass2(1024,1024));
-    //Texture              btickTexture1     = Texture::CreateBrick1();
-    //Texture              btickTexture2     = Texture::CreateBrick2();
-    //Texture              btickTexture3     = Texture::CreateBrick3();
-    //Texture              btickTexture4     = Texture::CreateBrick4(1024, 1024, 40, 20, 5);
-    //Texture              grassTexture      = Texture::CreateGrass(1024, 1024);
-    //Texture              t1                = Texture::Create(1024, 1024, 1);
-    //auto textureData = TextureGenerator::generateBrickImage4(1024,1024, 40, 20, 5);
-    //t1.upload(0, 1024, 1024, (void*)textureData.data());
-    //textureData = TextureGenerator::generateGrass(512,512);
-    //t1.upload(1,  512,  512, (void*)textureData.data());
-    //textureData = TextureGenerator::generateBrickImage4(256,256, 40, 20, 5);
-    //t1.upload(1,  256,  256, (void*)textureData.data());
-    std::vector<Texture*> brickTextures = {
-        &brickTexture1, &brickTexture2, &brickTexture3, &brickTexture4, &brickTexture5, &brickTexture6};
-    std::vector<Texture*> textures = {
-        &debugMipmap,
-        &checkBoardtexture,
-        &xorTexture,
-        &brickTexture1,
-        &brickTexture2,
-        &brickTexture3,
-        &brickTexture4,
-        &brickTexture5,
-        &brickTexture6,
-        &grass1,
-        &grass2
-    };
-    unsigned int cubeTextureID = 0;
-    unsigned int floorTextureID = 0;
+    Shader  shader;
+    Texture debugMipmap                 = Texture::CreateDebugWithMipmap();
+    Texture blackWhiteCheckBoardtexture = Texture::CreateCheckerboard(64,
+                                                                      64,
+                                                                      Texture::Color{0, 0, 0},
+                                                                      Texture::Color{255, 255, 255},
+                                                                      8);
+    Texture checkBoardtexture           = Texture::CreateCheckerboard(1024,
+                                                            1024,
+                                                            Texture::Color{255, 0, 0},
+                                                            Texture::Color{0, 255, 255},
+                                                            8);
+    Texture xorTexture                  = Texture::Create(TextureGenerator::generateXor(256, 256));
+    Texture brickTexture1 = Texture::Create(TextureGenerator::generateBrickTexture1(1024, 1024));
+    Texture brickTexture2 = Texture::Create(TextureGenerator::generateBrickTexture2(1024, 1024));
+    Texture brickTexture3 = Texture::Create(TextureGenerator::generateBrickTexture3(1024, 1024));
+    Texture brickTexture4 = Texture::Create(TextureGenerator::generateBrickTexture4(1024, 1024));
+    Texture brickTexture5 = Texture::Create(TextureGenerator::generateBrickTexture5(512, 512));
+    Texture brickTexture6 = Texture::Create(TextureGenerator::generateBrickTexture6(256, 128));
+    Texture grass1        = Texture::Create(TextureGenerator::generateGrass(1024, 1024));
+    Texture grass2        = Texture::Create(TextureGenerator::generateGrass2(1024, 1024));
+    std::vector<Texture*> brickTextures  = {&brickTexture1,
+                                            &brickTexture2,
+                                            &brickTexture3,
+                                            &brickTexture4,
+                                            &brickTexture5,
+                                            &brickTexture6};
+    std::vector<Texture*> textures       = {&debugMipmap,
+                                            &checkBoardtexture,
+                                            &xorTexture,
+                                            &brickTexture1,
+                                            &brickTexture2,
+                                            &brickTexture3,
+                                            &brickTexture4,
+                                            &brickTexture5,
+                                            &brickTexture6,
+                                            &grass1,
+                                            &grass2};
+    unsigned int          cubeTextureID  = 0;
+    unsigned int          floorTextureID = 0;
 
     auto         boxMesh       = Mesh::CreateBox();
     auto         gridMesh      = Mesh::CreateGrid();
@@ -493,13 +512,15 @@ int main(int, char**) {
                     floorTextureID = (floorTextureID + 1) % (unsigned)textures.size();
                 }
                 if (e.key.scancode == SDL_SCANCODE_2) {
-                    floorTextureID = floorTextureID == 0u ? (unsigned)textures.size() - 1u : floorTextureID - 1u;
+                    floorTextureID =
+                      floorTextureID == 0u ? (unsigned)textures.size() - 1u : floorTextureID - 1u;
                 }
                 if (e.key.scancode == SDL_SCANCODE_KP_0) {
                     cubeTextureID = (cubeTextureID + 1) % (unsigned)brickTextures.size();
                 }
                 if (e.key.scancode == SDL_SCANCODE_KP_1) {
-                    cubeTextureID = cubeTextureID == 0u ? (unsigned)brickTextures.size() - 1u : cubeTextureID - 1u;
+                    cubeTextureID = cubeTextureID == 0u ? (unsigned)brickTextures.size() - 1u
+                                                        : cubeTextureID - 1u;
                 }
                 if (e.key.scancode == SDL_SCANCODE_W) {
                     camera.moveForward(1.f);

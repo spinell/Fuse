@@ -2,8 +2,8 @@
 
 #include "math/Mat4.h"
 #include "math/Vec4.h"
+#include "Log.h"
 
-#include <print>
 
 namespace {
 const char* vertex_shader_source = R"(
@@ -52,7 +52,7 @@ static GLuint createShader(const char* source, GLenum shaderType) {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::println("Shader compilation failed: {}", infoLog);
+        fuse::logError("Shader compilation failed: {}", infoLog);
     }
     return shader;
 }
@@ -74,7 +74,7 @@ Shader::Shader() {
     glGetProgramiv(mProgram, GL_LINK_STATUS, &linkStatus);
     if (!linkStatus) {
         glGetProgramInfoLog(mProgram, 512, nullptr, infoLog);
-        std::println("Shader program failed to link : {}", infoLog);
+        fuse::logError("Shader program failed to link : {}", infoLog);
     }
 
     glDeleteShader(vertexShader);
@@ -99,7 +99,7 @@ void Shader::setMatrix(const char* name, const fuse::Mat4& matrix) {
 GLint Shader::getUniformLocation(const char* uniformName) const {
     GLint location = glGetUniformLocation(mProgram, uniformName);
     if (location == -1) {
-        std::println("Could not find uniform '{}' in shader.", uniformName);
+        fuse::logWarn("Could not find uniform '{}' in shader.", uniformName);
     }
     return location;
 }

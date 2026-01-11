@@ -19,6 +19,8 @@ add_executable(FuseTestbed
     GeometryGenerator.cpp
     TextureGenerator.h
     TextureGenerator.cpp
+    Log.h
+    Log.cpp
 )
 fuse_target_set_compiler_warnings(FuseTestbed)
 
@@ -28,6 +30,7 @@ target_link_libraries(FuseTestbed
         glad2::glad2
         ImGui::ImGui
         Fuse::Lib
+        stb::image
 )
 
 # The SDL INTERFACE_SYSTEM_INCLUDE_DIRECTORIES is not propagated ....

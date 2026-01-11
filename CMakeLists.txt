@@ -53,7 +53,8 @@ endif()
 # Add a custom target to run clang-format on all source files
 add_custom_target(
     ClangFormat
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/scripts/RunClangFormat.cmake
+    COMMAND ${CMAKE_COMMAND} -DCLANG_FORMAT_EXECUTABLE=${CLANG_FORMAT_EXECUTABLE} -P ${CMAKE_SOURCE_DIR}/scripts/RunClangFormat.cmake
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    VERBATIM
     COMMENT "Running clang-format on source files"
 )

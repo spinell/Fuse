@@ -32,3 +32,20 @@ target_include_directories(ImGui
     PUBLIC imgui ${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_link_libraries(ImGui PUBLIC SDL3::SDL3)
+
+#
+# STB
+#
+add_library(stb STATIC)
+add_library(stb::image ALIAS stb)
+target_sources(
+    stb
+    PRIVATE
+        stb_build.cpp
+        stb/stb_image.h
+        stb/stb_image_write.h
+)
+
+target_include_directories(stb
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/stb
+)
