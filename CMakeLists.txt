@@ -31,7 +31,8 @@ fuse_print_linker_flags()
 include(CompilerWarning)
 
 add_subdirectory(externals SYSTEM)
-add_subdirectory(src)
+add_subdirectory(src/lib)
+add_subdirectory(src/testbed)
 
 enable_testing()
 add_subdirectory(tests)
