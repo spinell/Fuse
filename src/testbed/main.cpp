@@ -184,7 +184,7 @@ static void renderMesh(const Mesh& mesh) {
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
 
-    glDrawElements(GL_TRIANGLES, mesh.nbIndices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.nbIndices, GL_UNSIGNED_INT, nullptr);
 }
 
 
