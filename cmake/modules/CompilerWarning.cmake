@@ -63,25 +63,26 @@ function(fuse_target_set_compiler_warnings target)
                 # GCC & Clang (GNU) specific
                 $<$<AND:$<CXX_COMPILER_FRONTEND_VARIANT:GNU>,$<CXX_COMPILER_ID:GNU,Clang>>:-Wall -Wextra>
                 -Wpedantic
-                -Wno-comment              # this will trigger warning on doxygen comments which use latex matrix
-                -Wnon-virtual-dtor        # warn the user if a class with virtual functions has a non-virtual destructor.
-                #-Wshadow                  # warn the user if a variable declaration shadows one from a parent context
-                #-Wold-style-cast         # warn for c-style casts
-                #-Wcast-align             # warn for potential performance problem casts
-                -Wunused                  # warn on anything being unused
-                -Woverloaded-virtual      # warn if you overload (not override) a virtual function
-                -Wconversion              # warn on type conversions that may lose data
-                #-Wmisleading-indentation # warn if indentation implies blocks where blocks do not exist
-                -Wnull-dereference        # warn if a null dereference is detected
-                -Wdouble-promotion        # warn if float is implicit promoted to double
-                -Wformat=2                # warn on security issues around functions that format output (ie printf)
-                -Wimplicit-fallthrough    # warns when case statements fall-through.
+                -Wno-comment                    # this will trigger warning on doxygen comments which use latex matrix
+                -Wnon-virtual-dtor              # warn the user if a class with virtual functions has a non-virtual destructor.
+                #-Wshadow                       # warn the user if a variable declaration shadows one from a parent context
+                #-Wold-style-cast               # warn for c-style casts
+                #-Wcast-align                   # warn for potential performance problem casts
+                -Wunused                        # warn on anything being unused
+                -Woverloaded-virtual            # warn if you overload (not override) a virtual function
+                -Wconversion                    # warn on type conversions that may lose data
+                #-Wmisleading-indentation       # warn if indentation implies blocks where blocks do not exist
+                -Wnull-dereference              # warn if a null dereference is detected
+                -Wdouble-promotion              # warn if float is implicit promoted to double
+                -Wformat=2                      # warn on security issues around functions that format output (ie printf)
+                -Wimplicit-fallthrough          # warn when case statements fall-through.
                 -Wswitch
-                -Wswitch-default
-                -Wswitch-enum
+                -Wswitch-default                # warn whenever a switch statement does not have a default case.
+                -Wswitch-enum                   # warn about an omitted enumeration
+                -Wzero-as-null-pointer-constant # warn when using 0 instead of nullptr
                 -Wundef
-                -Wextra-semi             # warn about redundant semicolons
-                -Wsuggest-override       # warn about overriding virtual functions that are not marked with the override keyword.
+                -Wextra-semi                    # warn about redundant semicolons
+                -Wsuggest-override              # warn about overriding virtual functions that are not marked with the override keyword.
                 -Werror=return-type
         )
 
