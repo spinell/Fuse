@@ -12,7 +12,7 @@ ARG USERID="1000"
 ####################################################
 #               Install tools
 # Install all package in one run to reduce image size
-# by removeing unnecessary files after installation
+# by removing unnecessary files after installation
 ####################################################
 RUN    apt-get -y update \
     && apt-get -y upgrade \
