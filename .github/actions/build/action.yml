@@ -66,3 +66,11 @@ runs:
     - name: Run CMake Install
       shell: bash
       run: cmake --install ${{inputs.build_dir}} --prefix ${{inputs.install_dir}}
+
+    # Run CTest
+    - name: Run CTest
+      shell: bash
+      run: |
+        ctest \
+          --output-on-failure \
+          --test-dir ${{inputs.build_dir}}

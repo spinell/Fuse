@@ -165,7 +165,7 @@ TEST(Vec2, multiple_by_scalar) {
         // test the return value
         EXPECT_FLOAT_EQ(r.x, 10.F);
         EXPECT_FLOAT_EQ(r.y, 20.F);
-        EXPECT_EQ(&r, &v);
+        EXPECT_EQ(&r, &v1);
     }
 }
 
