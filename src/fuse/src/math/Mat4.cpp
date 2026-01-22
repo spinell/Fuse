@@ -1,7 +1,7 @@
-#include "Mat4.h"
+#include "fuse/math/Mat4.h"
 
-#include "Angle.h"
-#include "Vec3.h"
+#include "fuse/math/Angle.h"
+#include "fuse/math/Vec3.h"
 
 #include <assert.h>
 

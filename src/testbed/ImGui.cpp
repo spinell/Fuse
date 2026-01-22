@@ -1,8 +1,8 @@
 #include "ImGui.h"
 
-#include "math/Angle.h"
-#include "math/Mat4.h"
-#include "math/Vec3.h"
+#include "fuse/math/Angle.h"
+#include "fuse/math/Mat4.h"
+#include "fuse/math/Vec3.h"
 
 #include <string>
 

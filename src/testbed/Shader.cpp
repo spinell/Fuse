@@ -1,7 +1,7 @@
 #include "Shader.h"
 
-#include "math/Mat4.h"
-#include "math/Vec4.h"
+#include "fuse/math/Mat4.h"
+#include "fuse/math/Vec4.h"
 #include "Log.h"
 
 

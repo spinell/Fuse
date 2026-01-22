@@ -1,13 +1,13 @@
 #include "GTestUtils.h"
 
-#include <math/Angle.h>
-#include <math/Mat2.h>
-#include <math/Mat3.h>
-#include <math/Mat4.h>
-#include <math/Quaternion.h>
-#include <math/Vec2.h>
-#include <math/Vec3.h>
-#include <math/Vec4.h>
+#include <fuse/math/Angle.h>
+#include <fuse/math/Mat2.h>
+#include <fuse/math/Mat3.h>
+#include <fuse/math/Mat4.h>
+#include <fuse/math/Quaternion.h>
+#include <fuse/math/Vec2.h>
+#include <fuse/math/Vec3.h>
+#include <fuse/math/Vec4.h>
 
 #include <gtest/gtest.h>
 

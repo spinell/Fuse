@@ -1,6 +1,6 @@
 #include "GTestUtils.h"
 
-#include <math/Mat2.h>
+#include <fuse/math/Mat2.h>
 
 #include <gtest/gtest.h>
 

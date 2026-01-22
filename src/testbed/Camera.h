@@ -1,6 +1,6 @@
 #pragma once
-#include "math/Angle.h"
-#include "math/Mat4.h"
+#include "fuse/math/Angle.h"
+#include "fuse/math/Mat4.h"
 
 /// @brief FlyWay Camera
 ///

@@ -1,5 +1,5 @@
 #include "GTestUtils.h"
-#include "math/Angle.h"
+#include "fuse/math/Angle.h"
 
 #include "gmock/gmock-matchers.h"
 #include "gtest/gtest.h"

@@ -1,4 +1,4 @@
-#include "Mat2.h"
+#include "fuse/math/Mat2.h"
 
 namespace fuse {
 

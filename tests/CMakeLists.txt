@@ -1,4 +1,4 @@
-find_package(GTest 1.17.0 EXACT CONFIG REQUIRED)
+set(CMAKE_FOLDER "tests")
 
 add_executable(TestFuseCore
     GTestUtils.h
@@ -18,7 +18,7 @@ fuse_target_set_compiler_warnings(TestFuseCore)
 target_link_libraries(TestFuseCore
     PRIVATE
         GTest::gmock_main
-        Fuse::Lib
+        Fuse::Fuse
 )
 
 add_test(NAME Fuse::lib COMMAND TestFuseCore)

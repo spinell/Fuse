@@ -1,6 +1,6 @@
 #include "GTestUtils.h"
 
-#include <math/Vec3.h>
+#include <fuse/math/Vec3.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

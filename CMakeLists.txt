@@ -11,36 +11,52 @@ include(PreventInSourceBuild)
 
 project(Fuse VERSION 0.1.0 LANGUAGES C CXX)
 
-include(CMakeDependentOption)
-cmake_dependent_option(FUSE_BUILD_DOC     "Build doxygen documentation" ON PROJECT_IS_TOP_LEVEL OFF)
-
+###############################################
+#               Project setup
+###############################################
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Print information (Can be useful for debugging)
+include(CMakeDependentOption)
+cmake_dependent_option(FUSE_BUILD_DOC     "Build doxygen documentation" ON PROJECT_IS_TOP_LEVEL OFF)
+cmake_dependent_option(FUSE_BUILD_TESTS   "Build tests" ON PROJECT_IS_TOP_LEVEL OFF)
+
 include(FusePrintUtils)
+include(CompilerWarning)
+
+# Print information (Can be useful for debugging)
 fuse_print_system_info()
 fuse_print_generator_info()
 fuse_print_compiler_info()
 fuse_print_compiler_flags()
 fuse_print_linker_flags()
 
-include(CompilerWarning)
 
+################################################
+#               Dependencies
+################################################
+find_package(SDL3 3.2.28 CONFIG REQUIRED)
+message(STATUS "SDL3_DIR     : " ${SDL3_DIR})
+message(STATUS "SDL3_VERSION : " ${SDL3_VERSION})
+
+################################################
+#               Targets
+################################################
 add_subdirectory(externals SYSTEM)
-add_subdirectory(src/lib)
+add_subdirectory(src/fuse)
 add_subdirectory(src/testbed)
 
-enable_testing()
-add_subdirectory(tests)
+set_directory_properties(PROPERTIES VS_STARTUP_PROJECT Fuse)
 
-set_directory_properties(PROPERTIES
-    VS_STARTUP_PROJECT Fuse
-)
+if(FUSE_BUILD_TESTS)
+    find_package(GTest 1.17.0 EXACT CONFIG REQUIRED)
 
+    enable_testing()
+    add_subdirectory(tests)
+endif()
 
 if(FUSE_BUILD_DOC)
     message(STATUS "Building documentation.")

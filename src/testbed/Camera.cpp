@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#include "math/Mat3.h"
+#include "fuse/math/Mat3.h"
 
 #include <algorithm>
 #include <cmath>

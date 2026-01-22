@@ -1,7 +1,7 @@
 #include "GTestUtils.h"
 
-#include <math/Angle.h>
-#include <math/Mat3.h>
+#include <fuse/math/Angle.h>
+#include <fuse/math/Mat3.h>
 
 #include <gtest/gtest.h>
 

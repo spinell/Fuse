@@ -1,6 +1,6 @@
-#include "Mat3.h"
+#include "fuse/math/Mat3.h"
 
-#include "Angle.h"
+#include "fuse/math/Angle.h"
 
 #include <assert.h>
 

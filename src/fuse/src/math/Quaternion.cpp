@@ -1,6 +1,6 @@
-#include "Quaternion.h"
+#include "fuse/math/Quaternion.h"
 
-#include "Angle.h"
+#include "fuse/math/Angle.h"
 
 #include <cassert>
 
