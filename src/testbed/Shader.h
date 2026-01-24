@@ -1,5 +1,6 @@
 #pragma once
 #include <glad/gl.h>
+#include <utility>
 
 namespace fuse {
 class Mat4;
@@ -16,6 +17,15 @@ public:
 
     Shader(const Shader&)            = delete;
     Shader& operator=(const Shader&) = delete;
+
+    Shader(Shader&& o) {
+        o.mProgram = std::exchange(mProgram, o.mProgram);
+    }
+
+    Shader& operator=(Shader&& o) {
+        o.mProgram = std::exchange(mProgram, o.mProgram);
+        return *this;
+    }
 
     void bind();
     void unbind();

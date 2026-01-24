@@ -14,7 +14,7 @@ ContinuationIndentWidth: 2
 IndentCaseLabels: true
 IndentCaseBlocks: false
 IndentExternBlock: Indent
-IndentPPDirectives: None
+IndentPPDirectives: AfterHash
 IndentWidth: 4
 IndentWrappedFunctionNames: false
 #TabWidth: 4

@@ -11,9 +11,7 @@ add_library(ImGui::ImGui ALIAS ImGui)
 target_sources(
     ImGui
     PRIVATE
-        imgui/imconfig.h
         imgui/imgui.cpp
-        imgui/imgui.h
         imgui/imgui_demo.cpp
         imgui/imgui_draw.cpp
         imgui/imgui_internal.h
@@ -26,11 +24,23 @@ target_sources(
         imgui/backends/imgui_impl_opengl3.cpp
         imgui/backends/imgui_impl_sdl3.h
         imgui/backends/imgui_impl_sdl3.cpp
+    PUBLIC
+        FILE_SET HEADERS
+        TYPE HEADERS
+        BASE_DIRS
+        FILES
+            imgui/imgui.h
+            imgui/imgui_internal.h
+            imgui/imconfig.h
 )
 
 target_include_directories(ImGui
-    PUBLIC imgui ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/imgui>
 )
+
+
 target_link_libraries(ImGui PUBLIC SDL3::SDL3)
 
 #

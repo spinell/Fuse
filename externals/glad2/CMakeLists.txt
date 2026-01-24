@@ -3,12 +3,16 @@
 add_library(glad2 STATIC)
 add_library(glad2::glad2 ALIAS glad2)
 
-target_sources(
-    glad2
+# TODO: Don't install glad headers when OpenGL will be abstracted
+target_sources(glad2
     PRIVATE
-        include/glad/gl.h
-        include/KHR/khrplatform.h
         src/gl.c
+    PUBLIC
+        FILE_SET HEADERS
+        TYPE HEADERS
+        BASE_DIRS
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+        FILES
+            include/glad/gl.h
+            include/KHR/khrplatform.h
 )
-
-target_include_directories(glad2 PUBLIC include)

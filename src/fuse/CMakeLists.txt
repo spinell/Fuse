@@ -6,6 +6,9 @@ fuse_target_set_compiler_warnings(Fuse)
 
 target_sources(Fuse
     PRIVATE
+        src/Application.cpp
+        src/Timer.cpp
+        src/LayerStack.cpp
         src/math/Angle.cpp
         src/math/Mat2.cpp
         src/math/Mat3.cpp
@@ -18,6 +21,11 @@ target_sources(Fuse
             ${CMAKE_CURRENT_BINARY_DIR}/generated
             ${CMAKE_CURRENT_SOURCE_DIR}/include
         FILES
+            include/fuse/Application.h
+            include/fuse/Layer.h
+            include/fuse/LayerStack.h
+            include/fuse/Time.h
+            include/fuse/Timer.h
             include/fuse/math/Angle.h
             include/fuse/math/Vec2.h
             include/fuse/math/Vec3.h
@@ -27,6 +35,14 @@ target_sources(Fuse
             include/fuse/math/Mat4.h
             include/fuse/math/Quaternion.h
 )
+
+target_link_libraries(Fuse
+    PRIVATE
+        SDL3::SDL3
+        glad2::glad2
+        ImGui::ImGui
+)
+
 
 # Group source/headers files for IDE to match the file system.
 get_target_property(sources Fuse SOURCES)
@@ -39,8 +55,13 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include/fuse PREFIX "Header Files"
 #
 include(GNUInstallDirs)
 
+# Install fuse and it's dependencies.
+# This is required for when fuse is build as a static lib.
+# TODO: Find a way to not have to install dependencies when fuse is build as a static lib.
+#       May use OBJECT library for the dependencies or
+#       merge all static library in fuse.
 install(
-    TARGETS Fuse
+    TARGETS Fuse glad2 ImGui
     EXPORT FuseTargets
     RUNTIME
         DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -51,6 +72,11 @@ install(
     FILE_SET HEADERS
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
+
+# install SDL3 config files
+install(FILES $<TARGET_IMPORT_FILE:SDL3::SDL3> DESTINATION lib/)
+
+# install SDL3 lib
 
 # Install exported target
 install(

@@ -17,6 +17,10 @@ add_executable(FuseTestbed
     TextureGenerator.cpp
     Log.h
     Log.cpp
+    Mesh.h
+    Mesh.cpp
+    Layers/TestLayer.h
+    Layers/TestLayer.cpp
 )
 fuse_target_set_compiler_warnings(FuseTestbed)
 
