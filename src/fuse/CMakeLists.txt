@@ -4,6 +4,10 @@ add_library(Fuse::Fuse ALIAS Fuse)
 
 fuse_target_set_compiler_warnings(Fuse)
 
+# The SDL INTERFACE_SYSTEM_INCLUDE_DIRECTORIES is not propagated ....
+get_target_property(sdl_include_dir SDL3::Headers INTERFACE_INCLUDE_DIRECTORIES)
+target_include_directories(Fuse SYSTEM PRIVATE ${sdl_include_dir})
+
 target_sources(Fuse
     PRIVATE
         src/Application.cpp

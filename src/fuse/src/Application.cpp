@@ -12,6 +12,8 @@
 
 #include <cassert>
 #include <print>
+#include <utility>
+
 
 namespace {
 SDL_Window*      window{};
