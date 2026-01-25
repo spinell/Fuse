@@ -47,9 +47,9 @@ void log_message(LogLevel level, const std::format_string<Args...>& fmt, Args&&.
 } // namespace fuse
 
 // TODO: Enable/Disable from the build system
-#define FUSE_FATAL(msg, ...) fuse::log_message(fuse::LogLevel::Fatal, msg, __VA_ARGS__)
-#define FUSE_ERROR(msg, ...) fuse::log_message(fuse::LogLevel::Error, msg, __VA_ARGS__)
-#define FUSE_WARN(msg, ...) fuse::log_message(fuse::LogLevel::Warn, msg, __VA_ARGS__)
-#define FUSE_INFO(msg, ...) fuse::log_message(fuse::LogLevel::Info, msg, __VA_ARGS__)
-#define FUSE_DEBUG(msg, ...) fuse::log_message(fuse::LogLevel::Debug, msg, __VA_ARGS__)
-#define FUSE_VERBOSE(msg, ...) fuse::log_message(fuse::LogLevel::Verbose, msg, __VA_ARGS__)
+#define FUSE_FATAL(...) fuse::log_message(fuse::LogLevel::Fatal, __VA_ARGS__)
+#define FUSE_ERROR(...) fuse::log_message(fuse::LogLevel::Error, __VA_ARGS__)
+#define FUSE_WARN(...) fuse::log_message(fuse::LogLevel::Warn, __VA_ARGS__)
+#define FUSE_INFO(...) fuse::log_message(fuse::LogLevel::Info, __VA_ARGS__)
+#define FUSE_DEBUG(...) fuse::log_message(fuse::LogLevel::Debug, __VA_ARGS__)
+#define FUSE_VERBOSE(...) fuse::log_message(fuse::LogLevel::Verbose, __VA_ARGS__)
