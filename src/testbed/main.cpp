@@ -1,5 +1,7 @@
 #include "fuse/Application.h"
 #include "Layers/TestLayer.h"
+#include <fuse/Assert.h>
+#include <fuse/Logger.h>
 
 
 int main(int, char**) {

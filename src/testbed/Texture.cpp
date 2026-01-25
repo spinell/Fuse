@@ -1,8 +1,9 @@
 #include "Texture.h"
 
+#include <fuse/Logger.h>
+
 #include "stb_image.h"
 #include "TextureGenerator.h"
-#include "Log.h"
 
 #include <cassert>
 #include <cmath>
@@ -91,7 +92,7 @@ Texture Texture::CreateFromFile(const char* path, bool srgb, bool generateMipmap
     void* pixels{};
 
     if (stbi_info(path, &texWidth, &texHeight, &texChannels) == 0) {
-        fuse::logError("Fail to load texture: {}\n {}", path, stbi_failure_reason());
+        FUSE_ERROR("Fail to load texture: {}\n {}", path, stbi_failure_reason());
         return {};
     }
 
@@ -149,7 +150,7 @@ Texture Texture::CreateFromFile(const char* path, bool srgb, bool generateMipmap
     }
 
     if (!pixels) {
-        fuse::logError("Fail to load texture: {}", path);
+        FUSE_ERROR("Fail to load texture: {}", path);
         return {};
     }
 
@@ -161,7 +162,7 @@ Texture Texture::CreateFromFile(const char* path, bool srgb, bool generateMipmap
 
     stbi_image_free(pixels);
 
-    fuse::logError("Loading texture {} {}x{}x{}", path, texWidth, texHeight, texChannels);
+    FUSE_ERROR("Loading texture {} {}x{}x{}", path, texWidth, texHeight, texChannels);
 
     return texture;
 }

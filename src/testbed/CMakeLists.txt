@@ -15,8 +15,6 @@ add_executable(FuseTestbed
     GeometryGenerator.cpp
     TextureGenerator.h
     TextureGenerator.cpp
-    Log.h
-    Log.cpp
     Mesh.h
     Mesh.cpp
     Layers/TestLayer.h

@@ -11,6 +11,7 @@ target_include_directories(Fuse SYSTEM PRIVATE ${sdl_include_dir})
 target_sources(Fuse
     PRIVATE
         src/Assert.cpp
+        src/Logger.cpp
         src/Application.cpp
         src/Timer.cpp
         src/LayerStack.cpp
@@ -27,6 +28,7 @@ target_sources(Fuse
             ${CMAKE_CURRENT_SOURCE_DIR}/include
         FILES
             include/fuse/Assert.h
+            include/fuse/Logger.h
             include/fuse/Application.h
             include/fuse/Layer.h
             include/fuse/LayerStack.h

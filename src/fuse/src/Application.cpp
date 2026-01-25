@@ -1,6 +1,7 @@
 #include "fuse/Application.h"
 
 #include "fuse/LayerStack.h"
+#include "fuse/Logger.h"
 #include "fuse/Timer.h"
 
 #include <glad/gl.h>
@@ -10,7 +11,6 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_sdl3.h>
 
-#include <print>
 #include <utility>
 
 
@@ -79,7 +79,13 @@ static void openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum se
         }
     }();
 
-    std::println("[OpenGL][{}][{}][{}]({}) {}", typeStr, sourceStr, severityStr, id, message);
+    fuse::log_message(fuse::LogLevel::Info,
+                      "[OpenGL][{}][{}][{}]({}) {}",
+                      typeStr,
+                      sourceStr,
+                      severityStr,
+                      id,
+                      message);
 }
 
 
@@ -94,41 +100,43 @@ Application::Application() {
     assert(sInstance == nullptr && "Multiple instance not allowed.");
     sInstance = this;
 
+    fuse::log_initialize();
+
     //
     // Init SDL
     //
-    std::println("NumVideoDrivers {}", SDL_GetNumVideoDrivers());
+    FUSE_DEBUG("NumVideoDrivers {}", SDL_GetNumVideoDrivers());
     for (auto i = 0; i < SDL_GetNumVideoDrivers(); i++) {
-        std::println(" - {}", SDL_GetVideoDriver(i));
+        FUSE_DEBUG(" - {}", SDL_GetVideoDriver(i));
     }
 
-    std::println("NumAudioDrivers {}", SDL_GetNumAudioDrivers());
+    FUSE_DEBUG("NumAudioDrivers {}", SDL_GetNumAudioDrivers());
     for (auto i = 0; i < SDL_GetNumAudioDrivers(); i++) {
-        std::println(" - {}", SDL_GetAudioDriver(i));
+        FUSE_DEBUG(" - {}", SDL_GetAudioDriver(i));
     }
 
-    std::println("NumRenderDrivers {}", SDL_GetNumRenderDrivers());
+    FUSE_DEBUG("NumRenderDrivers {}", SDL_GetNumRenderDrivers());
     for (auto i = 0; i < SDL_GetNumRenderDrivers(); i++) {
-        std::println(" - {}", SDL_GetRenderDriver(i));
+        FUSE_DEBUG(" - {}", SDL_GetRenderDriver(i));
     }
 
-    std::println("NumGPUDrivers {}", SDL_GetNumGPUDrivers());
+    FUSE_DEBUG("NumGPUDrivers {}", SDL_GetNumGPUDrivers());
     for (auto i = 0; i < SDL_GetNumGPUDrivers(); i++) {
-        std::println(" - {}", SDL_GetGPUDriver(i));
+        FUSE_DEBUG(" - {}", SDL_GetGPUDriver(i));
     }
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        //fuse::logFatal("SDL could not initialize! SDL error: {}", SDL_GetError());
+        FUSE_FATAL("SDL could not initialize! SDL error: {}", SDL_GetError());
     }
 
-    std::println("SDL compiled version: {}.{}.{}",
-                 SDL_MAJOR_VERSION,
-                 SDL_MINOR_VERSION,
-                 SDL_MICRO_VERSION);
-    std::println("SDL runtime  version: {}.{}.{}",
-                 SDL_VERSIONNUM_MAJOR(SDL_GetVersion()),
-                 SDL_VERSIONNUM_MINOR(SDL_GetVersion()),
-                 SDL_VERSIONNUM_MICRO(SDL_GetVersion()));
+    FUSE_DEBUG("SDL compiled version: {}.{}.{}",
+               SDL_MAJOR_VERSION,
+               SDL_MINOR_VERSION,
+               SDL_MICRO_VERSION);
+    FUSE_DEBUG("SDL runtime  version: {}.{}.{}",
+               SDL_VERSIONNUM_MAJOR(SDL_GetVersion()),
+               SDL_VERSIONNUM_MINOR(SDL_GetVersion()),
+               SDL_VERSIONNUM_MICRO(SDL_GetVersion()));
 
     //
     // Create the main windows.
@@ -148,7 +156,7 @@ Application::Application() {
     windowFlags |= SDL_WINDOW_HIGH_PIXEL_DENSITY;
     window = SDL_CreateWindow("Fuse", 1920, 1080, windowFlags);
     if (window == nullptr) {
-        //fuse::logFatal("Window could not be created! SDL error: {}", SDL_GetError());
+        FUSE_FATAL("Window could not be created! SDL error: {}", SDL_GetError());
     }
 
     //
@@ -169,33 +177,33 @@ Application::Application() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     glContext = SDL_GL_CreateContext(window);
     if (glContext == nullptr) {
-        std::println("Unable to create OpenGLcontext: {}", SDL_GetError());
+        FUSE_FATAL("Unable to create OpenGLcontext: {}", SDL_GetError());
     }
     if (!SDL_GL_MakeCurrent(window, glContext)) {
-        std::println("Unable to bind OpenGL context: {}", SDL_GetError());
+        FUSE_FATAL("Unable to bind OpenGL context: {}", SDL_GetError());
     }
 
     if (!SDL_GL_SetSwapInterval(0)) {
-        std::println("Unable to set OpenGL Swap Interval: {}", SDL_GetError());
+        FUSE_WARN("Unable to set OpenGL Swap Interval: {}", SDL_GetError());
     }
 
     int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-    std::println("Glad Version: {}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+    FUSE_INFO("Glad Version: {}.{}\n", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
 
     const GLubyte* glVersion       = glGetString(GL_VERSION);
     const GLubyte* glVendor        = glGetString(GL_VENDOR);
     const GLubyte* glRenderer      = glGetString(GL_RENDERER);
     const GLubyte* glShaderVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
     // const GLubyte *glExtension = glGetString(GL_EXTENSIONS );
-    std::println("OpenGL Version       : {}", (const char*)glVersion);
-    std::println("OpenGL vendor        : {}", (const char*)glVendor);
-    std::println("OpenGL renderer      : {}", (const char*)glRenderer);
-    std::println("OpenGL Shader Version: {}", (const char*)glShaderVersion);
+    FUSE_INFO("OpenGL Version       : {}", (const char*)glVersion);
+    FUSE_INFO("OpenGL vendor        : {}", (const char*)glVendor);
+    FUSE_INFO("OpenGL renderer      : {}", (const char*)glRenderer);
+    FUSE_INFO("OpenGL Shader Version: {}", (const char*)glShaderVersion);
     GLint nbShaderLang{};
     glGetIntegerv(GL_NUM_SHADING_LANGUAGE_VERSIONS, &nbShaderLang);
     for (GLuint i = 0; i < (GLuint)nbShaderLang; i++) {
         const GLubyte* shaderVersion = glGetStringi(GL_SHADING_LANGUAGE_VERSION, i);
-        std::println(" - Shader Version: {}", (const char*)shaderVersion);
+        FUSE_INFO(" - Shader Version: {}", (const char*)shaderVersion);
     }
 
     GLint glVersionMajor{};
@@ -219,16 +227,16 @@ Application::Application() {
     const bool isNoErrorContext =
       (flags & GL_CONTEXT_FLAG_NO_ERROR_BIT) == GL_CONTEXT_FLAG_NO_ERROR_BIT;
     if (isDebugContext) {
-        std::println("**** Debug context ***");
+        FUSE_INFO("**** Debug context ***");
     }
     if (isForwardContext) {
-        std::println("**** Forward context ***");
+        FUSE_INFO("**** Forward context ***");
     }
     if (isRobustContext) {
-        std::println("**** Robust context ***");
+        FUSE_INFO("**** Robust context ***");
     }
     if (isNoErrorContext) {
-        std::println("**** No Error context ***");
+        FUSE_INFO("**** No Error context ***");
     }
 
     if (isDebugContext) {
@@ -308,6 +316,8 @@ void Application::run() {
     SDL_GL_DestroyContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    fuse::log_shutdown();
 }
 
 void Application::onUpdate(Time deltaTime) {
