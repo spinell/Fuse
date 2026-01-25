@@ -10,7 +10,6 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_sdl3.h>
 
-#include <cassert>
 #include <print>
 #include <utility>
 
